@@ -1,0 +1,9 @@
+config/config.php
+public/uploads/
+.uvcache/
+*.log
+
+storage/
+
+# Configuración local de herramientas
+.claude/

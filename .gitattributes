@@ -1,0 +1,4 @@
+# Finales de línea LF en el repositorio; los .bat de Windows necesitan CRLF.
+* text=auto eol=lf
+*.bat text eol=crlf
+*.pdf binary
