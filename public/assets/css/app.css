@@ -42,6 +42,7 @@ body {
   background: var(--fondo);
 }
 img { max-width: 100%; display: block; }
+button, input, select, textarea { font: inherit; }
 a { color: var(--azul); }
 h1, h2, h3 { line-height: 1.15; margin: 0 0 .5em; text-wrap: balance; }
 p { margin: 0 0 1em; }
@@ -432,6 +433,8 @@ p { margin: 0 0 1em; }
 .poi { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: #fff; color: var(--tinta); box-shadow: 0 1px 4px rgba(20, 26, 38, .35); cursor: pointer; }
 .poi .icono { width: 16px; height: 16px; stroke-width: 2; }
 .popup-mapa .maplibregl-popup-content { border-radius: 10px; padding: 10px; font: 600 13px var(--fuente); box-shadow: 0 6px 20px rgba(20, 26, 38, .2); }
+/* MapLibre trae Helvetica para sus textos (avisos, créditos): que usen la tipografía de la marca. */
+.mapa__lienzo.maplibregl-map { font-family: var(--fuente); }
 .mapa__lienzo .maplibregl-ctrl-attrib { font-size: 10px; }
 .mapa__punto { display: inline-block; padding: 1px 8px; border-radius: 999px; color: #fff; font-size: .75rem; font-weight: 800; }
 .mapa__punto--alquiler { background: var(--azul); }
