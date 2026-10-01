@@ -5,6 +5,7 @@ namespace App\Core;
 
 use LogicException;
 use PDO;
+use PDOException;
 
 /**
  * Patrón Singleton: una sola conexión PDO por solicitud (docs/ANALISIS.md, sección 12).
@@ -29,11 +30,15 @@ final class Conexion
             $db['nombre'],
             $db['charset'] ?? 'utf8mb4'
         );
-        $this->pdo = new PDO($dsn, $db['usuario'], $db['clave'], [
-            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES   => false,
-        ]);
+        try {
+            $this->pdo = new PDO($dsn, $db['usuario'], $db['clave'], [
+                PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES   => false,
+            ]);
+        } catch (PDOException $error) {
+            throw new BaseNoDisponible('No se pudo conectar con la base de datos.', 0, $error);
+        }
         $this->pdo->exec("SET time_zone = '-03:00'");
     }
 

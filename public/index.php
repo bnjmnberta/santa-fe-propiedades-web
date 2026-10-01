@@ -12,6 +12,7 @@ if (PHP_SAPI === 'cli-server') {
 define('PUBLICO', __DIR__);
 require dirname(__DIR__) . '/app/bootstrap.php';
 
+use App\Core\BaseNoDisponible;
 use App\Core\Config;
 use App\Core\NoEncontrado;
 use App\Core\Router;
@@ -28,6 +29,13 @@ try {
         'titulo'  => 'Página no encontrada | Santa Fe Propiedades',
         'mensaje' => 'La página que buscás no existe o la propiedad ya no está publicada.',
     ]);
+} catch (BaseNoDisponible $error) {
+    // Página propia y mínima: el diseño general lee la configuración de la base.
+    error_log((string) $error);
+    http_response_code(503);
+    header('Retry-After: 120');
+    $enLocal = Config::get('app.entorno') !== 'produccion';
+    require RAIZ . '/app/Vistas/publico/sin-base.php';
 } catch (Throwable $error) {
     error_log((string) $error);
     http_response_code(500);
