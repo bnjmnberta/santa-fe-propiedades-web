@@ -16,6 +16,9 @@
     });
   };
   var iconos = { facultad: 'birrete', transporte: 'bus', puerto: 'ancla', costanera: 'ola', otro: 'pin' };
+  // MapLibre les pone aria-label "Map marker" a todos los marcadores al agregarlos al mapa:
+  // se reemplaza por el nombre propio de cada uno, guardado en data-nombre.
+  var nombrar = function (elemento) { elemento.setAttribute('aria-label', elemento.dataset.nombre); };
 
   var mapa = new maplibregl.Map({
     container: nodo,
@@ -27,16 +30,20 @@
   });
   mapa.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right');
 
-  // Puntos estratégicos: íconos chicos, con el nombre al tocarlos.
+  // Puntos estratégicos: íconos chicos, con el nombre al tocarlos. Son botones para que se puedan
+  // usar con teclado y el lector de pantalla los anuncie.
   (datos.puntos || []).forEach(function (punto) {
-    var elemento = document.createElement('div');
+    var elemento = document.createElement('button');
+    elemento.type = 'button';
     elemento.className = 'poi';
     elemento.title = punto.nombre;
+    elemento.dataset.nombre = punto.nombre;
     elemento.innerHTML = '<svg class="icono" aria-hidden="true"><use href="#i-' + (iconos[punto.categoria] || 'pin') + '"></use></svg>';
     new maplibregl.Marker({ element: elemento })
       .setLngLat([punto.lng, punto.lat])
       .setPopup(new maplibregl.Popup({ offset: 14, closeButton: false, className: 'popup-mapa' }).setText(punto.nombre))
       .addTo(mapa);
+    nombrar(elemento);
   });
 
   var crearEtiqueta = function (p) {
@@ -44,7 +51,7 @@
     elemento.type = 'button';
     elemento.className = 'etiqueta-mapa etiqueta-mapa--' + p.operacion;
     elemento.textContent = p.etiqueta;
-    elemento.setAttribute('aria-label', p.titulo + ', ' + p.precio);
+    elemento.dataset.nombre = p.titulo + ', ' + p.precio;
     var popup = new maplibregl.Popup({ offset: 22, closeButton: false, maxWidth: '220px', className: 'popup-mapa' }).setHTML(
       '<a class="mapa-popup" href="' + escapar(p.url) + '">' +
         (p.foto ? '<img src="' + escapar(p.foto) + '" alt="">' : '') +
@@ -58,7 +65,7 @@
     elemento.type = 'button';
     elemento.className = 'grupo-mapa';
     elemento.textContent = cantidad;
-    elemento.setAttribute('aria-label', cantidad + ' propiedades: acercar');
+    elemento.dataset.nombre = cantidad + ' propiedades: acercar';
     elemento.addEventListener('click', function () {
       mapa.getSource('propiedades').getClusterExpansionZoom(idGrupo).then(function (zoom) {
         mapa.easeTo({ center: coordenadas, zoom: zoom + 0.5 });
@@ -83,7 +90,10 @@
           : crearEtiqueta(datos.propiedades[props.indice]);
       }
       nuevos[clave] = creados[clave];
-      if (!visibles[clave]) { creados[clave].addTo(mapa); }
+      if (!visibles[clave]) {
+        creados[clave].addTo(mapa);
+        nombrar(creados[clave].getElement());
+      }
     });
     Object.keys(visibles).forEach(function (clave) {
       if (!nuevos[clave]) { visibles[clave].remove(); }

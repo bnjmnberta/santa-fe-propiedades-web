@@ -68,7 +68,7 @@ final class FichaControlador
             'titulo'      => $propiedad->titulo . ' | Santa Fe Propiedades',
             'descripcion' => $descripcion,
             'canonica'    => $urlFicha,
-            'imagenOg'    => $propiedad->urlPortada(1600) ? url($propiedad->urlPortada(1600)) : null,
+            'imagenOg'    => $propiedad->urlPortada('grande') ? url($propiedad->urlPortada('grande')) : null,
             'propiedad'   => $propiedad,
             'similares'   => $repositorio->similares($propiedad, 3),
             'whatsapp'    => EnlaceWhatsApp::paraPropiedad(

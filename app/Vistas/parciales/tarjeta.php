@@ -6,7 +6,7 @@ use App\Modelos\EstadoPropiedad;
   <a class="tarjeta__enlace" href="<?= e($propiedad->url()) ?>">
     <div class="tarjeta__foto">
       <?php if ($propiedad->urlPortada()): ?>
-        <img src="<?= e($propiedad->urlPortada(480)) ?>" alt="<?= e($propiedad->titulo) ?>" loading="lazy" decoding="async" width="480" height="360">
+        <img src="<?= e($propiedad->urlPortada('chica')) ?>" alt="<?= e($propiedad->titulo) ?>" loading="lazy" decoding="async" width="480" height="360">
       <?php else: ?>
         <div class="sin-foto"><?= icono('casa', 'sin-foto__icono') ?><span>Fotos próximamente</span></div>
       <?php endif ?>
@@ -16,7 +16,7 @@ use App\Modelos\EstadoPropiedad;
       <?php endif ?>
     </div>
     <div class="tarjeta__cuerpo">
-      <p class="tarjeta__precio"><?= e($propiedad->precioTexto()) ?></p>
+      <p class="tarjeta__precio<?= $propiedad->precio->tieneValor() ? '' : ' tarjeta__precio--consultar' ?>"><?= e($propiedad->precioTexto()) ?></p>
       <h3 class="tarjeta__titulo"><?= e($propiedad->titulo) ?></h3>
       <p class="tarjeta__ubicacion"><?= icono('pin') ?><span><?= e($propiedad->ubicacion() ?: $propiedad->tipo) ?></span></p>
       <?php if ($propiedad->rasgos()): ?>

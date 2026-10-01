@@ -22,7 +22,7 @@ $telefonoFijo = Cfg::get('telefono_fijo');
   <?php if (!empty($imagenOg)): ?><meta property="og:image" content="<?= e($imagenOg) ?>"><?php endif ?>
   <meta name="theme-color" content="#1c2331">
   <link rel="icon" href="<?= e(asset('assets/img/favicon.svg')) ?>" type="image/svg+xml">
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preload" href="/assets/fuentes/open-sauce-sans-400.woff" as="font" type="font/woff" crossorigin>
   <link rel="stylesheet" href="<?= e(asset('assets/css/app.css')) ?>">
   <?php if (!empty($mapa)): ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.css">

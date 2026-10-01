@@ -1,22 +1,48 @@
 // Santa Fe Propiedades — interacciones mínimas. La web funciona sin JavaScript;
-// esto suma menú móvil, galería, filtros automáticos y eventos de Analytics.
+// esto suma menú móvil, galería, filtros automáticos, botón flotante y eventos de Analytics.
 (function () {
   'use strict';
   document.documentElement.classList.add('js');
 
-  // Menú móvil
+  // Menú móvil: se cierra con Escape, tocando afuera o eligiendo un enlace.
   var botonMenu = document.querySelector('.cabecera__menu');
   var navegacion = document.getElementById('navegacion');
   if (botonMenu && navegacion) {
+    var cerrarMenu = function (devolverFoco) {
+      if (!navegacion.classList.contains('abierta')) { return; }
+      navegacion.classList.remove('abierta');
+      botonMenu.setAttribute('aria-expanded', 'false');
+      if (devolverFoco) { botonMenu.focus(); }
+    };
     botonMenu.addEventListener('click', function () {
       var abierto = navegacion.classList.toggle('abierta');
       botonMenu.setAttribute('aria-expanded', abierto ? 'true' : 'false');
+      if (abierto) { navegacion.querySelector('a').focus(); }
     });
     navegacion.addEventListener('click', function (evento) {
-      if (evento.target.tagName === 'A') {
-        navegacion.classList.remove('abierta');
-        botonMenu.setAttribute('aria-expanded', 'false');
-      }
+      if (evento.target.tagName === 'A') { cerrarMenu(false); }
+    });
+    document.addEventListener('keydown', function (evento) {
+      if (evento.key === 'Escape') { cerrarMenu(true); }
+    });
+    document.addEventListener('click', function (evento) {
+      if (!navegacion.contains(evento.target) && !botonMenu.contains(evento.target)) { cerrarMenu(false); }
+    });
+  }
+
+  // Botón flotante de WhatsApp: se esconde mientras se ve otro botón de WhatsApp, una franja
+  // de captación o el pie, para no tapar texto que llega al borde derecho.
+  var flotante = document.querySelector('.whatsapp-flotante');
+  if (flotante && 'IntersectionObserver' in window) {
+    var aLaVista = new Set();
+    var observador = new IntersectionObserver(function (entradas) {
+      entradas.forEach(function (entrada) {
+        if (entrada.isIntersecting) { aLaVista.add(entrada.target); } else { aLaVista.delete(entrada.target); }
+      });
+      flotante.classList.toggle('whatsapp-flotante--oculto', aLaVista.size > 0);
+    });
+    document.querySelectorAll('.boton--whatsapp:not(.cabecera__cta), .franja, .pie').forEach(function (nodo) {
+      observador.observe(nodo);
     });
   }
 
@@ -67,16 +93,27 @@
     }
   });
 
-  // Interruptor Alquiler / Venta de las destacadas (pestañas accesibles).
+  // Interruptor Alquiler / Venta de las destacadas (patrón de pestañas: ← → Inicio Fin,
+  // y solo la pestaña activa queda en el orden del Tab).
   document.querySelectorAll('[data-pestanias]').forEach(function (grupo) {
-    var botones = grupo.querySelectorAll('[role="tab"]');
-    botones.forEach(function (boton) {
-      boton.addEventListener('click', function () {
-        botones.forEach(function (otro) {
-          var activo = otro === boton;
-          otro.setAttribute('aria-selected', activo ? 'true' : 'false');
-          document.getElementById(otro.getAttribute('aria-controls')).hidden = !activo;
-        });
+    var botones = Array.prototype.slice.call(grupo.querySelectorAll('[role="tab"]'));
+    var activar = function (boton, enfocar) {
+      botones.forEach(function (otro) {
+        var activo = otro === boton;
+        otro.setAttribute('aria-selected', activo ? 'true' : 'false');
+        otro.tabIndex = activo ? 0 : -1;
+        document.getElementById(otro.getAttribute('aria-controls')).hidden = !activo;
+      });
+      if (enfocar) { boton.focus(); }
+    };
+    botones.forEach(function (boton, indice) {
+      boton.tabIndex = boton.getAttribute('aria-selected') === 'true' ? 0 : -1;
+      boton.addEventListener('click', function () { activar(boton, false); });
+      boton.addEventListener('keydown', function (evento) {
+        var destino = { ArrowRight: indice + 1, ArrowLeft: indice - 1, Home: 0, End: botones.length - 1 }[evento.key];
+        if (destino === undefined) { return; }
+        evento.preventDefault();
+        activar(botones[(destino + botones.length) % botones.length], true);
       });
     });
   });

@@ -17,11 +17,11 @@ final class InicioControlador
         $alquileres = $propiedades->destacadas(8, Operacion::Alquiler);
         $ventas = $propiedades->destacadas(8, Operacion::Venta);
 
-        // Fondo difuminado del buscador "¿Dónde?": la foto de una propiedad destacada.
+        // Fondo difuminado de la portada: la foto de una propiedad destacada.
         $fondo = null;
         foreach ([...$alquileres, ...$ventas] as $propiedad) {
             if ($propiedad->urlPortada()) {
-                $fondo = $propiedad->urlPortada(1600);
+                $fondo = $propiedad->urlPortada('grande');
                 break;
             }
         }
@@ -32,7 +32,7 @@ final class InicioControlador
             'canonica'    => url('/'),
             'alquileres'  => $alquileres,
             'ventas'      => $ventas,
-            'fondoBuscador' => $fondo,
+            'fondoPortada' => $fondo,
             'tipos'       => $catalogo->tiposConPublicadas(),
             'zonas'       => $catalogo->zonasConPublicadas(),
             'motivos'     => $catalogo->motivos(),
