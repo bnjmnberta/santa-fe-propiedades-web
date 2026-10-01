@@ -60,7 +60,7 @@ use App\Modelos\Precio;
           <?= Csrf::campo() ?>
           <button class="panel-estrella <?= $p['destacada'] ? 'panel-estrella--activa' : '' ?>" type="submit"
                   title="<?= $p['destacada'] ? 'Quitar de destacadas' : 'Destacar en la portada' ?>"
-                  aria-label="<?= $p['destacada'] ? 'Quitar de destacadas' : 'Destacar en la portada' ?>">★</button>
+                  aria-label="<?= $p['destacada'] ? 'Quitar de destacadas' : 'Destacar en la portada' ?>"><?= icono('estrella') ?></button>
         </form>
       </div>
     </li>

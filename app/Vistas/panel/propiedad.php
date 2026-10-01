@@ -76,7 +76,7 @@ $accion = $fila ? '/panel/propiedades/' . (int) $fila['id_propiedad'] : '/panel/
       <input type="text" name="direccion" value="<?= e($v('direccion')) ?>" maxlength="150" placeholder="Ej: Crespo 3200">
     </label>
     <label class="panel-check"><input type="checkbox" name="mostrar_direccion" value="1" <?= $marcado('mostrar_direccion') ?>> Mostrar la dirección en la web</label>
-    <label class="panel-check"><input type="checkbox" name="destacada" value="1" <?= $marcado('destacada') ?>> ★ Destacar en la portada</label>
+    <label class="panel-check"><input type="checkbox" name="destacada" value="1" <?= $marcado('destacada') ?>> <?= icono('estrella', 'icono panel-check__estrella') ?>Destacar en la portada</label>
   </fieldset>
 
   <fieldset class="panel-bloque">
@@ -166,12 +166,14 @@ $accion = $fila ? '/panel/propiedades/' . (int) $fila['id_propiedad'] : '/panel/
       <span>Qué hay cerca</span>
       <input type="text" name="referencias" value="<?= e($v('referencias')) ?>" maxlength="250" placeholder="Ej: A metros del Parque Sur y de la Facultad de Ciencias Económicas">
     </label>
-    <label class="panel-campo panel-campo--completo">
-      <span>Ubicación en el mapa</span>
-      <input type="text" name="coordenadas" value="<?= e($v('coordenadas')) ?>" placeholder="Ej: -31.6396, -60.7132">
-      <small>En Google Maps, mantené apretado sobre la propiedad y copiá los números que aparecen arriba. También sirve pegar el enlace de Google Maps.</small>
+    <?php /* div y no label: un clic en el mapa no tiene que mandar el foco al campo de texto. */ ?>
+    <div class="panel-campo panel-campo--completo">
+      <label for="coordenadas"><span>Ubicación en el mapa</span></label>
+      <input type="text" id="coordenadas" name="coordenadas" value="<?= e($v('coordenadas')) ?>" placeholder="Ej: -31.6396, -60.7132" aria-describedby="coordenadas-ayuda">
+      <div class="panel-mapa" data-mapa-coordenadas="coordenadas" hidden></div>
+      <small id="coordenadas-ayuda">Tocá el mapa o arrastrá el pin hasta la propiedad y las coordenadas se completan solas. También podés pegarlas o pegar el enlace de Google Maps.</small>
       <?= $error('coordenadas') ?>
-    </label>
+    </div>
     <label class="panel-campo panel-campo--completo">
       <span>Publicación de Instagram</span>
       <input type="url" name="instagram_url" value="<?= e($v('instagram_url')) ?>" placeholder="https://www.instagram.com/p/...">

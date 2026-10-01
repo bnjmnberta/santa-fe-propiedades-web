@@ -26,6 +26,7 @@
     <symbol id="i-ancla" viewBox="0 0 24 24"><circle cx="12" cy="5.5" r="2"/><path d="M12 7.5V20.5M8 11h8M4.5 13.5a7.5 7.5 0 0 0 15 0"/></symbol>
     <symbol id="i-ola" viewBox="0 0 24 24"><path d="M3 9c2 0 2-1.5 4.5-1.5S9.5 9 12 9s2-1.5 4.5-1.5S19 9 21 9M3 14c2 0 2-1.5 4.5-1.5S9.5 14 12 14s2-1.5 4.5-1.5S19 14 21 14M3 19c2 0 2-1.5 4.5-1.5S9.5 19 12 19s2-1.5 4.5-1.5S19 19 21 19"/></symbol>
     <symbol id="i-filtros" viewBox="0 0 24 24"><path d="M4 6.5h16M7 12h10M10 17.5h4"/></symbol>
+    <symbol id="i-estrella" viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></symbol>
     <symbol id="i-obra" viewBox="0 0 24 24"><path d="M4 16.5a8 8 0 0 1 16 0M3 16.5h18v2.5H3zM10 8.7V6h4v2.7M12 6v4.5"/></symbol>
   </defs>
 </svg>

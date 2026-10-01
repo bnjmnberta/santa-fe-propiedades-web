@@ -52,7 +52,16 @@ $whatsappSimilares = EnlaceWhatsApp::general(Cfg::get('whatsapp_numero'), sprint
     <?php if ($p->fotos): ?>
       <div class="galeria__pista" tabindex="0" aria-label="Fotos de la propiedad">
         <?php foreach ($p->fotos as $indice => $foto): ?>
+          <?php
+            // La chica mide 480 px salvo que la original sea más angosta (no se agranda).
+            $anchoGrande = (int) ($foto['ancho'] ?? 1600);
+            $anchoChica = min(480, $anchoGrande);
+          ?>
           <img src="<?= e($p->urlFoto($foto['archivo'])) ?>" alt="<?= e($p->titulo) ?>, foto <?= $indice + 1 ?>"
+               <?php if ($anchoChica < $anchoGrande): ?>
+                 srcset="<?= e($p->urlFoto($foto['archivo'], 'chica')) ?> <?= $anchoChica ?>w, <?= e($p->urlFoto($foto['archivo'])) ?> <?= $anchoGrande ?>w"
+                 sizes="<?= $altoFoto > $anchoFoto ? '(min-width: 640px) 50vw, 100vw' : '(min-width: 1180px) 1148px, 100vw' ?>"
+               <?php endif ?>
                width="<?= e($foto['ancho'] ?? 1600) ?>" height="<?= e($foto['alto'] ?? 1200) ?>"
                <?= $indice === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?> decoding="async">
         <?php endforeach ?>

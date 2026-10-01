@@ -1,4 +1,4 @@
-// Panel: confirmaciones, estado de la subida de fotos y copiar el texto para Instagram.
+// Panel: confirmaciones, estado de la subida de fotos, copiar el texto para Instagram y mapa de ubicación.
 (function () {
   'use strict';
 
@@ -39,6 +39,65 @@
         texto.select();
         document.execCommand('copy');
         listo();
+      }
+    });
+  }
+
+  // Ubicación en el mapa: tocar el mapa o arrastrar el pin completa el campo de coordenadas,
+  // y escribir o pegar en el campo mueve el pin. MapLibre se carga solo en esta pantalla.
+  var lienzo = document.querySelector('[data-mapa-coordenadas]');
+  if (lienzo) {
+    var campo = document.getElementById(lienzo.dataset.mapaCoordenadas);
+    var VERSION = 'https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/';
+    var estilo = document.createElement('link');
+    estilo.rel = 'stylesheet';
+    estilo.href = VERSION + 'maplibre-gl.min.css';
+    document.head.appendChild(estilo);
+    var libreria = document.createElement('script');
+    libreria.src = VERSION + 'maplibre-gl.min.js';
+    libreria.onload = function () { armarMapa(lienzo, campo); };
+    document.head.appendChild(libreria);
+  }
+
+  // Mismo criterio que ValidadorPropiedad::coordenadas(): "-31.63, -60.71" o un enlace de Google Maps,
+  // dentro de Santa Fe y alrededores.
+  function leerCoordenadas(texto) {
+    var m = /(-3\d\.\d+)\s*,\s*(-6\d\.\d+)/.exec(texto);
+    if (!m) { return null; }
+    var lat = parseFloat(m[1]);
+    var lng = parseFloat(m[2]);
+    return lat > -32.5 && lat < -30.5 && lng > -61.5 && lng < -60 ? [lng, lat] : null;
+  }
+
+  function armarMapa(lienzo, campo) {
+    var inicial = leerCoordenadas(campo.value);
+    lienzo.hidden = false;
+    var mapa = new maplibregl.Map({
+      container: lienzo,
+      style: 'https://tiles.openfreemap.org/styles/liberty',
+      center: inicial || [-60.700, -31.636],
+      zoom: inicial ? 15.5 : 12.5,
+      cooperativeGestures: true,
+      attributionControl: { compact: true }
+    });
+    mapa.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right');
+    var pin = new maplibregl.Marker({ color: '#d0342c', draggable: true });
+    if (inicial) { pin.setLngLat(inicial).addTo(mapa); }
+
+    var escribir = function (lngLat) {
+      campo.value = lngLat.lat.toFixed(6) + ', ' + lngLat.lng.toFixed(6);
+      campo.dispatchEvent(new Event('input', { bubbles: true }));
+    };
+    mapa.on('click', function (evento) {
+      pin.setLngLat(evento.lngLat).addTo(mapa);
+      escribir(evento.lngLat);
+    });
+    pin.on('dragend', function () { escribir(pin.getLngLat()); });
+    campo.addEventListener('change', function () {
+      var punto = leerCoordenadas(campo.value);
+      if (punto) {
+        pin.setLngLat(punto).addTo(mapa);
+        mapa.easeTo({ center: punto, zoom: Math.max(mapa.getZoom(), 15) });
       }
     });
   }

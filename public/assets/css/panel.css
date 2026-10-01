@@ -47,8 +47,11 @@
 .panel-item__titulo { display: block; font-weight: 700; color: var(--tinta); text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .panel-item__detalle { font-size: .85rem; color: var(--tinta-suave); margin: 2px 0 0; }
 .panel-item__acciones { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-.panel-estrella { border: 1px solid var(--borde); background: #fff; width: 38px; height: 38px; border-radius: 50%; font-size: 1.1rem; color: #c3c9d4; cursor: pointer; }
-.panel-estrella--activa { color: #f0a500; border-color: #f0d38a; background: #fff8e6; }
+.panel-estrella { display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--borde); background: #fff; width: 38px; height: 38px; border-radius: 50%; color: #8a93a4; cursor: pointer; }
+.panel-estrella .icono { width: 20px; height: 20px; }
+.panel-estrella--activa { color: #a86f00; border-color: #f0d38a; background: #fff8e6; }
+.panel-estrella--activa .icono, .panel-check__estrella { fill: currentColor; }
+.panel-check__estrella { color: #a86f00; }
 
 .panel-chip { display: inline-block; font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; padding: 3px 8px; border-radius: 6px; background: var(--fondo-alterno); color: var(--tinta); }
 .panel-chip--alquiler { background: var(--azul); color: #fff; }
@@ -67,7 +70,10 @@
 .panel-bloque h2 { font-size: 1.2rem; margin: 0; }
 .panel-bloque h2 small { font-weight: 400; color: var(--tinta-suave); font-size: .85rem; }
 .panel-campo { display: grid; gap: 5px; }
-.panel-campo > span { font-weight: 700; font-size: .9rem; }
+.panel-campo > span, .panel-campo > label > span { font-weight: 700; font-size: .9rem; }
+/* Mapa para elegir la ubicación: lo arma panel.js (sin JavaScript queda solo el campo de texto). */
+.panel-mapa { height: 320px; border: 1px solid #cfd6e0; border-radius: 10px; overflow: hidden; }
+.panel-mapa .maplibregl-marker { cursor: grab; }
 .panel-campo input, .panel-campo select, .panel-campo textarea {
   width: 100%; min-height: 46px; padding: 10px 12px; border: 1px solid #cfd6e0; border-radius: 10px; font: inherit; background: #fff; color: var(--tinta);
 }

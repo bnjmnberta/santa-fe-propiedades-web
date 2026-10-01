@@ -17,11 +17,12 @@ final class InicioControlador
         $alquileres = $propiedades->destacadas(8, Operacion::Alquiler);
         $ventas = $propiedades->destacadas(8, Operacion::Venta);
 
-        // Fondo difuminado de la portada: la foto de una propiedad destacada.
+        // Fondo difuminado de la portada: la foto de una propiedad destacada. Va la chica: con 10 px
+        // de desenfoque no se nota la diferencia y pesa un tercio.
         $fondo = null;
         foreach ([...$alquileres, ...$ventas] as $propiedad) {
             if ($propiedad->urlPortada()) {
-                $fondo = $propiedad->urlPortada('grande');
+                $fondo = $propiedad->urlPortada('chica');
                 break;
             }
         }
