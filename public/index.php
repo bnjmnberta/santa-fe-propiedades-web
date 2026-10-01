@@ -2,10 +2,28 @@
 declare(strict_types=1);
 
 // Servidor embebido de PHP (desarrollo): los archivos que existen se sirven directo.
+// Fuentes, estilos, scripts e imágenes van con un año de caché, como hace public/.htaccess en
+// el hosting. Sin eso, el navegador baja las fuentes en cada página y la letra parpadea.
 if (PHP_SAPI === 'cli-server') {
     $archivo = __DIR__ . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     if (is_file($archivo) && !str_contains($archivo, '..')) {
-        return false;
+        $tipos = [
+            'woff'  => 'font/woff',
+            'woff2' => 'font/woff2',
+            'css'   => 'text/css; charset=utf-8',
+            'js'    => 'text/javascript; charset=utf-8',
+            'webp'  => 'image/webp',
+            'svg'   => 'image/svg+xml',
+        ];
+        $tipo = $tipos[strtolower(pathinfo($archivo, PATHINFO_EXTENSION))] ?? null;
+        if ($tipo === null) {
+            return false;
+        }
+        header('Content-Type: ' . $tipo);
+        header('Content-Length: ' . filesize($archivo));
+        header('Cache-Control: public, max-age=31536000');
+        readfile($archivo);
+        return true;
     }
 }
 
