@@ -25,7 +25,9 @@
     style: ESTILO,
     center: CENTRO,
     zoom: 12.5,
-    cooperativeGestures: true, // con un dedo se scrollea la página; con dos, se mueve el mapa
+    // Con mouse, la rueda sobre el mapa acerca y aleja, y fuera del mapa scrollea la página.
+    // En pantallas táctiles, un dedo scrollea la página y dos mueven el mapa (si no, el mapa atrapa el scroll).
+    cooperativeGestures: !window.matchMedia('(pointer: fine)').matches,
     attributionControl: { compact: true }
   });
   mapa.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right');

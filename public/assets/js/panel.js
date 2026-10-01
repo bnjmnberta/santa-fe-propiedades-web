@@ -77,7 +77,8 @@
       style: 'https://tiles.openfreemap.org/styles/liberty',
       center: inicial || [-60.700, -31.636],
       zoom: inicial ? 15.5 : 12.5,
-      cooperativeGestures: true,
+      // Igual que en el mapa público: rueda del mouse para acercar; en táctil, dos dedos.
+      cooperativeGestures: !window.matchMedia('(pointer: fine)').matches,
       attributionControl: { compact: true }
     });
     mapa.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right');
