@@ -6,14 +6,42 @@ namespace App\Servicios;
 use RuntimeException;
 
 /**
- * Regla g: las fotos se guardan en WebP, una grande (hasta 1600 px) y una miniatura de 480 px.
- * Usa GD, que viene en el hosting compartido.
+ * Regla g: las fotos se guardan en WebP, una grande (hasta 1600 px) y una miniatura (hasta 480 px).
+ * Los archivos se llaman por la variante ("-grande", "-chica") y no por el ancho, porque una foto
+ * de origen chica no se agranda: la medida real queda en la tabla foto.
+ * Usa GD, que viene en el hosting compartido; las HEIC de iPhone necesitan Imagick.
  */
 final class ImagenServicio
 {
     public const ANCHO_GRANDE = 1600;
     public const ANCHO_MINIATURA = 480;
+    public const VARIANTE_GRANDE = 'grande';
+    public const VARIANTE_MINIATURA = 'chica';
     private const CALIDAD = 80;
+
+    /** Imagick compilado con libheif. Depende del hosting: comprobarlo antes de publicar. En Windows local no viene. */
+    public static function admiteHeic(): bool
+    {
+        return class_exists(\Imagick::class) && \Imagick::queryFormats('HEIC') !== [];
+    }
+
+    /** Pasa una HEIC a un JPG temporal, ya enderezado. Quien llama borra el archivo devuelto. */
+    public static function convertirHeic(string $origen): string
+    {
+        $imagen = new \Imagick($origen);
+        $imagen->setIteratorIndex(0);
+        if (method_exists($imagen, 'autoOrient')) {
+            $imagen->autoOrient();
+        }
+        $imagen->setImageFormat('jpeg');
+        $imagen->setImageCompressionQuality(92);
+        $temporal = tempnam(sys_get_temp_dir(), 'heic');
+        $destino = $temporal . '.jpg';
+        $imagen->writeImage($destino);
+        $imagen->clear();
+        @unlink($temporal);
+        return $destino;
+    }
 
     /** @return array{ancho: int, alto: int} Medidas de la versión grande. */
     public static function procesar(string $origen, string $carpetaDestino, string $nombreBase): array
@@ -37,11 +65,11 @@ final class ImagenServicio
         }
 
         $grande = self::redimensionar($imagen, self::ANCHO_GRANDE);
-        imagewebp($grande, $carpetaDestino . '/' . $nombreBase . '-' . self::ANCHO_GRANDE . '.webp', self::CALIDAD);
+        imagewebp($grande, $carpetaDestino . '/' . $nombreBase . '-' . self::VARIANTE_GRANDE . '.webp', self::CALIDAD);
         $medidas = ['ancho' => imagesx($grande), 'alto' => imagesy($grande)];
 
         $miniatura = self::redimensionar($imagen, self::ANCHO_MINIATURA);
-        imagewebp($miniatura, $carpetaDestino . '/' . $nombreBase . '-' . self::ANCHO_MINIATURA . '.webp', self::CALIDAD);
+        imagewebp($miniatura, $carpetaDestino . '/' . $nombreBase . '-' . self::VARIANTE_MINIATURA . '.webp', self::CALIDAD);
 
         return $medidas;
     }

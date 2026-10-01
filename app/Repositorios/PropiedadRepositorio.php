@@ -91,7 +91,7 @@ final class PropiedadRepositorio
                 'operacion' => $propiedad->operacion->value,
                 'lat'       => (float) $fila['latitud'],
                 'lng'       => (float) $fila['longitud'],
-                'foto'      => $propiedad->urlPortada(480),
+                'foto'      => $propiedad->urlPortada('chica'),
             ];
         }, $consulta->fetchAll());
     }

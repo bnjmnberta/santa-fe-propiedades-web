@@ -136,7 +136,7 @@ $whatsappSimilares = EnlaceWhatsApp::general(Cfg::get('whatsapp_numero'), sprint
 
     <aside class="ficha__lateral">
       <div class="precio-caja">
-        <p class="precio-caja__precio"><?= e($p->precioTexto()) ?></p>
+        <p class="precio-caja__precio<?= $p->precio->tieneValor() ? '' : ' precio-caja__precio--consultar' ?>"><?= e($p->precioTexto()) ?></p>
         <?php if ($expensas): ?><p class="precio-caja__dato"><?= e($expensas) ?></p><?php endif ?>
         <?php if ($p->dato('requisitos')): ?><p class="precio-caja__dato"><strong>Requisitos:</strong> <?= e($p->dato('requisitos')) ?></p><?php endif ?>
         <?php if ($disponibleDesde): ?><p class="precio-caja__dato"><strong>Disponible desde:</strong> <?= e($disponibleDesde) ?></p><?php endif ?>
@@ -165,7 +165,7 @@ $whatsappSimilares = EnlaceWhatsApp::general(Cfg::get('whatsapp_numero'), sprint
 
 <?php if ($disponible): ?>
   <div class="barra-movil">
-    <span class="barra-movil__precio"><?= e($p->precioTexto()) ?></span>
+    <span class="barra-movil__precio<?= $p->precio->tieneValor() ? '' : ' barra-movil__precio--consultar' ?>"><?= e($p->precioTexto()) ?></span>
     <a class="boton boton--whatsapp" href="<?= e($whatsapp) ?>" target="_blank" rel="noopener"
        data-evento="consulta_whatsapp" data-origen="barra_movil" data-codigo="<?= e($p->codigo) ?>"
        data-operacion="<?= e($p->operacion->value) ?>" data-tipo="<?= e($p->tipo) ?>"><?= icono('whatsapp') ?>Consultar</a>

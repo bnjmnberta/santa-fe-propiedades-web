@@ -49,6 +49,7 @@ scripts/     migración del catálogo, fotos de Instagram y alta de usuarios
    mysql -u root -p -e "CREATE DATABASE sfp_web CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
    mysql -u root -p sfp_web < database/schema.sql
    mysql -u root -p sfp_web < database/migraciones/002_boceto_y_mapa.sql
+   mysql -u root -p sfp_web < database/migraciones/003_ajustes_auditoria.sql
    ```
 3. Copiar `config/config.example.php` como `config/config.php` y completar los datos de la base.
 4. Cargar el catálogo desde la web vieja, con las fotos:
@@ -56,6 +57,15 @@ scripts/     migración del catálogo, fotos de Instagram y alta de usuarios
    php scripts/migrar_catalogo.php --fotos
    ```
    Esta carga se hace **una sola vez**: si se vuelve a correr, pisa lo que se haya editado en el panel.
+   Después, reemplazar las fotos de la web vieja (800 px) por las placas de Instagram (1080 px) donde las hay:
+   ```bash
+   php scripts/importar_fotos_instagram.php --descargar
+   php scripts/importar_fotos_instagram.php --aplicar="78:3,1,2,4 252:1-9 254:5,1,2,3,4,6 257:2,1,3,4,5,6 258:2,1,3,4,5"
+   ```
+   Si ya había fotos subidas con el nombre viejo (`-1600.webp` / `-480.webp`), pasarlas al nuevo una vez:
+   ```bash
+   php scripts/renombrar_variantes_fotos.php
+   ```
 5. Crear el primer usuario del panel. La contraseña se genera sola:
    ```bash
    php scripts/crear_usuario.php --nombre="Nombre" --email=correo@ejemplo.com --rol=administrador

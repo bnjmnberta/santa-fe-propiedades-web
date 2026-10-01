@@ -190,9 +190,9 @@ $accion = $fila ? '/panel/propiedades/' . (int) $fila['id_propiedad'] : '/panel/
     <form class="panel-subir" action="/panel/propiedades/<?= (int) $fila['id_propiedad'] ?>/fotos" method="post" enctype="multipart/form-data" data-subir-fotos>
       <?= Csrf::campo() ?>
       <label class="panel-subir__zona">
-        <input type="file" name="fotos[]" accept="image/jpeg,image/png,image/webp" multiple>
+        <input type="file" name="fotos[]" accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.heic,.heif" multiple>
         <strong>Elegir fotos</strong>
-        <span data-subir-estado>JPG, PNG o WebP, hasta 8 MB cada una. Podés elegir varias juntas.</span>
+        <span data-subir-estado>JPG, PNG, WebP o HEIC de iPhone, hasta 8 MB cada una. Podés elegir varias juntas.</span>
       </label>
       <button class="boton boton--primario" type="submit">Subir</button>
     </form>
@@ -202,7 +202,7 @@ $accion = $fila ? '/panel/propiedades/' . (int) $fila['id_propiedad'] : '/panel/
       <ul class="panel-fotos">
         <?php foreach ($fotos as $indice => $foto): ?>
           <li class="panel-foto">
-            <img src="/uploads/propiedades/<?= (int) $fila['codigo'] ?>/<?= e($foto['archivo']) ?>-480.webp" alt="Foto <?= $indice + 1 ?>" loading="lazy">
+            <img src="/uploads/propiedades/<?= (int) $fila['codigo'] ?>/<?= e($foto['archivo']) ?>-chica.webp" alt="Foto <?= $indice + 1 ?>" loading="lazy">
             <?php if ($indice === 0): ?><span class="panel-foto__portada">Portada</span><?php endif ?>
             <div class="panel-foto__acciones">
               <?php foreach (['arriba' => '←', 'abajo' => '→', 'portada' => 'Portada'] as $movimiento => $texto): ?>

@@ -4,7 +4,8 @@ declare(strict_types=1);
 /*
  * Migra el catálogo de la web vieja (santafe-propiedades.com.ar) a la base nueva.
  * La web vieja aporta estructura y fotos; Instagram corrige estado, precio y textos
- * (scripts/datos/correcciones_instagram.php). Ver docs/ANALISIS.md, sección 14.
+ * (scripts/datos/correcciones_instagram.php); después van las de edición, con títulos y zonas
+ * (scripts/datos/correcciones_edicion.php). Ver docs/ANALISIS.md, sección 14.
  *
  *   php scripts/migrar_catalogo.php               solo datos, sin descargar fotos
  *   php scripts/migrar_catalogo.php --fotos       también descarga y convierte las fotos
@@ -28,7 +29,10 @@ $solo = isset($opciones['solo']) ? array_map('intval', explode(',', (string) $op
 $pdo = Conexion::obtenerInstancia()->pdo();
 $tipos = $pdo->query('SELECT slug, id_tipo FROM tipo_propiedad')->fetchAll(PDO::FETCH_KEY_PAIR);
 $zonas = $pdo->query('SELECT slug, id_zona FROM zona')->fetchAll(PDO::FETCH_KEY_PAIR);
-$correcciones = require __DIR__ . '/datos/correcciones_instagram.php';
+$correcciones = array_replace_recursive(
+    require __DIR__ . '/datos/correcciones_instagram.php',
+    require __DIR__ . '/datos/correcciones_edicion.php'
+);
 
 function descargar(string $url): string
 {

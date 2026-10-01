@@ -41,13 +41,27 @@ final class FotosControlador
             }
             // El tipo se valida por el contenido real del archivo, no por la extensión.
             $tipo = (new \finfo(FILEINFO_MIME_TYPE))->file($archivo['tmp_name']);
-            if (!in_array($tipo, ['image/jpeg', 'image/png', 'image/webp'], true)) {
-                $problemas[] = $archivo['name'] . ': tiene que ser JPG, PNG o WebP.';
+            $esHeic = in_array($tipo, ['image/heic', 'image/heif', 'image/heic-sequence', 'image/heif-sequence'], true);
+            if ($esHeic && !ImagenServicio::admiteHeic()) {
+                $problemas[] = $archivo['name'] . ': es una foto HEIC de iPhone y este servidor no puede convertirla. '
+                    . 'Subila desde el mismo iPhone (se convierte sola) o exportala como JPG.';
+                continue;
+            }
+            if (!$esHeic && !in_array($tipo, ['image/jpeg', 'image/png', 'image/webp'], true)) {
+                $problemas[] = $archivo['name'] . ': tiene que ser JPG, PNG, WebP o HEIC.';
                 continue;
             }
             try {
                 $nombre = sprintf('%d-%s', $propiedad['codigo'], bin2hex(random_bytes(5)));
-                $medidas = ImagenServicio::procesar($archivo['tmp_name'], PUBLICO . '/uploads/propiedades/' . $propiedad['codigo'], $nombre);
+                // Las HEIC se pasan primero a JPG con Imagick; GD no las lee.
+                $origen = $esHeic ? ImagenServicio::convertirHeic($archivo['tmp_name']) : $archivo['tmp_name'];
+                try {
+                    $medidas = ImagenServicio::procesar($origen, PUBLICO . '/uploads/propiedades/' . $propiedad['codigo'], $nombre);
+                } finally {
+                    if ($esHeic) {
+                        @unlink($origen);
+                    }
+                }
                 $repositorio->agregarFoto((int) $id, $nombre, $medidas['ancho'], $medidas['alto']);
                 $subidas++;
             } catch (Throwable $error) {
@@ -82,8 +96,8 @@ final class FotosControlador
         Sesion::exigirUsuario();
         Csrf::verificar();
         $foto = (new GestionPropiedadRepositorio())->borrarFoto((int) $id);
-        foreach ([ImagenServicio::ANCHO_GRANDE, ImagenServicio::ANCHO_MINIATURA] as $ancho) {
-            @unlink(PUBLICO . '/uploads/propiedades/' . $foto['codigo'] . '/' . $foto['archivo'] . '-' . $ancho . '.webp');
+        foreach ([ImagenServicio::VARIANTE_GRANDE, ImagenServicio::VARIANTE_MINIATURA] as $variante) {
+            @unlink(PUBLICO . '/uploads/propiedades/' . $foto['codigo'] . '/' . $foto['archivo'] . '-' . $variante . '.webp');
         }
         Sesion::avisar('ok', 'Foto eliminada.');
         redirigir('/panel/propiedades/' . $foto['id_propiedad'] . '#fotos');

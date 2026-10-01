@@ -119,14 +119,16 @@ final class Propiedad
         return array_values(array_filter(array_map('trim', preg_split('/\R/', $texto))));
     }
 
-    public function urlFoto(string $archivo, int $ancho = 1600): string
+    /** @param 'grande'|'chica' $variante Ver ImagenServicio::VARIANTE_*. */
+    public function urlFoto(string $archivo, string $variante = 'grande'): string
     {
-        return '/uploads/propiedades/' . $this->codigo . '/' . $archivo . '-' . $ancho . '.webp';
+        return '/uploads/propiedades/' . $this->codigo . '/' . $archivo . '-' . $variante . '.webp';
     }
 
-    public function urlPortada(int $ancho = 480): ?string
+    /** @param 'grande'|'chica' $variante */
+    public function urlPortada(string $variante = 'chica'): ?string
     {
         $archivo = $this->portada ?? ($this->fotos[0]['archivo'] ?? null);
-        return $archivo === null ? null : $this->urlFoto($archivo, $ancho);
+        return $archivo === null ? null : $this->urlFoto($archivo, $variante);
     }
 }

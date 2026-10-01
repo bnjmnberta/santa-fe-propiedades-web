@@ -35,7 +35,7 @@ use App\Modelos\Precio;
     <li class="panel-item">
       <a class="panel-item__foto" href="/panel/propiedades/<?= (int) $p['id_propiedad'] ?>">
         <?php if ($p['portada']): ?>
-          <img src="/uploads/propiedades/<?= (int) $p['codigo'] ?>/<?= e($p['portada']) ?>-480.webp" alt="" loading="lazy">
+          <img src="/uploads/propiedades/<?= (int) $p['codigo'] ?>/<?= e($p['portada']) ?>-chica.webp" alt="" loading="lazy">
         <?php else: ?>
           <span class="panel-item__sin-foto">Sin fotos</span>
         <?php endif ?>
@@ -50,7 +50,7 @@ use App\Modelos\Precio;
         <p class="panel-item__detalle">
           <?= e(Precio::crear($p['moneda'], $p['precio'])->formatear($p['operacion'] === 'alquiler')) ?>
           · <?= e($p['tipo']) ?><?= $p['zona'] ? ' · ' . e($p['zona']) : '' ?>
-          · <?= (int) $p['cantidad_fotos'] ?> fotos
+          · <?= (int) $p['cantidad_fotos'] ?> <?= (int) $p['cantidad_fotos'] === 1 ? 'foto' : 'fotos' ?>
         </p>
       </div>
       <div class="panel-item__acciones">
