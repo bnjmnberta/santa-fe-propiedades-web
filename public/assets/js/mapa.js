@@ -48,18 +48,96 @@
     nombrar(elemento);
   });
 
+  // Vista previa de cada propiedad: tarjeta con hasta dos fotos, precio, título, ubicación y rasgos.
+  // Con mouse aparece al pasar por encima de la etiqueta (o al llegar con Tab) y un clic abre la ficha;
+  // en pantallas táctiles se abre al tocar la etiqueta y tocando la tarjeta se va a la ficha.
+  // En la ficha (una sola propiedad, la que se está viendo) queda el globo simple de siempre.
+  var conVista = !datos.centrar;
+  var conMouse = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  var icono = function (nombre) { return '<svg class="icono" aria-hidden="true"><use href="#i-' + escapar(nombre) + '"></use></svg>'; };
+  var tarjetaVista = function (p) {
+    var fotos = (p.fotos && p.fotos.length ? p.fotos : (p.foto ? [p.foto] : [])).slice(0, 2);
+    return '<a class="vista-mapa" href="' + escapar(p.url) + '">' +
+      (fotos.length
+        ? '<span class="vista-mapa__fotos vista-mapa__fotos--' + fotos.length + '">' +
+            fotos.map(function (foto) { return '<img src="' + escapar(foto) + '" alt="">'; }).join('') +
+            '<span class="vista-mapa__operacion vista-mapa__operacion--' + escapar(p.operacion) + '">' + escapar(p.operacionTexto) + '</span>' +
+            (p.reservado ? '<span class="vista-mapa__reservado">Reservado</span>' : '') +
+          '</span>'
+        : '') +
+      '<span class="vista-mapa__cuerpo">' +
+        '<strong class="vista-mapa__precio' + (p.conPrecio ? '' : ' vista-mapa__precio--consultar') + '">' + escapar(p.precio) + '</strong>' +
+        '<span class="vista-mapa__titulo">' + escapar(p.titulo) + '</span>' +
+        '<span class="vista-mapa__ubicacion">' + icono('pin') + escapar(p.ubicacion) + '</span>' +
+        ((p.rasgos || []).length
+          ? '<span class="vista-mapa__rasgos">' + p.rasgos.map(function (r) { return '<span>' + icono(r[0]) + escapar(r[1]) + '</span>'; }).join('') + '</span>'
+          : '') +
+        '<span class="vista-mapa__ver">Ver la propiedad ' + icono('flecha') + '</span>' +
+      '</span></a>';
+  };
+
+  // Con mouse hay una sola tarjeta flotante que se mueve de una etiqueta a otra. Se esconde con
+  // una pequeña demora para poder pasar el mouse de la etiqueta a la tarjeta sin que desaparezca.
+  // La etiqueta ocupa unos 37 px hacia arriba del punto y hasta ~50 px a cada lado. El mapa elige de
+  // qué lado abrir la tarjeta según el espacio: cada lado tiene su distancia para no taparla nunca
+  // (si la tapa, la etiqueta pierde el mouse, la tarjeta se cierra y vuelve a abrirse en bucle).
+  var DISTANCIA_VISTA = {
+    'top': [0, 8], 'top-left': [14, 8], 'top-right': [-14, 8],
+    'bottom': [0, -44], 'bottom-left': [56, -4], 'bottom-right': [-56, -4],
+    'left': [56, -18], 'right': [-56, -18]
+  };
+  var vista = new maplibregl.Popup({ offset: DISTANCIA_VISTA, closeButton: false, closeOnClick: false, maxWidth: '280px', className: 'popup-mapa popup-vista' });
+  var demora = null;
+  var codigoEnVista = null;
+  var etiquetaEnVista = null;
+  var esconderVista = function () {
+    clearTimeout(demora);
+    demora = setTimeout(function () {
+      // Si el mouse sigue sobre la etiqueta o sobre la tarjeta, no se cierra.
+      var tarjeta = vista.getElement();
+      if ((etiquetaEnVista && etiquetaEnVista.matches(':hover')) || (tarjeta && tarjeta.querySelector('.maplibregl-popup-content:hover'))) { return; }
+      vista.remove();
+      codigoEnVista = null;
+      etiquetaEnVista = null;
+    }, 180);
+  };
+  var mostrarVista = function (p, etiqueta) {
+    clearTimeout(demora);
+    etiquetaEnVista = etiqueta;
+    if (codigoEnVista === p.codigo && vista.isOpen()) { return; }
+    codigoEnVista = p.codigo;
+    vista.setLngLat([p.lng, p.lat]).setHTML(tarjetaVista(p)).addTo(mapa);
+    var tarjeta = vista.getElement();
+    tarjeta.addEventListener('mouseenter', function () { clearTimeout(demora); });
+    tarjeta.addEventListener('mouseleave', esconderVista);
+    tarjeta.addEventListener('focusin', function () { clearTimeout(demora); });
+    tarjeta.addEventListener('focusout', esconderVista);
+  };
+
   var crearEtiqueta = function (p) {
     var elemento = document.createElement('button');
     elemento.type = 'button';
     elemento.className = 'etiqueta-mapa etiqueta-mapa--' + p.operacion;
     elemento.textContent = p.etiqueta;
     elemento.dataset.nombre = p.titulo + ', ' + p.precio;
-    var popup = new maplibregl.Popup({ offset: 22, closeButton: false, maxWidth: '220px', className: 'popup-mapa' }).setHTML(
+    var marcador = new maplibregl.Marker({ element: elemento, anchor: 'bottom' }).setLngLat([p.lng, p.lat]);
+
+    if (conVista && conMouse) {
+      elemento.addEventListener('mouseenter', function () { mostrarVista(p, elemento); });
+      elemento.addEventListener('mouseleave', esconderVista);
+      elemento.addEventListener('focus', function () { mostrarVista(p, elemento); });
+      elemento.addEventListener('blur', esconderVista);
+      elemento.addEventListener('click', function () { window.location.href = p.url; });
+      return marcador;
+    }
+    if (conVista) {
+      return marcador.setPopup(new maplibregl.Popup({ offset: DISTANCIA_VISTA, closeButton: false, maxWidth: '280px', className: 'popup-mapa popup-vista' }).setHTML(tarjetaVista(p)));
+    }
+    return marcador.setPopup(new maplibregl.Popup({ offset: 22, closeButton: false, maxWidth: '220px', className: 'popup-mapa' }).setHTML(
       '<a class="mapa-popup" href="' + escapar(p.url) + '">' +
         (p.foto ? '<img src="' + escapar(p.foto) + '" alt="">' : '') +
         '<strong>' + escapar(p.precio) + '</strong><span>' + escapar(p.titulo) + '</span></a>'
-    );
-    return new maplibregl.Marker({ element: elemento, anchor: 'bottom' }).setLngLat([p.lng, p.lat]).setPopup(popup);
+    ));
   };
 
   var crearGrupo = function (idGrupo, cantidad, coordenadas) {

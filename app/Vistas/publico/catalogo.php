@@ -93,7 +93,6 @@ $operacionOculta = $filtros->aConsulta($seccion)['operacion'] ?? null;
 
     <?php if (!empty($mapa) && $mapa['propiedades']): ?>
       <h2 class="seccion__titulo seccion__titulo--mapa">En el mapa</h2>
-      <p class="mapa__bajada">Las propiedades junto a facultades, la terminal, el puerto y la costanera.</p>
       <?= Vista::parcial('mapa', ['mapa' => $mapa]) ?>
     <?php endif ?>
 

@@ -6,6 +6,7 @@ namespace App\Repositorios;
 use App\Core\Conexion;
 use App\Modelos\FiltrosCatalogo;
 use App\Modelos\Operacion;
+use App\Modelos\EstadoPropiedad;
 use App\Modelos\Propiedad;
 use PDO;
 
@@ -72,28 +73,64 @@ final class PropiedadRepositorio
 
     /**
      * Propiedades con coordenadas para el mapa del catálogo (todas las que cumplen los filtros,
-     * no solo la página actual).
-     * @return list<array{codigo: int, titulo: string, url: string, precio: string, operacion: string, lat: float, lng: float, foto: ?string}>
+     * no solo la página actual). Llevan lo que muestra la tarjeta de vista previa al pasar el mouse.
+     * @return list<array{codigo: int, titulo: string, url: string, precio: string, conPrecio: bool, operacion: string,
+     *     operacionTexto: string, reservado: bool, ubicacion: string, rasgos: list<array{0: string, 1: string}>,
+     *     lat: float, lng: float, foto: ?string, fotos: list<string>}>
      */
     public function puntosMapa(FiltrosCatalogo $filtros): array
     {
         [$where, $parametros] = $this->condiciones($filtros);
         $consulta = $this->pdo->prepare(self::SELECT . ' WHERE ' . $where . ' AND p.latitud IS NOT NULL AND p.longitud IS NOT NULL');
         $consulta->execute($parametros);
-        return array_map(static function (array $fila): array {
+        $filas = $consulta->fetchAll();
+        $fotos = $this->primerasFotos(array_map(fn (array $fila) => (int) $fila['id_propiedad'], $filas), 2);
+        return array_map(static function (array $fila) use ($fotos): array {
             $propiedad = Propiedad::desdeFila($fila);
             return [
-                'codigo'    => $propiedad->codigo,
-                'titulo'    => $propiedad->titulo,
-                'url'       => $propiedad->url(),
-                'precio'    => $propiedad->precioTexto(),
-                'etiqueta'  => $propiedad->etiquetaMapa(),
-                'operacion' => $propiedad->operacion->value,
-                'lat'       => (float) $fila['latitud'],
-                'lng'       => (float) $fila['longitud'],
-                'foto'      => $propiedad->urlPortada('chica'),
+                'codigo'         => $propiedad->codigo,
+                'titulo'         => $propiedad->titulo,
+                'url'            => $propiedad->url(),
+                'precio'         => $propiedad->precioTexto(),
+                'conPrecio'      => $propiedad->precio->tieneValor(),
+                'etiqueta'       => $propiedad->etiquetaMapa(),
+                'operacion'      => $propiedad->operacion->value,
+                'operacionTexto' => $propiedad->operacion->etiqueta(),
+                'reservado'      => $propiedad->estado === EstadoPropiedad::Reservado,
+                'ubicacion'      => $propiedad->ubicacion() ?: $propiedad->tipo,
+                'rasgos'         => $propiedad->rasgos(),
+                'lat'            => (float) $fila['latitud'],
+                'lng'            => (float) $fila['longitud'],
+                'foto'           => $propiedad->urlPortada('chica'),
+                'fotos'          => array_map(
+                    fn (string $archivo) => $propiedad->urlFoto($archivo, 'chica'),
+                    $fotos[$propiedad->id] ?? []
+                ),
             ];
-        }, $consulta->fetchAll());
+        }, $filas);
+    }
+
+    /**
+     * Las primeras fotos (en el orden de la galería) de varias propiedades, en una sola consulta.
+     * @param list<int> $ids
+     * @return array<int, list<string>> id_propiedad => nombres de archivo
+     */
+    private function primerasFotos(array $ids, int $cantidad): array
+    {
+        if ($ids === []) {
+            return [];
+        }
+        $marcas = implode(',', array_fill(0, count($ids), '?'));
+        $consulta = $this->pdo->prepare("SELECT id_propiedad, archivo FROM foto WHERE id_propiedad IN ($marcas) ORDER BY id_propiedad, orden, id_foto");
+        $consulta->execute($ids);
+        $fotos = [];
+        foreach ($consulta->fetchAll() as $fila) {
+            $id = (int) $fila['id_propiedad'];
+            if (count($fotos[$id] ?? []) < $cantidad) {
+                $fotos[$id][] = $fila['archivo'];
+            }
+        }
+        return $fotos;
     }
 
     /**

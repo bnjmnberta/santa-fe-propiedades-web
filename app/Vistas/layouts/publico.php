@@ -63,39 +63,36 @@ $telefonoFijo = Cfg::get('telefono_fijo');
 <?= $contenido ?>
 </main>
 
+<?php /* Pie compacto en tres filas: logo y enlaces, datos de contacto en una línea, y la línea legal. */ ?>
 <footer class="pie">
-  <div class="contenedor pie__grilla">
-    <div>
-      <a class="logo logo--claro" href="/" aria-label="Santa Fe Propiedades, inicio"><?= Vista::parcial('logo') ?></a>
-      <p class="pie__texto">Inmobiliaria en Santa Fe Capital desde 2007. Alquileres, ventas, tasaciones y administración de propiedades.</p>
-      <p class="pie__matricula"><?= e(Cfg::get('matricula')) ?></p>
-    </div>
-    <div>
-      <h2 class="pie__titulo">Contacto</h2>
-      <ul class="pie__lista">
-        <li><?= icono('pin') ?><?= e(Cfg::get('direccion')) ?></li>
-        <li><?= icono('whatsapp') ?><a href="<?= e($whatsappGeneral) ?>" target="_blank" rel="noopener" data-evento="consulta_whatsapp" data-origen="pie"><?= e(Cfg::get('whatsapp_visible')) ?></a></li>
-        <?php if ($telefonoFijo !== ''): ?>
-          <li><?= icono('telefono') ?><a href="tel:+54<?= e(preg_replace('/\D+/', '', ltrim($telefonoFijo, '0'))) ?>" data-evento="click_telefono"><?= e($telefonoFijo) ?></a></li>
-        <?php endif ?>
-        <li><?= icono('mail') ?><a href="mailto:<?= e(Cfg::get('email')) ?>"><?= e(Cfg::get('email')) ?></a></li>
-        <li><?= icono('reloj') ?><?= e(Cfg::get('horario')) ?></li>
-      </ul>
-    </div>
-    <div>
-      <h2 class="pie__titulo">Propiedades</h2>
-      <ul class="pie__lista pie__lista--simple">
-        <li><a href="/alquileres">En alquiler</a></li>
-        <li><a href="/ventas">En venta</a></li>
-        <li><a href="/comerciales">Locales, galpones y cocheras</a></li>
-        <?php if (modulo('paginas')): ?><li><a href="/servicios">Tasaciones y servicios</a></li><?php endif ?>
-        <?php if (modulo('captacion')): ?><li><a href="/alquila-con-nosotros">Alquilá o vendé con nosotros</a></li><?php endif ?>
-        <?php if (modulo('faq')): ?><li><a href="/preguntas-frecuentes">Preguntas frecuentes</a></li><?php endif ?>
-      </ul>
-      <a class="pie__social" href="<?= e(Cfg::get('instagram_url')) ?>" target="_blank" rel="noopener"><?= icono('instagram') ?>@santafepropiedadesinmobiliaria</a>
-    </div>
+  <div class="contenedor pie__fila">
+    <a class="logo logo--claro" href="/" aria-label="Santa Fe Propiedades, inicio"><?= Vista::parcial('logo') ?></a>
+    <nav class="pie__enlaces" aria-label="Pie de página">
+      <a href="/alquileres">En alquiler</a>
+      <a href="/ventas">En venta</a>
+      <a href="/comerciales">Locales, galpones y cocheras</a>
+      <?php if (modulo('paginas')): ?><a href="/servicios">Tasaciones y servicios</a><?php endif ?>
+      <?php if (modulo('captacion')): ?><a href="/alquila-con-nosotros">Alquilá o vendé con nosotros</a><?php endif ?>
+      <?php if (modulo('faq')): ?><a href="/preguntas-frecuentes">Preguntas frecuentes</a><?php endif ?>
+      <a href="/contacto">Contacto</a>
+    </nav>
   </div>
-  <p class="pie__legal contenedor">© <?= date('Y') ?> Santa Fe Propiedades</p>
+  <div class="contenedor">
+    <ul class="pie__datos" aria-label="Contacto">
+      <li><?= icono('pin') ?><?= e(Cfg::get('direccion')) ?></li>
+      <li><?= icono('whatsapp') ?><a href="<?= e($whatsappGeneral) ?>" target="_blank" rel="noopener" data-evento="consulta_whatsapp" data-origen="pie"><?= e(Cfg::get('whatsapp_visible')) ?></a></li>
+      <?php if ($telefonoFijo !== ''): ?>
+        <li><?= icono('telefono') ?><a href="tel:+54<?= e(preg_replace('/\D+/', '', ltrim($telefonoFijo, '0'))) ?>" data-evento="click_telefono"><?= e($telefonoFijo) ?></a></li>
+      <?php endif ?>
+      <li><?= icono('mail') ?><a href="mailto:<?= e(Cfg::get('email')) ?>"><?= e(Cfg::get('email')) ?></a></li>
+      <li><?= icono('instagram') ?><a href="<?= e(Cfg::get('instagram_url')) ?>" target="_blank" rel="noopener">@santafepropiedadesinmobiliaria</a></li>
+      <li><?= icono('reloj') ?><?= e(Cfg::get('horario')) ?></li>
+    </ul>
+  </div>
+  <div class="contenedor pie__legal">
+    <span>© <?= date('Y') ?> Santa Fe Propiedades · Inmobiliaria en Santa Fe Capital desde 2007</span>
+    <span><?= e(Cfg::get('matricula')) ?></span>
+  </div>
 </footer>
 
 <?php if (empty($sinFlotante)): ?>
