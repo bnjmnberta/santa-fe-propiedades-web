@@ -50,7 +50,7 @@ $telefonoFijo = Cfg::get('telefono_fijo');
       <a href="/comerciales">Comerciales</a>
       <?php if (modulo('paginas')): ?>
         <a href="/servicios">Servicios</a>
-        <a href="/la-empresa">La empresa</a>
+        <a href="/nosotros">Nosotros</a>
       <?php endif ?>
       <a href="/contacto">Contacto</a>
     </nav>

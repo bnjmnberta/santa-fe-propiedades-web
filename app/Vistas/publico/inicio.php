@@ -81,7 +81,7 @@ $carrusel = function (array $propiedades, string $id, string $enlace, string $te
       <h2 class="seccion__titulo seccion__titulo--centrado">¿Por qué elegirnos?</h2>
       <?= Vista::parcial('motivos', ['motivos' => $motivos]) ?>
       <?php if (modulo('paginas')): ?>
-        <p class="centrado"><a class="enlace-flecha" href="/la-empresa">Conocé la empresa <?= icono('flecha') ?></a></p>
+        <p class="centrado"><a class="enlace-flecha" href="/nosotros">Conocé más sobre nosotros <?= icono('flecha') ?></a></p>
       <?php endif ?>
     </div>
   </section>

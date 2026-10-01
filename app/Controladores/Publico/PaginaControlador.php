@@ -9,7 +9,7 @@ use App\Repositorios\CatalogoRepositorio;
 use App\Repositorios\ConfiguracionRepositorio as Cfg;
 use App\Servicios\ValidadorPropiedad;
 
-/** Páginas institucionales: Contacto, Servicios, La Empresa, captación de propietarios y FAQ. */
+/** Páginas institucionales: Contacto, Servicios, Nosotros, captación de propietarios y FAQ. */
 final class PaginaControlador
 {
     /** Contacto está siempre visible: no depende de ningún módulo. */
@@ -46,7 +46,7 @@ final class PaginaControlador
     {
         $this->exigir('paginas');
         Vista::render('publico/empresa', [
-            'titulo'      => 'La empresa | Santa Fe Propiedades',
+            'titulo'      => 'Nosotros | Santa Fe Propiedades',
             'descripcion' => 'Inmobiliaria en Santa Fe Capital desde 2007, con un equipo que viene de más de 30 años en la construcción.',
             'motivos'     => (new CatalogoRepositorio())->motivos(),
         ]);

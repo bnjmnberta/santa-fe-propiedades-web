@@ -9,7 +9,7 @@ Web nueva de la inmobiliaria **Santa Fe Propiedades** (Santa Fe Capital), hecha 
   - catálogo con búsqueda y filtros;
   - ficha de cada propiedad con galería, botón de WhatsApp y una sección "Cerca de";
   - mapa con las propiedades y los puntos estratégicos de la ciudad (facultades, terminal, puerto y costanera);
-  - páginas Servicios, La empresa, Alquilá/Vendé con nosotros y Preguntas frecuentes.
+  - páginas Servicios, Nosotros, Alquilá/Vendé con nosotros y Preguntas frecuentes.
 - **Panel de autogestión** (`/panel`):
   - alta y edición de propiedades;
   - fotos: subida, orden y portada;

@@ -19,6 +19,12 @@ final class RedireccionControlador
         redirigir($propiedad?->url() ?? '/propiedades', 301);
     }
 
+    /** La página La empresa pasó a llamarse Nosotros: /la-empresa → /nosotros */
+    public function nosotros(): void
+    {
+        redirigir('/nosotros', 301);
+    }
+
     /** resultados.php?tipo=V|A → /ventas o /alquileres */
     public function listadoViejo(): void
     {
@@ -33,7 +39,7 @@ final class RedireccionControlador
     public function paginaVieja(string $pagina): void
     {
         redirigir(match ($pagina) {
-            'empresa'   => modulo('paginas') ? '/la-empresa' : '/',
+            'empresa'   => modulo('paginas') ? '/nosotros' : '/',
             'servicios' => modulo('paginas') ? '/servicios' : '/',
             default     => '/contacto',
         }, 301);

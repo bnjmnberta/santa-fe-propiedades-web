@@ -4,7 +4,7 @@ use App\Repositorios\ConfiguracionRepositorio as Cfg;
 ?>
 <section class="encabezado-pagina">
   <div class="contenedor">
-    <h1>La empresa</h1>
+    <h1>Nosotros</h1>
     <p>Santa Fe Propiedades · <?= e(str_replace(' | ', ' · ', Cfg::get('matricula'))) ?></p>
   </div>
 </section>

@@ -34,7 +34,7 @@ final class AdministracionControlador
         ],
         'Secciones visibles' => [
             'modulo_mapa'      => ['Mapa con puntos estratégicos', 'modulo'],
-            'modulo_paginas'   => ['Páginas Servicios y La Empresa', 'modulo'],
+            'modulo_paginas'   => ['Páginas Servicios y Nosotros', 'modulo'],
             'modulo_captacion' => ['Alquilá / Vendé con nosotros', 'modulo'],
             'modulo_faq'       => ['Preguntas frecuentes', 'modulo'],
         ],

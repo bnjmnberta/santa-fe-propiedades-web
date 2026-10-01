@@ -20,7 +20,8 @@ $router->get('/{seccion:ventas|alquileres|comerciales}', [CatalogoControlador::c
 $router->get('/propiedad/{codigo:\d+}-{slug:[a-z0-9-]+}', [FichaControlador::class, 'mostrar']);
 $router->get('/propiedad/{codigo:\d+}', [FichaControlador::class, 'mostrar']);
 $router->get('/servicios', [PaginaControlador::class, 'servicios']);
-$router->get('/la-empresa', [PaginaControlador::class, 'empresa']);
+$router->get('/nosotros', [PaginaControlador::class, 'empresa']);
+$router->get('/la-empresa', [RedireccionControlador::class, 'nosotros']);
 $router->get('/{operacion:alquila|vende}-con-nosotros', [PaginaControlador::class, 'captacion']);
 $router->get('/preguntas-frecuentes', [PaginaControlador::class, 'preguntasFrecuentes']);
 $router->get('/contacto', [PaginaControlador::class, 'contacto']);
