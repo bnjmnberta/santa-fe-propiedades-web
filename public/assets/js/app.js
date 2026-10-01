@@ -94,16 +94,49 @@
   });
 
   // Interruptor Alquiler / Venta de las destacadas (patrón de pestañas: ← → Inicio Fin,
-  // y solo la pestaña activa queda en el orden del Tab).
+  // y solo la pestaña activa queda en el orden del Tab). Una pastilla se desliza hasta la opción
+  // elegida cambiando de color, y las tarjetas entran desde ese lado.
   document.querySelectorAll('[data-pestanias]').forEach(function (grupo) {
     var botones = Array.prototype.slice.call(grupo.querySelectorAll('[role="tab"]'));
+    var pastilla = document.createElement('span');
+    pastilla.className = 'interruptor__pastilla';
+    pastilla.setAttribute('aria-hidden', 'true');
+    grupo.insertBefore(pastilla, grupo.firstChild);
+
+    var elegido = function () { return botones.filter(function (b) { return b.getAttribute('aria-selected') === 'true'; })[0] || botones[0]; };
+    var ubicarPastilla = function (boton) {
+      grupo.style.setProperty('--x-pastilla', boton.offsetLeft + 'px');
+      grupo.style.setProperty('--ancho-pastilla', boton.offsetWidth + 'px');
+      grupo.dataset.operacion = boton.classList.contains('interruptor__opcion--venta') ? 'venta' : 'alquiler';
+    };
+    // Primera ubicación y cambios de ancho (fuente cargada, rotar el celular): sin animación.
+    var reubicar = function () {
+      grupo.classList.add('interruptor--quieto');
+      ubicarPastilla(elegido());
+      void pastilla.offsetWidth;
+      grupo.classList.remove('interruptor--quieto');
+    };
+    reubicar();
+    grupo.classList.add('interruptor--deslizante');
+    if (document.fonts) { document.fonts.ready.then(reubicar); }
+    window.addEventListener('resize', reubicar);
+
     var activar = function (boton, enfocar) {
+      var anterior = botones.indexOf(elegido());
+      var nuevo = botones.indexOf(boton);
       botones.forEach(function (otro) {
         var activo = otro === boton;
         otro.setAttribute('aria-selected', activo ? 'true' : 'false');
         otro.tabIndex = activo ? 0 : -1;
         document.getElementById(otro.getAttribute('aria-controls')).hidden = !activo;
       });
+      ubicarPastilla(boton);
+      if (nuevo !== anterior) {
+        var panel = document.getElementById(boton.getAttribute('aria-controls'));
+        panel.removeAttribute('data-entrada');
+        void panel.offsetWidth; // reinicia la animación si se cambia rápido de una a otra
+        panel.dataset.entrada = nuevo > anterior ? 'derecha' : 'izquierda';
+      }
       if (enfocar) { boton.focus(); }
     };
     botones.forEach(function (boton, indice) {

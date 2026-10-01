@@ -348,10 +348,26 @@ p { margin: 0 0 1em; }
 .contenedor--angosto { max-width: 780px; }
 
 /* Interruptor Alquiler / Venta de las destacadas */
-.interruptor { display: inline-flex; padding: 4px; border-radius: 999px; background: var(--fondo-alterno); border: 1px solid var(--borde); }
-.interruptor__opcion { border: 0; background: none; font: inherit; font-weight: 700; padding: 8px 18px; border-radius: 999px; cursor: pointer; color: var(--tinta-suave); }
-.interruptor__opcion[aria-selected="true"].interruptor__opcion--alquiler { background: var(--azul); color: #fff; }
-.interruptor__opcion[aria-selected="true"].interruptor__opcion--venta { background: var(--rojo); color: #fff; }
+.interruptor { position: relative; display: inline-flex; padding: 4px; border-radius: 999px; background: var(--fondo-alterno); border: 1px solid var(--borde); }
+.interruptor__opcion { position: relative; z-index: 1; border: 0; background: none; font: inherit; font-weight: 700; padding: 8px 18px; border-radius: 999px; cursor: pointer; color: var(--tinta-suave); transition: color .3s ease; }
+.interruptor__opcion[aria-selected="true"] { color: #fff; }
+.interruptor__opcion[aria-selected="true"].interruptor__opcion--alquiler { background: var(--azul); }
+.interruptor__opcion[aria-selected="true"].interruptor__opcion--venta { background: var(--rojo); }
+/* Con JavaScript, el color de la opción elegida es una pastilla que se desliza de una a otra
+   y pasa de azul (alquiler) a rojo (venta). Sin JavaScript queda el fondo fijo de arriba. */
+.interruptor__pastilla {
+  position: absolute; top: 4px; bottom: 4px; left: 0; width: var(--ancho-pastilla, 0); border-radius: 999px;
+  background: var(--azul); transform: translateX(var(--x-pastilla, 0));
+  transition: transform .35s cubic-bezier(.3, .7, .2, 1), width .35s cubic-bezier(.3, .7, .2, 1), background-color .35s ease;
+}
+.interruptor[data-operacion="venta"] .interruptor__pastilla { background: var(--rojo); }
+.interruptor--deslizante .interruptor__opcion[aria-selected="true"] { background: none; }
+.interruptor--quieto .interruptor__pastilla { transition: none; }
+/* Las destacadas entran desde el lado hacia el que se movió la pastilla. */
+@keyframes entrar-derecha { from { opacity: 0; transform: translateX(32px); } }
+@keyframes entrar-izquierda { from { opacity: 0; transform: translateX(-32px); } }
+.carrusel[data-entrada="derecha"] { animation: entrar-derecha .4s cubic-bezier(.3, .7, .2, 1); }
+.carrusel[data-entrada="izquierda"] { animation: entrar-izquierda .4s cubic-bezier(.3, .7, .2, 1); }
 
 /* Carrusel de destacadas */
 .carrusel { position: relative; margin-top: 18px; }
@@ -501,6 +517,8 @@ p { margin: 0 0 1em; }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .interruptor__pastilla, .interruptor__opcion { transition: none; }
+  .carrusel[data-entrada] { animation: none; }
   html { scroll-behavior: auto; }
   .tarjeta, .boton, .whatsapp-flotante { transition: none; }
 }
