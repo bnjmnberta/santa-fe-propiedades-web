@@ -27,7 +27,7 @@
   --radio: 12px;
   --sombra: 0 1px 2px rgba(20, 26, 38, .06), 0 4px 16px rgba(20, 26, 38, .06);
   --fuente: "Open Sauce Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --ancho: 1180px;
+  --ancho: 1920px; /* tope solo para monitores ultra anchos: en PC el contenido usa todo el ancho */
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -514,6 +514,20 @@ p { margin: 0 0 1em; }
 
 @media (min-width: 960px) {
   .carrusel__pista { grid-auto-columns: calc((100% - 32px) / 3); }
+  .contenedor { padding: 0 32px; }
+}
+
+/* PC ancha: más columnas en lugar de márgenes vacíos. Cuatro columnas porque el catálogo
+   muestra 12 por página (tres filas completas). Los textos largos mantienen un ancho cómodo de lectura. */
+@media (min-width: 1400px) {
+  .contenedor { padding: 0 48px; }
+  .grilla { grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .carrusel__pista { grid-auto-columns: calc((100% - 48px) / 4); }
+  .ficha__cuerpo { grid-template-columns: minmax(0, 1fr) 380px; gap: 56px; }
+  .ficha__texto { max-width: 75ch; }
+  .caracteristicas { grid-template-columns: repeat(3, 1fr); }
+  .datos { grid-template-columns: repeat(4, 1fr); }
+  .mapa__lienzo { height: 540px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
