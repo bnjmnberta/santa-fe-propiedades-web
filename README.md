@@ -50,6 +50,7 @@ scripts/     migración del catálogo, fotos de Instagram y alta de usuarios
    mysql -u root -p sfp_web < database/schema.sql
    mysql -u root -p sfp_web < database/migraciones/002_boceto_y_mapa.sql
    mysql -u root -p sfp_web < database/migraciones/003_ajustes_auditoria.sql
+   mysql -u root -p sfp_web < database/migraciones/004_contacto.sql
    ```
 3. Copiar `config/config.example.php` como `config/config.php` y completar los datos de la base.
 4. Cargar el catálogo desde la web vieja, con las fotos:

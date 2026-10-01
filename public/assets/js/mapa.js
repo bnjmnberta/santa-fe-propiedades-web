@@ -121,6 +121,21 @@
     actualizar();
   });
 
+  // Oficina (página de Contacto): los cuadros del logo con el nombre, apoyados sobre la dirección.
+  if (datos.oficina) {
+    var marcador = document.createElement('div');
+    marcador.className = 'marcador-oficina';
+    marcador.innerHTML = '<svg viewBox="0 0 26 26" aria-hidden="true">' +
+      '<rect x="9" y="0" width="8" height="8"/><rect x="18" y="0" width="8" height="8"/>' +
+      '<rect class="azul" x="0" y="9" width="8" height="8"/><rect class="azul" x="9" y="9" width="8" height="8"/><rect class="azul" x="18" y="9" width="8" height="8"/>' +
+      '<rect class="azul" x="0" y="18" width="8" height="8"/><rect class="azul" x="9" y="18" width="8" height="8"/><rect class="azul" x="18" y="18" width="8" height="8"/>' +
+      '</svg><span>' + escapar(datos.oficina.nombre) + '</span>';
+    new maplibregl.Marker({ element: marcador, anchor: 'bottom' }).setLngLat([datos.oficina.lng, datos.oficina.lat]).addTo(mapa);
+    marcador.setAttribute('role', 'img');
+    marcador.setAttribute('aria-label', datos.oficina.nombre + ', ' + datos.oficina.direccion);
+    mapa.jumpTo({ center: [datos.oficina.lng, datos.oficina.lat], zoom: 15.5 });
+  }
+
   // Encuadre: en la ficha, centrado en la propiedad; en el catálogo, las propiedades de la ciudad
   // (las de Sauce Viejo, Recreo o Colastiné se ven al alejar).
   if (datos.centrar && datos.propiedades.length) {

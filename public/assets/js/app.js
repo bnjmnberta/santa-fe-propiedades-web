@@ -151,6 +151,38 @@
     });
   });
 
+  // Formulario de Contacto: arma el mensaje con nombre, motivo, código y texto, lo muestra
+  // como va a llegar y abre WhatsApp. Sin JavaScript, el formulario manda solo el texto.
+  document.querySelectorAll('[data-formulario-whatsapp]').forEach(function (formulario) {
+    var campo = function (nombre) { return formulario.querySelector('[data-consulta="' + nombre + '"]'); };
+    var vista = formulario.querySelector('[data-consulta-vista]');
+    var textoVista = formulario.querySelector('[data-consulta-texto]');
+    var armar = function () {
+      var nombre = campo('nombre').value.trim();
+      var motivo = formulario.querySelector('[data-consulta="motivo"]:checked');
+      var codigo = campo('codigo').value.replace(/\D+/g, '');
+      var mensaje = campo('mensaje').value.trim();
+      var partes = ['Hola' + (nombre ? ', soy ' + nombre : '') + '.'];
+      if (motivo) { partes.push('Quiero ' + motivo.dataset.frase + '.'); }
+      if (codigo) { partes.push('Me interesa la propiedad #' + codigo + '.'); }
+      var texto = partes.join(' ');
+      if (mensaje) { texto += '\n' + mensaje; }
+      return partes.length === 1 && !mensaje && !nombre ? '' : texto;
+    };
+    var actualizar = function () {
+      var texto = armar();
+      vista.hidden = texto === '';
+      textoVista.textContent = texto;
+    };
+    formulario.addEventListener('input', actualizar);
+    formulario.addEventListener('change', actualizar);
+    formulario.addEventListener('submit', function (evento) {
+      evento.preventDefault();
+      var texto = armar() || 'Hola, les escribo desde la web de Santa Fe Propiedades.';
+      window.open('https://wa.me/' + formulario.dataset.formularioWhatsapp + '?text=' + encodeURIComponent(texto), '_blank', 'noopener');
+    });
+  });
+
   // Carrusel de destacadas: las flechas avanzan una tarjeta.
   document.querySelectorAll('[data-carrusel]').forEach(function (carrusel) {
     var pista = carrusel.querySelector('.carrusel__pista');

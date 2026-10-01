@@ -20,6 +20,7 @@ final class AdministracionControlador
             'telefono_fijo'    => ['Teléfono de la oficina', 'texto'],
             'email'            => ['Email', 'texto'],
             'direccion'        => ['Dirección', 'texto'],
+            'oficina_coordenadas' => ['Ubicación de la oficina en el mapa de Contacto (ej: -31.6474, -60.7121)', 'texto'],
             'horario'          => ['Horario de atención', 'texto'],
             'matricula'        => ['Matrículas', 'texto'],
             'instagram_url'    => ['Instagram (enlace)', 'texto'],

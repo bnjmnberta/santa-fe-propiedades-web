@@ -35,18 +35,7 @@ final class RedireccionControlador
         redirigir(match ($pagina) {
             'empresa'   => modulo('paginas') ? '/la-empresa' : '/',
             'servicios' => modulo('paginas') ? '/servicios' : '/',
-            default     => $this->destinoContacto(),
+            default     => '/contacto',
         }, 301);
-    }
-
-    /** En el boceto, Contacto vive dentro de la página Servicios. */
-    public function contacto(): void
-    {
-        redirigir($this->destinoContacto(), 302);
-    }
-
-    private function destinoContacto(): string
-    {
-        return modulo('paginas') ? '/servicios#contacto' : '/#contacto';
     }
 }

@@ -6,10 +6,29 @@ namespace App\Controladores\Publico;
 use App\Core\NoEncontrado;
 use App\Core\Vista;
 use App\Repositorios\CatalogoRepositorio;
+use App\Repositorios\ConfiguracionRepositorio as Cfg;
+use App\Servicios\ValidadorPropiedad;
 
-/** Páginas institucionales del boceto: Servicios, La Empresa, captación de propietarios y FAQ. */
+/** Páginas institucionales: Contacto, Servicios, La Empresa, captación de propietarios y FAQ. */
 final class PaginaControlador
 {
+    /** Contacto está siempre visible: no depende de ningún módulo. */
+    public function contacto(): void
+    {
+        $oficina = ValidadorPropiedad::coordenadas(Cfg::get('oficina_coordenadas'));
+        Vista::render('publico/contacto', [
+            'titulo'      => 'Contacto | Santa Fe Propiedades',
+            'descripcion' => 'Escribinos por WhatsApp, llamanos o visitanos en ' . Cfg::get('direccion') . '. ' . Cfg::get('horario') . '.',
+            'canonica'    => url('/contacto'),
+            'mapa'        => $oficina ? [
+                'propiedades' => [],
+                'puntos'      => [],
+                'centrar'     => true,
+                'oficina'     => ['lat' => $oficina[0], 'lng' => $oficina[1], 'nombre' => 'Santa Fe Propiedades', 'direccion' => Cfg::get('direccion')],
+            ] : null,
+        ]);
+    }
+
     public function servicios(): void
     {
         $this->exigir('paginas');

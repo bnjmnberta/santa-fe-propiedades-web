@@ -492,6 +492,102 @@ p { margin: 0 0 1em; }
 .encabezado-pagina--venta { background: linear-gradient(120deg, #a3231d, var(--rojo)); }
 .encabezado-pagina__antetitulo { text-transform: uppercase; letter-spacing: .1em; font-size: .78rem; font-weight: 700; opacity: .85; margin-bottom: .3em; text-wrap: balance; }
 
+/* ---- Página de Contacto: los colores y los cuadros del logo (rojo y azul), el verde solo para WhatsApp ---- */
+.encabezado-pagina--contacto { background: linear-gradient(160deg, var(--oscuro) 35%, var(--azul-oscuro)); }
+.encabezado-contacto { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 24px; }
+.encabezado-contacto__cuadros { width: 64px; height: 64px; }
+.encabezado-contacto__cuadros rect { fill: var(--rojo); }
+.encabezado-contacto__cuadros rect.azul { fill: var(--azul); }
+
+.contacto-pagina { display: grid; gap: 32px; align-items: start; }
+.canales { display: grid; gap: 12px; min-width: 0; }
+.canal {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 14px;
+  padding: 14px 16px; border: 1px solid var(--borde); border-radius: var(--radio); background: #fff;
+  color: var(--tinta); text-decoration: none; transition: box-shadow .15s, border-color .15s;
+}
+.canal:hover { border-color: #c9d1dd; box-shadow: var(--sombra); }
+/* Cada canal lleva un cuadro de color, como los del logo. */
+.canal__icono { display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 46px; border-radius: 8px; color: #fff; background: var(--azul); }
+.canal__icono .icono { width: 24px; height: 24px; }
+.canal--whatsapp .canal__icono { background: var(--whatsapp); }
+.canal--email .canal__icono { background: var(--rojo); }
+.canal--instagram .canal__icono { background: var(--azul-oscuro); }
+.canal--whatsapp { border-color: #b9dcc6; background: #f3faf5; }
+.canal__texto { display: grid; gap: 1px; min-width: 0; }
+.canal__rotulo { font-size: .82rem; color: var(--tinta-suave); }
+.canal__texto strong { font-size: 1.08rem; font-weight: 800; overflow-wrap: anywhere; }
+.canal__accion { display: inline-flex; align-items: center; gap: 4px; font-weight: 700; color: var(--azul); white-space: nowrap; }
+.canal--whatsapp .canal__accion { color: var(--whatsapp); }
+.canales__horario { display: flex; gap: 10px; margin: 8px 0 0; color: var(--tinta-suave); font-size: .95rem; }
+.canales__horario .icono { color: var(--azul); margin-top: .2em; }
+.canales__horario strong { color: var(--tinta); }
+
+.consulta { display: grid; gap: 16px; padding: 22px 20px; background: #fff; border: 1px solid var(--borde); border-radius: 16px; box-shadow: var(--sombra); min-width: 0; }
+.consulta__titulo { font-size: 1.45rem; font-weight: 800; margin: 0; }
+.consulta__bajada { color: var(--tinta-suave); margin: -8px 0 0; }
+.campo input[type="text"], .campo textarea {
+  width: 100%; min-height: 46px; padding: 10px 12px; font: inherit; color: var(--tinta);
+  border: 1px solid #cfd6e0; border-radius: 10px; background: #fff;
+}
+.campo textarea { resize: vertical; min-height: 110px; }
+.campo__opcional { text-transform: none; letter-spacing: 0; font-weight: 400; }
+.consulta__motivos { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; border: 0; min-width: 0; }
+.consulta__motivos legend { width: 100%; margin-bottom: 8px; padding: 0; }
+.opcion-chip { position: relative; }
+.opcion-chip input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.opcion-chip span {
+  display: inline-flex; align-items: center; min-height: 40px; padding: 8px 15px; border: 1px solid #cfd6e0; border-radius: 999px;
+  font-weight: 600; font-size: .94rem; background: #fff; transition: background-color .15s, color .15s, border-color .15s;
+}
+.opcion-chip input:checked + span { background: var(--azul); border-color: var(--azul); color: #fff; }
+.opcion-chip input:focus-visible + span { outline: 3px solid var(--celeste); outline-offset: 2px; }
+.consulta__vista { display: grid; gap: 6px; }
+.consulta__vista[hidden] { display: none; }
+.consulta__vista p { margin: 0; padding: 10px 14px; border-radius: 4px 14px 14px 14px; background: #e6f4ea; white-space: pre-line; font-size: .95rem; overflow-wrap: anywhere; }
+.consulta__nota { margin: -6px 0 0; font-size: .82rem; color: var(--tinta-suave); text-align: center; }
+
+.oficina { display: grid; gap: 28px; align-items: center; }
+.oficina__lista { list-style: none; margin: 0 0 22px; padding: 0; display: grid; gap: 14px; }
+.oficina__lista li { display: flex; gap: 12px; }
+.oficina__lista .icono { color: var(--rojo); width: 22px; height: 22px; margin-top: .1em; }
+.oficina__foto { margin-top: 22px; border-radius: var(--radio); overflow: hidden; aspect-ratio: 4 / 3; }
+.oficina__foto img { width: 100%; height: 100%; object-fit: cover; }
+.oficina__mapa .mapa__lienzo { height: 340px; }
+/* Marcador de la oficina: los cuadros del logo con el nombre. */
+.marcador-oficina {
+  position: relative; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 9px; padding: 7px 12px 7px 8px;
+  border-radius: 10px; background: #fff; color: var(--tinta); font: 800 13px/1.2 var(--fuente); white-space: nowrap;
+  box-shadow: 0 3px 12px rgba(20, 26, 38, .3);
+}
+.marcador-oficina::after { content: ""; position: absolute; left: 50%; bottom: -7px; transform: translateX(-50%); border: 7px solid transparent; border-bottom: 0; border-top-color: #fff; }
+.marcador-oficina svg { width: 20px; height: 20px; }
+.marcador-oficina rect { fill: var(--rojo); }
+.marcador-oficina rect.azul { fill: var(--azul); }
+
+.captacion--contacto { margin-top: 0; }
+.captacion__tarjeta--faq { background: var(--tinta); }
+
+@media (max-width: 599px) {
+  .canal__accion { font-size: 0; gap: 0; } /* en celular queda solo la flecha, para que entren el número y el email */
+  .canal__accion .icono { font-size: 1rem; }
+}
+@media (min-width: 640px) {
+  .encabezado-contacto__cuadros { width: 96px; height: 96px; }
+  .consulta { padding: 28px; }
+  .oficina__mapa .mapa__lienzo { height: 420px; }
+  .captacion.captacion--contacto { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+}
+@media (min-width: 960px) {
+  .contacto-pagina { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; }
+  .oficina { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 48px; }
+  .encabezado-contacto__cuadros { width: 120px; height: 120px; }
+}
+@media (min-width: 1400px) {
+  .contacto-pagina { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 64px; }
+  .oficina__mapa .mapa__lienzo { height: 480px; }
+}
+
 /* Botón flotante de WhatsApp */
 .whatsapp-flotante {
   position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 40;
@@ -534,5 +630,5 @@ p { margin: 0 0 1em; }
   .interruptor__pastilla, .interruptor__opcion { transition: none; }
   .carrusel[data-entrada] { animation: none; }
   html { scroll-behavior: auto; }
-  .tarjeta, .boton, .whatsapp-flotante { transition: none; }
+  .tarjeta, .boton, .whatsapp-flotante, .canal, .opcion-chip span { transition: none; }
 }

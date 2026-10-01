@@ -23,7 +23,7 @@ $router->get('/servicios', [PaginaControlador::class, 'servicios']);
 $router->get('/la-empresa', [PaginaControlador::class, 'empresa']);
 $router->get('/{operacion:alquila|vende}-con-nosotros', [PaginaControlador::class, 'captacion']);
 $router->get('/preguntas-frecuentes', [PaginaControlador::class, 'preguntasFrecuentes']);
-$router->get('/contacto', [RedireccionControlador::class, 'contacto']);
+$router->get('/contacto', [PaginaControlador::class, 'contacto']);
 
 // Panel de autogestión
 $router->get('/panel/ingresar', [AccesoControlador::class, 'formulario']);
