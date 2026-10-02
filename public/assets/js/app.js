@@ -41,7 +41,7 @@
       });
       flotante.classList.toggle('whatsapp-flotante--oculto', aLaVista.size > 0);
     });
-    document.querySelectorAll('.boton--whatsapp:not(.cabecera__cta), .franja, .pie').forEach(function (nodo) {
+    document.querySelectorAll('.boton--whatsapp:not(.cabecera__cta), .contacto-pagina__wa, .franja, .pie').forEach(function (nodo) {
       observador.observe(nodo);
     });
   }
@@ -245,6 +245,66 @@
     medir();
     pintar();
     if (document.fonts) { document.fonts.ready.then(function () { medir(); pintar(); }); }
+  });
+
+  // Contacto: indicador "Abierto ahora / Cerrado" con la hora de Santa Fe. El servidor lo escribe ya calculado
+  // (HorarioAtencion.php); acá se repite el cálculo cada minuto para que no quede viejo en una pestaña abierta.
+  document.querySelectorAll('[data-horario]').forEach(function (indicador) {
+    var datos;
+    try { datos = JSON.parse(indicador.getAttribute('data-horario')); } catch (e) { return; }
+    var texto = indicador.querySelector('[data-estado-texto]');
+    var bajada = document.querySelector('[data-bajada-oficina]');
+    var formato = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Argentina/Buenos_Aires', weekday: 'short', hour: 'numeric', minute: 'numeric', hourCycle: 'h23' });
+    var hora = function (minutos) {
+      var h = Math.floor(minutos / 60);
+      var m = minutos % 60;
+      return m === 0 ? String(h) : h + ':' + (m < 10 ? '0' : '') + m;
+    };
+    var calcular = function () {
+      var partes = formato.formatToParts(new Date());
+      var valor = function (tipo) { return partes.filter(function (p) { return p.type === tipo; })[0].value; };
+      var dia = { Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6, Sun: 7 }[valor('weekday')];
+      var minuto = parseInt(valor('hour'), 10) * 60 + parseInt(valor('minute'), 10);
+      var turnos = datos.turnos;
+      if (datos.dias.indexOf(dia) >= 0) {
+        for (var i = 0; i < turnos.length; i++) {
+          if (minuto >= turnos[i][0] && minuto < turnos[i][1]) { return { abierto: true, texto: 'Abierto ahora · hasta las ' + hora(turnos[i][1]) + ' hs' }; }
+        }
+        for (var j = 0; j < turnos.length; j++) {
+          if (minuto < turnos[j][0]) { return { abierto: false, texto: 'Cerrado ahora · abrimos hoy a las ' + hora(turnos[j][0]) + ' hs' }; }
+        }
+      }
+      for (var salto = 1; salto <= 7; salto++) {
+        var candidato = (dia - 1 + salto) % 7 + 1;
+        if (datos.dias.indexOf(candidato) >= 0) {
+          return { abierto: false, texto: 'Cerrado ahora · abrimos ' + (salto === 1 ? 'mañana' : 'el ' + datos.nombres[candidato - 1]) + ' a las ' + hora(turnos[0][0]) + ' hs' };
+        }
+      }
+      return { abierto: false, texto: 'Cerrado ahora' };
+    };
+    var pintar = function () {
+      var estado = calcular();
+      indicador.classList.toggle('estado-oficina--abierto', estado.abierto);
+      indicador.classList.toggle('estado-oficina--cerrado', !estado.abierto);
+      texto.textContent = estado.texto;
+      if (bajada) { bajada.textContent = estado.abierto ? bajada.dataset.abierto : bajada.dataset.cerrado; }
+    };
+    pintar();
+    window.setInterval(pintar, 60000);
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) { pintar(); } });
+  });
+
+  // Contacto: en celular el mapa queda detrás de un botón (en escritorio se ve siempre).
+  document.querySelectorAll('[data-mapa-contacto]').forEach(function (contenedor) {
+    var boton = contenedor.querySelector('[data-mapa-boton]');
+    if (!boton) { return; }
+    var etiqueta = boton.querySelector('span');
+    contenedor.classList.add('contacto-pagina__mapa--cerrado');
+    boton.addEventListener('click', function () {
+      var cerrado = contenedor.classList.toggle('contacto-pagina__mapa--cerrado');
+      boton.setAttribute('aria-expanded', cerrado ? 'false' : 'true');
+      etiqueta.textContent = cerrado ? 'Ver mapa' : 'Ocultar mapa';
+    });
   });
 
   // Carrusel de destacadas: las flechas avanzan una tarjeta.

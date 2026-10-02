@@ -7,6 +7,7 @@ use App\Core\NoEncontrado;
 use App\Core\Vista;
 use App\Repositorios\CatalogoRepositorio;
 use App\Repositorios\ConfiguracionRepositorio as Cfg;
+use App\Servicios\HorarioAtencion;
 use App\Servicios\ValidadorPropiedad;
 
 /** Páginas institucionales: Contacto, Servicios, Nosotros, captación de propietarios y FAQ. */
@@ -20,6 +21,7 @@ final class PaginaControlador
             'titulo'      => 'Contacto | Santa Fe Propiedades',
             'descripcion' => 'Escribinos por WhatsApp, llamanos o visitanos en ' . Cfg::get('direccion') . '. ' . Cfg::get('horario') . '.',
             'canonica'    => url('/contacto'),
+            'horario'     => HorarioAtencion::desdeConfiguracion(),
             'mapa'        => $oficina ? [
                 'propiedades' => [],
                 'puntos'      => [],

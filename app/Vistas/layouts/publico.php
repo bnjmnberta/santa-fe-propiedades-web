@@ -29,8 +29,7 @@ $telefonoFijo = Cfg::get('telefono_fijo');
            página tapada si se llegó con la transición entre secciones (assets/js/cargadores.js). */ ?>
   <script>(function(){var h=document.documentElement;h.classList.add('js');try{var s=sessionStorage;if(!s.getItem('sf-intro')){s.setItem('sf-intro','1');h.classList.add('sf-con-intro');}else if(s.getItem('sf-pt')){h.classList.add('sf-llegando');}s.removeItem('sf-pt');}catch(e){}})();</script>
   <?php if (!empty($mapa)): ?>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.js" defer></script>
+    <?php /* mapa.js trae MapLibre (CSS y JS) recién cuando el mapa está por verse: no pesa en la carga de la página. */ ?>
     <script src="<?= e(asset('assets/js/mapa.js')) ?>" defer></script>
   <?php endif ?>
   <?php if ($ga !== ''): ?>

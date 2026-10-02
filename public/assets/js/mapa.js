@@ -5,7 +5,33 @@
   'use strict';
   var nodo = document.getElementById('mapa');
   var fuente = document.getElementById('datos-mapa');
-  if (!nodo || !fuente || !window.maplibregl) { return; }
+  if (!nodo || !fuente) { return; }
+
+  // MapLibre (CSS + JS, unos 180 KB) se pide recién cuando el mapa está por entrar en pantalla.
+  // Si está oculto (por ejemplo, detrás del botón "Ver mapa" en celular), espera a que se muestre.
+  var LIBRERIA = 'https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/';
+  var traerLibreria = function (listo) {
+    if (window.maplibregl) { listo(); return; }
+    var estilo = document.createElement('link');
+    estilo.rel = 'stylesheet';
+    estilo.href = LIBRERIA + 'maplibre-gl.min.css';
+    document.head.appendChild(estilo);
+    var script = document.createElement('script');
+    script.src = LIBRERIA + 'maplibre-gl.min.js';
+    script.onload = listo;
+    document.head.appendChild(script);
+  };
+  var arrancar = function () { traerLibreria(iniciar); };
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (entradas, observador) {
+      if (entradas.some(function (e) { return e.isIntersecting; })) { observador.disconnect(); arrancar(); }
+    }, { rootMargin: '300px' }).observe(nodo);
+  } else {
+    arrancar();
+  }
+
+  function iniciar() {
+  if (!window.maplibregl) { return; }
   var datos = JSON.parse(fuente.textContent);
   var ESTILO = 'https://tiles.openfreemap.org/styles/liberty';
   var CENTRO = [-60.700, -31.636];
@@ -226,5 +252,6 @@
     var limites = new maplibregl.LngLatBounds();
     lista.forEach(function (p) { limites.extend([p.lng, p.lat]); });
     mapa.fitBounds(limites, { padding: 60, maxZoom: 15, duration: 0 });
+  }
   }
 })();
