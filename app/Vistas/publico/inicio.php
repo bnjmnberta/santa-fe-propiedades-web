@@ -5,20 +5,15 @@ use App\Repositorios\ConfiguracionRepositorio as Cfg;
 /** @var list<App\Modelos\Propiedad> $alquileres */
 /** @var list<App\Modelos\Propiedad> $ventas */
 // Orden: título con el buscador en una fila → destacadas (asoman en la primera pantalla) → ¿Por qué elegirnos? → Alquilá / Vendé con nosotros.
-$carrusel = function (array $propiedades, string $id, string $enlace, string $textoEnlace, bool $oculto): string {
-    ob_start(); ?>
-    <div class="carrusel" id="<?= e($id) ?>" role="tabpanel" <?= $oculto ? 'hidden' : '' ?> data-carrusel>
-      <div class="carrusel__pista">
-        <?php foreach ($propiedades as $propiedad): ?>
-          <?= Vista::parcial('tarjeta', ['propiedad' => $propiedad]) ?>
-        <?php endforeach ?>
-      </div>
-      <button class="carrusel__boton carrusel__boton--anterior" type="button" aria-label="Anteriores" data-carrusel-anterior><?= icono('anterior') ?></button>
-      <button class="carrusel__boton carrusel__boton--siguiente" type="button" aria-label="Siguientes" data-carrusel-siguiente><?= icono('siguiente') ?></button>
-      <p class="carrusel__ver-todas"><a class="boton boton--secundario" href="<?= e($enlace) ?>"><?= e($textoEnlace) ?></a></p>
-    </div>
-    <?php return (string) ob_get_clean();
-};
+// Destacadas de alquiler y de venta, intercaladas, para el estado inicial ("Todas").
+$destacadas = [];
+foreach (range(0, max(count($alquileres), count($ventas)) - 1) as $n) {
+    foreach ([$alquileres[$n] ?? null, $ventas[$n] ?? null] as $propiedad) {
+        if ($propiedad !== null) {
+            $destacadas[] = $propiedad;
+        }
+    }
+}
 ?>
 <section class="portada">
   <div class="contenedor portada__fila">
@@ -43,17 +38,23 @@ $carrusel = function (array $propiedades, string $id, string $enlace, string $te
   </div>
 </section>
 
-<section class="seccion">
+<?php /* El buscador de arriba filtra esta sección sin cambiar de página (app.js); sin JavaScript envía a /propiedades. */ ?>
+<section class="seccion" id="resultados" aria-labelledby="destacadas-titulo">
   <div class="contenedor">
     <div class="seccion__encabezado">
-      <h2 class="seccion__titulo">Propiedades destacadas</h2>
-      <div class="interruptor" role="tablist" aria-label="Operación" data-pestanias>
-        <button type="button" role="tab" aria-selected="true" aria-controls="destacadas-alquiler" class="interruptor__opcion interruptor__opcion--alquiler">Alquiler</button>
-        <button type="button" role="tab" aria-selected="false" aria-controls="destacadas-venta" class="interruptor__opcion interruptor__opcion--venta">Venta</button>
-      </div>
+      <h2 class="seccion__titulo" id="destacadas-titulo" data-resultados-titulo data-inicial="Propiedades destacadas">Propiedades destacadas</h2>
+      <p class="resultados" role="status" data-resultados-estado></p>
     </div>
-    <?= $carrusel($alquileres, 'destacadas-alquiler', '/alquileres', 'Ver todos los alquileres', false) ?>
-    <?= $carrusel($ventas, 'destacadas-venta', '/ventas', 'Ver todas las ventas', true) ?>
+    <div class="carrusel" data-carrusel data-resultados>
+      <div class="carrusel__pista" data-resultados-pista>
+        <?php foreach ($destacadas as $propiedad): ?>
+          <?= Vista::parcial('tarjeta', ['propiedad' => $propiedad]) ?>
+        <?php endforeach ?>
+      </div>
+      <button class="carrusel__boton carrusel__boton--anterior" type="button" aria-label="Anteriores" data-carrusel-anterior><?= icono('anterior') ?></button>
+      <button class="carrusel__boton carrusel__boton--siguiente" type="button" aria-label="Siguientes" data-carrusel-siguiente><?= icono('siguiente') ?></button>
+      <p class="carrusel__ver-todas"><a class="boton boton--secundario" href="/propiedades" data-resultados-enlace data-inicial="Ver todas las propiedades">Ver todas las propiedades</a></p>
+    </div>
   </div>
 </section>
 

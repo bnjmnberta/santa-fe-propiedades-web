@@ -318,6 +318,84 @@
     carrusel.querySelector('[data-carrusel-siguiente]').addEventListener('click', function () { mover(1); });
   });
 
+  // Buscador de la portada: filtra las propiedades de abajo en la misma página, sin recargar.
+  // Pide /propiedades con los mismos filtros, toma las tarjetas del resultado y las pone en el carrusel.
+  // Elegir una operación con el mouse o el dedo filtra al instante; con el teclado (flechas) solo cambia la
+  // selección y se envía con Enter o con Buscar. Sin JavaScript, el formulario manda a /propiedades.
+  (function () {
+    var formulario = document.querySelector('.buscador');
+    var seccion = document.getElementById('resultados');
+    if (!formulario || !seccion || !window.fetch || !window.DOMParser) { return; }
+    var pista = seccion.querySelector('[data-resultados-pista]');
+    var titulo = seccion.querySelector('[data-resultados-titulo]');
+    var estado = seccion.querySelector('[data-resultados-estado]');
+    var enlace = seccion.querySelector('[data-resultados-enlace]');
+    var inicial = pista.innerHTML;
+    var NOMBRES = { '': '', alquiler: ' en alquiler', venta: ' en venta', comerciales: ' comerciales' };
+    var pedido = 0;
+
+    formulario.querySelectorAll('.buscador__operacion input').forEach(function (opcion) {
+      opcion.addEventListener('click', function (evento) {
+        if (evento.detail > 0) { formulario.requestSubmit(); }
+      });
+    });
+
+    var mostrar = function (operacion, texto, tarjetas, total, destino) {
+      pista.innerHTML = '';
+      tarjetas.forEach(function (tarjeta) { pista.appendChild(document.importNode(tarjeta, true)); });
+      pista.scrollTo({ left: 0 });
+      titulo.textContent = 'Propiedades' + NOMBRES[operacion];
+      estado.textContent = total === 0
+        ? 'No encontramos propiedades' + (texto ? ' para “' + texto + '”' : '') + '.'
+        : (total === 1 ? '1 propiedad' : total + ' propiedades') + (texto ? ' para “' + texto + '”' : '');
+      enlace.href = destino;
+      enlace.textContent = total > tarjetas.length ? 'Ver las ' + total + ' propiedades' : 'Ver en el catálogo';
+      enlace.parentNode.hidden = total === 0;
+    };
+
+    var restaurar = function () {
+      pista.innerHTML = inicial;
+      titulo.textContent = titulo.dataset.inicial;
+      estado.textContent = '';
+      enlace.href = '/propiedades';
+      enlace.textContent = enlace.dataset.inicial;
+      enlace.parentNode.hidden = false;
+    };
+
+    formulario.addEventListener('submit', function (evento) {
+      evento.preventDefault();
+      var datos = new FormData(formulario);
+      var operacion = String(datos.get('operacion') || '');
+      var texto = String(datos.get('q') || '').trim();
+      var consulta = new URLSearchParams();
+      if (operacion) { consulta.set('operacion', operacion); }
+      if (texto) { consulta.set('q', texto); }
+      var destino = '/propiedades' + (consulta.toString() ? '?' + consulta.toString() : '');
+      if (!operacion && !texto) { pedido++; restaurar(); return; }
+
+      var mio = ++pedido;
+      seccion.setAttribute('aria-busy', 'true');
+      fetch(destino, { headers: { Accept: 'text/html' } }).then(function (respuesta) {
+        if (!respuesta.ok) { throw new Error('http ' + respuesta.status); }
+        // Un número que coincide con un código redirige a la ficha de esa propiedad: se va directo.
+        if (new URL(respuesta.url).pathname.indexOf('/propiedad/') === 0) { window.location.href = respuesta.url; return null; }
+        return respuesta.text();
+      }).then(function (html) {
+        if (html === null || mio !== pedido) { return; }
+        var doc = new DOMParser().parseFromString(html, 'text/html');
+        var tarjetas = Array.prototype.slice.call(doc.querySelectorAll('.grilla > .tarjeta'));
+        var total = parseInt((doc.querySelector('.resultados') || {}).textContent, 10) || tarjetas.length;
+        mostrar(operacion, texto, tarjetas, total, destino);
+        var arriba = seccion.getBoundingClientRect().top;
+        if (arriba > window.innerHeight * 0.7) { seccion.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      }).catch(function () {
+        window.location.href = destino;   // si algo falla, la búsqueda de siempre
+      }).then(function () {
+        seccion.removeAttribute('aria-busy');
+      });
+    });
+  })();
+
   // Regla j: cada consulta por WhatsApp (y cada clic en teléfono) se registra en Analytics.
   document.addEventListener('click', function (evento) {
     var enlace = evento.target.closest('[data-evento]');

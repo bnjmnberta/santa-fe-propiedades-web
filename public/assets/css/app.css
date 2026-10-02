@@ -131,6 +131,7 @@ p { margin: 0 0 1em; }
 .seccion--alterna { background: var(--fondo-alterno); }
 .seccion--oscura { background: var(--oscuro); color: #fff; }
 .seccion--oscura a { color: #9fd6f2; }
+.seccion__encabezado .resultados { margin: 0; }
 .seccion__encabezado { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .seccion__titulo { font-size: clamp(1.5rem, 4.5vw, 2.1rem); font-weight: 800; }
 .enlace-flecha { display: inline-flex; align-items: center; gap: .35em; font-weight: 700; text-decoration: none; }
