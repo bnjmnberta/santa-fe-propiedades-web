@@ -36,15 +36,15 @@ $pagina = $esAlquiler ? [
 
 <section class="seccion">
   <div class="contenedor">
-    <div class="motivos">
-      <?php foreach ($pagina['beneficios'] as [$icono, $titulo, $texto]): ?>
-        <article class="motivo">
-          <span class="motivo__icono"><?= icono($icono) ?></span>
-          <h2 class="motivo__titulo"><?= e($titulo) ?></h2>
+    <ul class="beneficios">
+      <?php foreach ($pagina['beneficios'] as $i => [$icono, $titulo, $texto]): ?>
+        <li class="beneficio">
+          <span class="servicio__icono servicio__icono--<?= ['azul', 'celeste', 'rojo'][$i % 3] ?>"><?= icono($icono) ?></span>
+          <h2 class="beneficio__titulo"><?= e($titulo) ?></h2>
           <p><?= e($texto) ?></p>
-        </article>
+        </li>
       <?php endforeach ?>
-    </div>
+    </ul>
     <p class="centrado">
       <a class="boton boton--whatsapp" href="<?= e(EnlaceWhatsApp::general(Cfg::get('whatsapp_numero'), $pagina['mensaje'])) ?>"
          target="_blank" rel="noopener" data-evento="consulta_whatsapp" data-origen="captacion_<?= $esAlquiler ? 'alquiler' : 'venta' ?>"><?= icono('whatsapp') ?><?= e($pagina['boton']) ?></a>
@@ -53,12 +53,7 @@ $pagina = $esAlquiler ? [
 </section>
 
 <?php if ($motivos): ?>
-  <section class="seccion seccion--alterna">
-    <div class="contenedor">
-      <h2 class="seccion__titulo seccion__titulo--centrado">¿Por qué elegirnos?</h2>
-      <?= Vista::parcial('motivos', ['motivos' => $motivos]) ?>
-    </div>
-  </section>
+  <?= Vista::parcial('motivos', ['motivos' => $motivos]) ?>
 <?php endif ?>
 
 <?= Vista::parcial('captacion', ['sin' => $esAlquiler ? 'alquila' : 'vende']) ?>

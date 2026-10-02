@@ -45,7 +45,7 @@ final class CatalogoRepositorio
     /** Bloque "¿Por qué elegirnos?". */
     public function motivos(): array
     {
-        return $this->pdo->query('SELECT titulo, descripcion, icono FROM motivo WHERE activo = 1 ORDER BY orden')->fetchAll();
+        return $this->pdo->query('SELECT titulo, dato, descripcion, icono FROM motivo WHERE activo = 1 ORDER BY orden')->fetchAll();
     }
 
     public function preguntasFrecuentes(): array

@@ -10,31 +10,47 @@ use App\Servicios\EnlaceWhatsApp;
   </div>
 </section>
 
-<section class="seccion">
-  <div class="contenedor">
-    <div class="servicios">
-      <?php foreach ($servicios as $servicio): ?>
-        <article class="servicio">
-          <span class="servicio__icono"><?= icono($servicio['icono'] ?: 'casa') ?></span>
-          <h2 class="servicio__titulo"><?= e($servicio['titulo']) ?></h2>
-          <p><?= e($servicio['descripcion']) ?></p>
+<?php
+/* Scroll horizontal guiado por el scroll vertical: al bajar, la página se queda fija y los
+   servicios pasan de costado, uno por vez, cada uno con su botón de WhatsApp.
+   Sin JavaScript (o con "reducir movimiento") se ven todos uno debajo del otro. */
+$colores = ['azul', 'celeste', 'rojo'];
+$total = count($servicios);
+?>
+<section class="servicios-h" data-servicios-h style="--n: <?= $total ?>" aria-label="Servicios">
+  <div class="servicios-h__escena">
+    <div class="servicios-h__pista">
+      <?php foreach ($servicios as $i => $servicio): ?>
+        <article class="servicio-h" data-servicio-h>
+          <span class="servicio-h__numero" aria-hidden="true"><?= str_pad((string) ($i + 1), 2, '0', STR_PAD_LEFT) ?></span>
+          <div class="contenedor servicio-h__contenido">
+            <span class="servicio-h__icono servicio__icono--<?= $colores[$i % 3] ?>"><?= icono($servicio['icono'] ?: 'casa') ?></span>
+            <div class="servicio-h__texto">
+              <h2 class="servicio-h__titulo"><?= e($servicio['titulo']) ?></h2>
+              <p><?= e($servicio['descripcion']) ?></p>
+              <a class="boton boton--whatsapp" href="<?= e(EnlaceWhatsApp::general(Cfg::get('whatsapp_numero'), 'Hola, quiero consultar por ' . mb_strtolower($servicio['titulo']) . '.')) ?>"
+                 target="_blank" rel="noopener" data-evento="consulta_whatsapp" data-origen="servicio"><?= icono('whatsapp') ?>Consultar por WhatsApp</a>
+            </div>
+          </div>
         </article>
       <?php endforeach ?>
     </div>
-    <p class="servicios__cta">
-      <a class="boton boton--whatsapp" href="<?= e(EnlaceWhatsApp::general(Cfg::get('whatsapp_numero'), 'Hola, quiero consultar por una tasación.')) ?>"
-         target="_blank" rel="noopener" data-evento="consulta_whatsapp" data-origen="tasacion"><?= icono('whatsapp') ?>Pedí tu tasación</a>
-    </p>
+    <div class="contenedor servicios-h__progreso">
+      <p class="servicios-h__contador" data-servicios-contador aria-live="off"></p>
+      <div class="servicios-h__pasos" role="group" aria-label="Ir a un servicio">
+        <?php foreach ($servicios as $i => $servicio): ?>
+          <button type="button" class="servicios-h__paso servicios-h__paso--<?= $colores[$i % 3] ?>" data-paso aria-label="<?= e($servicio['titulo']) ?>">
+            <span class="servicios-h__barra"><i></i></span>
+            <span class="servicios-h__nombre"><?= e($servicio['titulo']) ?></span>
+          </button>
+        <?php endforeach ?>
+      </div>
+    </div>
   </div>
 </section>
 
 <?php if ($motivos): ?>
-  <section class="seccion seccion--alterna">
-    <div class="contenedor">
-      <h2 class="seccion__titulo seccion__titulo--centrado">¿Por qué elegirnos?</h2>
-      <?= Vista::parcial('motivos', ['motivos' => $motivos]) ?>
-    </div>
-  </section>
+  <?= Vista::parcial('motivos', ['motivos' => $motivos]) ?>
 <?php endif ?>
 
 <section class="seccion">

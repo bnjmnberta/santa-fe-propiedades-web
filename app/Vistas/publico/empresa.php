@@ -25,12 +25,7 @@ use App\Repositorios\ConfiguracionRepositorio as Cfg;
 </section>
 
 <?php if ($motivos): ?>
-  <section class="seccion seccion--alterna">
-    <div class="contenedor">
-      <h2 class="seccion__titulo seccion__titulo--centrado">¿Por qué elegirnos?</h2>
-      <?= Vista::parcial('motivos', ['motivos' => $motivos]) ?>
-    </div>
-  </section>
+  <?= Vista::parcial('motivos', ['motivos' => $motivos]) ?>
 <?php endif ?>
 
 <?= Vista::parcial('captacion') ?>

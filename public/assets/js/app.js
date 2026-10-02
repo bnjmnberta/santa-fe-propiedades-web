@@ -183,6 +183,70 @@
     });
   });
 
+  // Servicios: scroll horizontal guiado por el scroll vertical. La escena queda fija (position: sticky)
+  // y, a medida que se baja, la pista de servicios se desplaza de costado. No se intercepta la rueda:
+  // es el scroll normal de la página, así que se puede salir hacia arriba o hacia abajo en cualquier momento.
+  document.querySelectorAll('[data-servicios-h]').forEach(function (seccion) {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { return; }
+    var escena = seccion.querySelector('.servicios-h__escena');
+    var paneles = Array.prototype.slice.call(seccion.querySelectorAll('[data-servicio-h]'));
+    var pasos = Array.prototype.slice.call(seccion.querySelectorAll('[data-paso]'));
+    var contador = seccion.querySelector('[data-servicios-contador]');
+    var n = paneles.length;
+    if (n < 2) { return; }
+    var cabecera = document.querySelector('.cabecera');
+    var alto = 65;
+    var posicion = 0;
+    var pendiente = false;
+    seccion.classList.add('servicios-h--fijo');
+
+    var recorrido = function () { return seccion.offsetHeight - escena.offsetHeight; };
+    var medir = function () {
+      alto = cabecera ? cabecera.offsetHeight : 65;
+      seccion.style.setProperty('--alto-cab', alto + 'px');
+    };
+    var pintar = function () {
+      pendiente = false;
+      var largo = recorrido();
+      var avance = largo > 0 ? Math.min(1, Math.max(0, (alto - seccion.getBoundingClientRect().top) / largo)) : 0;
+      posicion = avance * (n - 1);
+      seccion.style.setProperty('--pos', posicion.toFixed(4));
+      paneles.forEach(function (panel, i) {
+        var d = i - posicion;
+        panel.style.setProperty('--d', d.toFixed(3));
+        panel.style.setProperty('--ad', Math.min(1, Math.abs(d)).toFixed(3));
+      });
+      var activo = Math.round(posicion);
+      pasos.forEach(function (paso, i) {
+        paso.style.setProperty('--f', Math.min(1, Math.max(0, posicion - i + 1)).toFixed(3));
+        if (i === activo) { paso.setAttribute('aria-current', 'step'); } else { paso.removeAttribute('aria-current'); }
+      });
+      if (contador) {
+        contador.textContent = (activo + 1) + ' de ' + n + ' · ' + paneles[activo].querySelector('.servicio-h__titulo').textContent;
+      }
+    };
+    var programar = function () {
+      if (!pendiente) { pendiente = true; window.requestAnimationFrame(pintar); }
+    };
+    var irA = function (i) {
+      var destino = window.pageYOffset + seccion.getBoundingClientRect().top - alto + (i / (n - 1)) * recorrido();
+      window.scrollTo({ top: destino, behavior: 'smooth' });
+    };
+
+    pasos.forEach(function (paso, i) { paso.addEventListener('click', function () { irA(i); }); });
+    // Con Tab, el foco puede llegar a un botón que está fuera de pantalla: se lleva la página hasta ese servicio.
+    seccion.addEventListener('focusin', function (evento) {
+      var panel = evento.target.closest('[data-servicio-h]');
+      var i = panel ? paneles.indexOf(panel) : -1;
+      if (i >= 0 && Math.abs(i - posicion) > 0.5) { irA(i); }
+    });
+    window.addEventListener('scroll', programar, { passive: true });
+    window.addEventListener('resize', function () { medir(); programar(); });
+    medir();
+    pintar();
+    if (document.fonts) { document.fonts.ready.then(function () { medir(); pintar(); }); }
+  });
+
   // Carrusel de destacadas: las flechas avanzan una tarjeta.
   document.querySelectorAll('[data-carrusel]').forEach(function (carrusel) {
     var pista = carrusel.querySelector('.carrusel__pista');

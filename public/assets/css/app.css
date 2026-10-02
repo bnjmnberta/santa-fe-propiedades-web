@@ -182,13 +182,73 @@ p { margin: 0 0 1em; }
 .acceso--comercial { background: var(--tinta); }
 
 /* Servicios */
-.servicios { display: grid; gap: 14px; margin-top: 12px; }
-.servicio { background: #fff; border: 1px solid var(--borde); border-radius: var(--radio); padding: 20px; }
-.servicio__icono { display: inline-flex; padding: 10px; border-radius: 10px; background: #e7f0fa; color: var(--azul); margin-bottom: 10px; }
-.servicio__icono .icono { width: 26px; height: 26px; }
-.servicio__titulo { font-size: 1.1rem; font-weight: 700; }
-.servicio p { color: var(--tinta-suave); margin: 0; }
-.servicios__cta { margin: 24px 0 0; }
+/* Íconos de color (cuadrados del logo): beneficios de las páginas de captación y servicios. */
+.servicio__icono { display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; border-radius: 8px; color: #fff; }
+.servicio__icono .icono { width: 30px; height: 30px; }
+.servicio__icono--azul { background: #0058a8; }
+.servicio__icono--celeste { background: #0094da; }
+.servicio__icono--rojo { background: #ed1b24; }
+
+/* Servicios: scroll horizontal guiado por el scroll vertical. Base: todos apilados (sin JavaScript
+   o con "reducir movimiento"). Con .servicios-h--fijo la escena queda fija y la pista se desplaza. */
+.servicios-h { --alto-cab: 65px; }
+.servicio-h { border-top: 1px solid var(--borde); }
+.servicio-h:first-child { border-top: 0; }
+.servicio-h__contenido { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 20px 40px; align-items: center; padding-block: 40px; }
+.servicio-h__icono { display: inline-flex; align-items: center; justify-content: center; width: clamp(72px, 12vw, 150px); aspect-ratio: 1; border-radius: 8px; color: #fff; }
+.servicio-h__icono .icono { width: 45%; height: 45%; stroke-width: 1.5; }
+.servicio-h__titulo { font-size: clamp(1.7rem, 5vw, 4rem); font-weight: 900; text-transform: uppercase; line-height: 1.02; letter-spacing: .005em; margin: 0 0 .35em; }
+.servicio-h__texto p { max-width: 52ch; color: var(--tinta-suave); font-size: clamp(1rem, 1.5vw, 1.25rem); margin: 0 0 24px; }
+.servicios-h__progreso { display: none; }
+
+.servicios-h--fijo { height: calc(100svh - var(--alto-cab) + (var(--n) - 1) * 85svh); }
+.servicios-h--fijo .servicios-h__escena {
+  position: sticky; top: var(--alto-cab); height: calc(100svh - var(--alto-cab));
+  display: flex; flex-direction: column; overflow: hidden; overflow: clip; background: var(--fondo);
+}
+.servicios-h--fijo .servicios-h__pista { flex: 1; min-height: 0; display: flex; width: calc(var(--n) * 100%); transform: translate3d(calc(var(--pos, 0) * -100% / var(--n)), 0, 0); will-change: transform; }
+.servicios-h--fijo .servicio-h { flex: 0 0 calc(100% / var(--n)); display: flex; align-items: center; border-top: 0; }
+.servicios-h--fijo .servicio-h__contenido { width: 100%; padding-block: 20px; opacity: calc(1 - var(--ad, 0) * .85); transform: translate3d(calc(var(--d, 0) * 70px), 0, 0); }
+.servicios-h--fijo .servicio-h__icono { transform: scale(calc(1 - var(--ad, 0) * .25)); }
+
+/* Barra de avance: un tramo por servicio con los colores del logo, y también sirve para saltar. */
+.servicios-h--fijo .servicios-h__progreso { display: block; padding-bottom: calc(14px + env(safe-area-inset-bottom)); }
+.servicios-h__contador { margin: 0 0 4px; font-size: .85rem; font-weight: 700; color: var(--tinta-suave); }
+.servicios-h__pasos { display: flex; gap: 8px; }
+.servicios-h__paso { flex: 1; min-width: 0; padding: 14px 0 6px; border: 0; background: none; font: inherit; text-align: left; cursor: pointer; color: var(--tinta-suave); }
+.servicios-h__barra { display: block; height: 4px; border-radius: 2px; background: var(--borde); overflow: hidden; }
+.servicios-h__barra i { display: block; height: 100%; width: calc(var(--f, 0) * 100%); background: var(--c, var(--azul)); }
+.servicios-h__paso--azul { --c: #0058a8; }
+.servicios-h__paso--celeste { --c: #0094da; }
+.servicios-h__paso--rojo { --c: #ed1b24; }
+.servicios-h__nombre { display: none; margin-top: 8px; font-size: .82rem; line-height: 1.25; }
+.servicios-h__paso[aria-current="step"] { color: var(--tinta); }
+.servicios-h__paso[aria-current="step"] .servicios-h__nombre { font-weight: 700; }
+
+.servicio-h__numero { display: none; }
+
+@media (max-width: 699px) {
+  .servicio-h__contenido { grid-template-columns: minmax(0, 1fr); }
+}
+@media (min-width: 960px) {
+  .servicios-h__contador { display: none; }
+  .servicios-h__nombre { display: block; }
+  /* Número grande de fondo: se mueve más rápido que el texto y da sensación de profundidad. */
+  .servicios-h--fijo .servicio-h { position: relative; }
+  .servicios-h--fijo .servicio-h__contenido { position: relative; z-index: 1; }
+  .servicios-h--fijo .servicio-h__numero {
+    display: block; position: absolute; z-index: 0; right: 3%; top: 50%; pointer-events: none; user-select: none;
+    font-size: clamp(10rem, 26vw, 24rem); font-weight: 900; line-height: .8; letter-spacing: -.04em; color: var(--fondo-alterno);
+    transform: translate3d(calc(var(--d, 0) * -260px), -50%, 0);
+  }
+}
+
+.beneficios { list-style: none; margin: 0 0 32px; padding: 0; display: grid; gap: 28px; }
+.beneficio { display: grid; gap: 8px; align-content: start; }
+.beneficio .servicio__icono { width: 52px; height: 52px; margin-bottom: 6px; }
+.beneficio .servicio__icono .icono { width: 26px; height: 26px; }
+.beneficio__titulo { font-size: 1.2rem; font-weight: 800; margin: 0; }
+.beneficio p { color: var(--tinta-suave); margin: 0; max-width: 42ch; }
 
 /* Empresa */
 .empresa { display: grid; gap: 24px; }
@@ -304,7 +364,6 @@ p { margin: 0 0 1em; }
   .grilla { grid-template-columns: repeat(2, 1fr); }
   .buscador { grid-template-columns: repeat(3, 1fr) auto; align-items: end; }
   .accesos { grid-template-columns: repeat(3, 1fr); }
-  .servicios { grid-template-columns: repeat(2, 1fr); }
   .filtros { grid-template-columns: 220px 220px auto; justify-content: start; }
   .filtros__boton { grid-column: auto; }
   .datos { grid-template-columns: repeat(3, 1fr); }
@@ -325,7 +384,6 @@ p { margin: 0 0 1em; }
   .navegacion a:hover { background: var(--fondo-alterno); }
   .portada { padding: 72px 0 80px; }
   .grilla { grid-template-columns: repeat(3, 1fr); gap: 22px; }
-  .servicios { grid-template-columns: repeat(3, 1fr); }
   .empresa { grid-template-columns: 3fr 2fr; align-items: start; }
   .contacto { grid-template-columns: 1fr 1.3fr; align-items: start; }
   .ficha__cuerpo { grid-template-columns: minmax(0, 1fr) 340px; gap: 40px; }
@@ -383,12 +441,21 @@ p { margin: 0 0 1em; }
 .campo input[type="search"] { width: 100%; min-height: 46px; padding: 0 12px; font: inherit; border: 1px solid var(--borde); border-radius: 10px; }
 
 /* ¿Por qué elegirnos? */
-.motivos { display: grid; gap: 16px; margin-top: 16px; }
-.motivo { text-align: center; padding: 22px 18px; border-radius: var(--radio); border: 1px solid var(--borde); background: #fff; }
-.motivo__icono { display: inline-flex; width: 58px; height: 58px; align-items: center; justify-content: center; border-radius: 50%; background: #e7f0fa; color: var(--azul); margin-bottom: 10px; }
-.motivo__icono .icono { width: 28px; height: 28px; }
-.motivo__titulo { font-size: 1.15rem; font-weight: 800; }
-.motivo p { color: var(--tinta-suave); margin: 0; }
+/* ¿Por qué elegirnos?: franja oscura con un dato grande por motivo. */
+.motivos { background: var(--oscuro); color: #fff; padding: 52px 0; }
+.motivos__titulo { font-size: .85rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: #9fc6ea; margin-bottom: 26px; }
+.motivos__lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 28px; }
+.motivo { display: grid; gap: 6px; align-content: start; }
+.motivo__cuadro { width: 14px; height: 14px; margin-bottom: 6px; }
+.motivo__cuadro--rojo { background: #ed1b24; }
+.motivo__cuadro--celeste { background: #0094da; }
+.motivo__cuadro--azul { background: #0058a8; outline: 1px solid rgba(255, 255, 255, .25); }
+.motivo__dato { font-size: clamp(2rem, 4.5vw, 3rem); font-weight: 900; line-height: 1.05; letter-spacing: -.01em; }
+.motivo__icono .icono { width: 40px; height: 40px; color: #9fc6ea; }
+.motivo__titulo { font-size: 1.05rem; font-weight: 700; margin: 4px 0 0; color: #fff; }
+.motivo p { color: #c4ccda; margin: 0; max-width: 42ch; }
+.motivos__enlace { margin: 30px 0 0; }
+.motivos__enlace a { color: #9fd6f2; }
 
 /* Franjas Alquilá / Vendé con nosotros */
 .franja { color: #fff; padding: 40px 0; }
@@ -612,7 +679,7 @@ p { margin: 0 0 1em; }
 @media (min-width: 640px) {
   .carrusel__pista { grid-auto-columns: calc((100% - 16px) / 2); }
   .carrusel__boton { display: inline-flex; }
-  .motivos { grid-template-columns: repeat(3, 1fr); }
+  .motivos__lista, .beneficios { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; }
   .franja__contenido { grid-template-columns: 1fr auto; }
   .mapa__lienzo { height: 440px; }
   .contacto { grid-template-columns: 1fr 1fr; align-items: center; }

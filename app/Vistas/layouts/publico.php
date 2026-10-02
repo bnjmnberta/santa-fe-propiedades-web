@@ -27,7 +27,7 @@ $telefonoFijo = Cfg::get('telefono_fijo');
   <link rel="stylesheet" href="<?= e(asset('assets/css/cargadores.css')) ?>">
   <?php /* Antes del primer cuadro: pantalla de carga en la primera visita de la sesión, o
            página tapada si se llegó con la transición entre secciones (assets/js/cargadores.js). */ ?>
-  <script>(function(){try{var h=document.documentElement,s=sessionStorage;if(!s.getItem('sf-intro')){s.setItem('sf-intro','1');h.classList.add('sf-con-intro');}else if(s.getItem('sf-pt')){h.classList.add('sf-llegando');}s.removeItem('sf-pt');}catch(e){}})();</script>
+  <script>(function(){var h=document.documentElement;h.classList.add('js');try{var s=sessionStorage;if(!s.getItem('sf-intro')){s.setItem('sf-intro','1');h.classList.add('sf-con-intro');}else if(s.getItem('sf-pt')){h.classList.add('sf-llegando');}s.removeItem('sf-pt');}catch(e){}})();</script>
   <?php if (!empty($mapa)): ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.js" defer></script>

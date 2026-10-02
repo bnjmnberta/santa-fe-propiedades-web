@@ -76,15 +76,7 @@ $carrusel = function (array $propiedades, string $id, string $enlace, string $te
 </section>
 
 <?php if ($motivos): ?>
-  <section class="seccion">
-    <div class="contenedor">
-      <h2 class="seccion__titulo seccion__titulo--centrado">¿Por qué elegirnos?</h2>
-      <?= Vista::parcial('motivos', ['motivos' => $motivos]) ?>
-      <?php if (modulo('paginas')): ?>
-        <p class="centrado"><a class="enlace-flecha" href="/nosotros">Conocé más sobre nosotros <?= icono('flecha') ?></a></p>
-      <?php endif ?>
-    </div>
-  </section>
+  <?= Vista::parcial('motivos', ['motivos' => $motivos, 'enlace' => modulo('paginas') ? ['Conocé más sobre nosotros', '/nosotros'] : null]) ?>
 <?php endif ?>
 
 <?= Vista::parcial('captacion') ?>
