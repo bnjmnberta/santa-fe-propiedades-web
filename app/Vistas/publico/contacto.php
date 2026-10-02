@@ -1,4 +1,5 @@
 <?php
+use App\Core\Vista;
 use App\Repositorios\ConfiguracionRepositorio as Cfg;
 use App\Servicios\EnlaceWhatsApp;
 
@@ -82,6 +83,9 @@ $motivos = [
       <?php endif ?>
 
       <p class="canales__horario"><?= icono('reloj') ?><span><strong>Horario de atención:</strong> <?= e(Cfg::get('horario')) ?></span></p>
+      <?php if (modulo('faq')): ?>
+        <p class="canales__horario"><?= icono('check') ?><span>Requisitos, visitas y tasaciones: <a href="/preguntas-frecuentes">mirá las preguntas frecuentes</a>.</span></p>
+      <?php endif ?>
     </div>
 
     <?php
@@ -153,30 +157,4 @@ $motivos = [
   </div>
 </section>
 
-<?php if (modulo('captacion') || modulo('faq')): ?>
-  <section class="seccion">
-    <div class="contenedor">
-      <div class="captacion captacion--contacto">
-        <?php if (modulo('captacion')): ?>
-          <a class="captacion__tarjeta captacion__tarjeta--alquiler" href="/alquila-con-nosotros">
-            <span class="captacion__antetitulo">¿Tenés una propiedad?</span>
-            <strong>Alquilá con nosotros</strong>
-            <span class="captacion__flecha"><?= icono('flecha') ?></span>
-          </a>
-          <a class="captacion__tarjeta captacion__tarjeta--venta" href="/vende-con-nosotros">
-            <span class="captacion__antetitulo">¿Querés vender?</span>
-            <strong>Pedí tu tasación</strong>
-            <span class="captacion__flecha"><?= icono('flecha') ?></span>
-          </a>
-        <?php endif ?>
-        <?php if (modulo('faq')): ?>
-          <a class="captacion__tarjeta captacion__tarjeta--faq" href="/preguntas-frecuentes">
-            <span class="captacion__antetitulo">Requisitos, visitas, tasaciones</span>
-            <strong>Preguntas frecuentes</strong>
-            <span class="captacion__flecha"><?= icono('flecha') ?></span>
-          </a>
-        <?php endif ?>
-      </div>
-    </div>
-  </section>
-<?php endif ?>
+<?= Vista::parcial('captacion') ?>

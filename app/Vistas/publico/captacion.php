@@ -61,8 +61,4 @@ $pagina = $esAlquiler ? [
   </section>
 <?php endif ?>
 
-<section class="seccion">
-  <div class="contenedor">
-    <?= Vista::parcial('captacion') ?>
-  </div>
-</section>
+<?= Vista::parcial('captacion', ['sin' => $esAlquiler ? 'alquila' : 'vende']) ?>

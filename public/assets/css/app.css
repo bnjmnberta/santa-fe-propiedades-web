@@ -399,16 +399,6 @@ p { margin: 0 0 1em; }
 .franja__titulo { font-size: clamp(1.7rem, 6vw, 2.5rem); font-weight: 900; text-transform: uppercase; }
 .franja p { max-width: 36em; margin-bottom: 0; }
 
-/* Tarjetas de captación (catálogo y páginas) */
-.captacion { display: grid; gap: 14px; margin-top: 28px; }
-.captacion__tarjeta { position: relative; display: flex; flex-direction: column; gap: 4px; padding: 22px 56px 22px 22px; border-radius: var(--radio); color: #fff; text-decoration: none; }
-.captacion__tarjeta--alquiler { background: var(--azul); }
-.captacion__tarjeta--venta { background: var(--rojo); }
-.captacion__tarjeta strong { font-size: 1.4rem; font-weight: 900; text-transform: uppercase; }
-.captacion__antetitulo { font-size: .75rem; text-transform: uppercase; letter-spacing: .1em; opacity: .85; text-wrap: balance; }
-.captacion__flecha { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); }
-.captacion__flecha .icono { width: 26px; height: 26px; }
-
 /* Búsqueda del catálogo */
 .busqueda { margin-top: 16px; }
 .busqueda__barra { display: flex; align-items: center; gap: 8px; padding: 6px 6px 6px 14px; border: 1px solid var(--borde); border-radius: 999px; background: #fff; box-shadow: var(--sombra); }
@@ -589,8 +579,6 @@ p { margin: 0 0 1em; }
 .marcador-oficina::after { content: ""; position: absolute; left: 50%; bottom: -7px; transform: translateX(-50%); border: 7px solid transparent; border-bottom: 0; border-top-color: #fff; }
 .marcador-oficina svg { width: 20px; height: 20px; }
 
-.captacion--contacto { margin-top: 0; }
-.captacion__tarjeta--faq { background: var(--tinta); }
 
 @media (max-width: 599px) {
   .canal__accion { font-size: 0; gap: 0; } /* en celular queda solo la flecha, para que entren el número y el email */
@@ -600,7 +588,6 @@ p { margin: 0 0 1em; }
   .encabezado-contacto__cuadros { width: 96px; height: 96px; }
   .consulta { padding: 28px; }
   .oficina__mapa .mapa__lienzo { height: 420px; }
-  .captacion.captacion--contacto { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
 }
 @media (min-width: 960px) {
   .contacto-pagina { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; }
@@ -626,7 +613,6 @@ p { margin: 0 0 1em; }
   .carrusel__pista { grid-auto-columns: calc((100% - 16px) / 2); }
   .carrusel__boton { display: inline-flex; }
   .motivos { grid-template-columns: repeat(3, 1fr); }
-  .captacion { grid-template-columns: 1fr 1fr; }
   .franja__contenido { grid-template-columns: 1fr auto; }
   .mapa__lienzo { height: 440px; }
   .contacto { grid-template-columns: 1fr 1fr; align-items: center; }

@@ -87,25 +87,4 @@ $carrusel = function (array $propiedades, string $id, string $enlace, string $te
   </section>
 <?php endif ?>
 
-<?php if (modulo('captacion')): ?>
-  <section class="franja franja--alquiler">
-    <div class="contenedor franja__contenido">
-      <div>
-        <p class="franja__antetitulo">¿Tenés una propiedad para alquilar?</p>
-        <h2 class="franja__titulo">Alquilá con nosotros</h2>
-        <p>La publicamos en la web y en Instagram, buscamos inquilinos y administramos el alquiler para que cobres tranquilo.</p>
-      </div>
-      <a class="boton boton--claro" href="/alquila-con-nosotros">Quiero alquilar mi propiedad <?= icono('flecha') ?></a>
-    </div>
-  </section>
-  <section class="franja franja--venta">
-    <div class="contenedor franja__contenido">
-      <div>
-        <p class="franja__antetitulo">¿Querés vender?</p>
-        <h2 class="franja__titulo">Vendé con nosotros</h2>
-        <p>Tasación profesional, difusión y asesoramiento en cada paso de la operación.</p>
-      </div>
-      <a class="boton boton--claro" href="/vende-con-nosotros">Pedí tu tasación <?= icono('flecha') ?></a>
-    </div>
-  </section>
-<?php endif ?>
+<?= Vista::parcial('captacion') ?>

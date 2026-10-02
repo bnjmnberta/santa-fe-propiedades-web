@@ -102,7 +102,7 @@ $operacionOculta = $filtros->aConsulta($seccion)['operacion'] ?? null;
       <a class="boton boton--whatsapp" href="<?= e(EnlaceWhatsApp::general(Cfg::get('whatsapp_numero'), 'Hola, estoy buscando una propiedad y no encontré lo que necesito en la web.')) ?>"
          target="_blank" rel="noopener" data-evento="consulta_whatsapp" data-origen="rescate"><?= icono('whatsapp') ?>WhatsApp</a>
     </aside>
-
-    <?= Vista::parcial('captacion') ?>
   </div>
 </section>
+
+<?= Vista::parcial('captacion') ?>
