@@ -254,10 +254,15 @@ p { margin: 0 0 1em; }
 .beneficio p { color: var(--tinta-suave); margin: 0; max-width: 42ch; }
 
 /* Empresa */
-.historia { display: grid; gap: 18px; }
-.historia__titulo { margin: 0; font-size: clamp(1.6rem, 4vw, 2.2rem); font-weight: 900; text-transform: uppercase; line-height: 1.1; }
-.historia__destacado { margin: 0; font-size: clamp(1.3rem, 3vw, 2.5rem); font-weight: 400; line-height: 1.25; color: var(--tinta); }
-.historia__texto { display: grid; gap: 14px; }
+.historia { display: grid; gap: 28px; }
+.historia__cita { display: flex; gap: 18px; }
+.historia__barra { display: grid; grid-template-rows: repeat(3, 1fr); flex: none; width: 8px; }
+.historia__barra i:nth-child(1) { background: #ed1b24; }
+.historia__barra i:nth-child(2) { background: #0094da; }
+.historia__barra i:nth-child(3) { background: #0058a8; }
+.historia__titulo { margin: 0 0 12px; font-size: .9rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: var(--tinta-suave); }
+.historia__destacado { margin: 0; font-size: clamp(1.5rem, 3vw, 2.4rem); font-weight: 400; line-height: 1.2; color: var(--tinta); }
+.historia__texto { display: grid; gap: 14px; align-content: center; }
 .historia__texto p { margin: 0; color: var(--tinta-suave); font-size: 1.05rem; }
 
 /* Contacto */
@@ -399,7 +404,7 @@ p { margin: 0 0 1em; }
   .navegacion a:hover { background: var(--fondo-alterno); }
   .navegacion a[aria-current="page"] { box-shadow: inset 0 -3px 0 var(--azul); border-radius: 8px 8px 0 0; }
   .grilla { grid-template-columns: repeat(3, 1fr); gap: 22px; }
-  .historia__texto { grid-template-columns: 1fr 1fr; gap: 48px; }
+  .historia { grid-template-columns: 1.2fr 1fr; gap: 56px; align-items: center; }
   .contacto { grid-template-columns: 1fr 1.3fr; align-items: start; }
   .ficha__cuerpo { grid-template-columns: minmax(0, 1fr) 340px; gap: 40px; }
   .ficha__lateral { position: relative; }
