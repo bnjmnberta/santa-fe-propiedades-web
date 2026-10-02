@@ -358,7 +358,7 @@ p { margin: 0 0 1em; }
 .pie a:hover { text-decoration: underline; }
 .pie__fila { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 40px; }
 .pie__enlaces { display: flex; flex-wrap: wrap; gap: 6px 22px; }
-.pie__datos { display: flex; flex-wrap: wrap; gap: 8px 26px; margin: 18px 0 0; padding: 16px 0 0; list-style: none; border-top: 1px solid #242c3b; }
+.pie__datos { display: flex; flex-wrap: wrap; gap: 8px 26px; margin: 18px 0 0; padding: 16px 0; list-style: none; border-top: 1px solid #242c3b; }
 .pie__datos li { display: inline-flex; align-items: center; gap: 8px; }
 .pie__datos .icono { color: #9fc6ea; }
 .pie__legal { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 24px; margin-top: 16px; padding-top: 12px; padding-bottom: 14px; border-top: 1px solid #242c3b; font-size: .8rem; color: #8993a6; }
@@ -367,6 +367,14 @@ p { margin: 0 0 1em; }
   .pie__enlaces { gap: 20px 22px; }
   .pie__datos { gap: 20px 26px; }
   .pie__enlaces a, .pie__datos a { display: inline-block; padding: 10px 0; margin: -10px 0; }
+}
+
+/* Escritorio: los datos de contacto se ordenan en una grilla pareja (3 columnas) y, en pantallas muy anchas, en una sola fila de borde a borde. */
+@media (min-width: 960px) {
+  .pie__datos { display: grid; grid-template-columns: repeat(3, auto); justify-content: space-between; gap: 12px 24px; }
+}
+@media (min-width: 1700px) {
+  .pie__datos { grid-template-columns: none; grid-auto-flow: column; white-space: nowrap; }
 }
 
 /* Tablet y escritorio */
@@ -705,7 +713,11 @@ html:not(.js) .contacto-pagina__mapa { display: none; }
 @media (min-width: 900px) {
   .franjas--dos { display: grid; grid-template-columns: 1fr 1fr; }
   .franjas--dos .franja__contenido { grid-template-columns: 1fr; gap: 20px; }
-  .franjas--dos .contenedor { padding-inline: clamp(16px, 3vw, 48px); }
+  .franjas--dos .contenedor { padding-inline: 32px; }
+}
+
+@media (min-width: 1400px) {
+  .franjas--dos .contenedor { padding-inline: 48px; }
 }
 
 /* Botón flotante de WhatsApp */
