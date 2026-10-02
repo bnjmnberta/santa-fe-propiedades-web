@@ -2,12 +2,7 @@
 use App\Core\Vista;
 use App\Repositorios\ConfiguracionRepositorio as Cfg;
 ?>
-<section class="encabezado-pagina">
-  <div class="contenedor">
-    <h1>Nosotros</h1>
-    <p>Santa Fe Propiedades · <?= e(str_replace(' | ', ' · ', Cfg::get('matricula'))) ?></p>
-  </div>
-</section>
+<?= Vista::parcial('encabezado', ['titulo' => 'Nosotros', 'bajada' => 'Santa Fe Propiedades · ' . str_replace(' | ', ' · ', Cfg::get('matricula')), 'migas' => ['Nosotros']]) ?>
 
 <section class="seccion">
   <div class="contenedor empresa">

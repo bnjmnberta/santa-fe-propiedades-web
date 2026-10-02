@@ -49,6 +49,7 @@ final class FichaControlador
 
         Vista::render('publico/ficha', [
             'sinFlotante' => true, // la ficha ya tiene su barra de WhatsApp
+            'menuActivo'  => $propiedad->esComercial ? 'comerciales' : ($propiedad->operacion->value === 'alquiler' ? 'alquileres' : 'ventas'),
             'cercanos'    => array_values($cercanos),
             'mapa'        => $puntos ? [
                 'propiedades' => [[

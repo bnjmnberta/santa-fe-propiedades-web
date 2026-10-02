@@ -3,12 +3,7 @@ use App\Core\Vista;
 use App\Repositorios\ConfiguracionRepositorio as Cfg;
 use App\Servicios\EnlaceWhatsApp;
 ?>
-<section class="encabezado-pagina">
-  <div class="contenedor">
-    <h1>Servicios</h1>
-    <p>Todo lo que necesitás para alquilar, vender o tasar tu propiedad en Santa Fe.</p>
-  </div>
-</section>
+<?= Vista::parcial('encabezado', ['titulo' => 'Servicios', 'bajada' => 'Todo lo que necesitás para alquilar, vender o tasar tu propiedad en Santa Fe.', 'migas' => ['Servicios']]) ?>
 
 <?php
 /* Scroll horizontal guiado por el scroll vertical: al bajar, la página se queda fija y los

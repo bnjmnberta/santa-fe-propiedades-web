@@ -29,6 +29,14 @@ final class CatalogoControlador
                 redirigir($propiedad->url());
             }
         }
+        // El buscador único acepta "Barrio, calle o código": un número solo que coincide con una propiedad va directo a su ficha.
+        // Si no coincide con ninguna, sigue como búsqueda de texto (puede ser el número de una dirección).
+        if (!$codigo && preg_match('/^#?\s*(\d{1,4})\s*$/', (string) ($_GET['q'] ?? ''), $m)) {
+            $porNumero = (new PropiedadRepositorio())->porCodigo((int) $m[1]);
+            if ($porNumero !== null) {
+                redirigir($porNumero->url());
+            }
+        }
 
         $filtros = FiltrosCatalogo::desdeConsulta($_GET, $seccion);
         $pagina = max(1, (int) ($_GET['pagina'] ?? 1));
@@ -51,6 +59,9 @@ final class CatalogoControlador
             ] : null,
             'titulo'         => $titulo . ' | Santa Fe Propiedades',
             'encabezado'     => $titulo,
+            'tono'           => match ($claveTitulo) { 'alquileres' => 'alquiler', 'ventas' => 'venta', default => 'neutro' },
+            'miga'           => match ($claveTitulo) { 'alquileres' => 'Alquileres', 'ventas' => 'Ventas', 'comerciales' => 'Comerciales', default => 'Propiedades' },
+            'menuActivo'     => $claveTitulo,
             'descripcion'    => $descripcion,
             'seccion'        => $seccion,
             'filtros'        => $filtros,

@@ -26,13 +26,7 @@ $pagina = $esAlquiler ? [
     'boton'     => 'Pedí tu tasación',
 ];
 ?>
-<section class="encabezado-pagina encabezado-pagina--<?= $esAlquiler ? 'alquiler' : 'venta' ?>">
-  <div class="contenedor">
-    <p class="encabezado-pagina__antetitulo">Propietarios</p>
-    <h1><?= e($pagina['titulo']) ?></h1>
-    <p><?= e($pagina['bajada']) ?></p>
-  </div>
-</section>
+<?= Vista::parcial('encabezado', ['titulo' => $pagina['titulo'], 'bajada' => $pagina['bajada'], 'tono' => $esAlquiler ? 'alquiler' : 'venta', 'migas' => [$esAlquiler ? 'Alquilá con nosotros' : 'Vendé con nosotros']]) ?>
 
 <section class="seccion">
   <div class="contenedor">

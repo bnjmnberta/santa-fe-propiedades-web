@@ -1,6 +1,6 @@
 <?php
 /**
- * "¿Por qué elegirnos?": franja oscura de ancho completo con un dato grande por motivo
+ * "¿Por qué elegirnos?": franja clara de ancho completo con un dato grande por motivo
  * ("Desde 2007", "CCI 099 · 731", "WhatsApp"), su título y la explicación.
  * Cada dato lleva un cuadrado con un color del logo. Va fuera de cualquier .contenedor.
  *
@@ -12,7 +12,7 @@ $colores = ['rojo', 'celeste', 'azul'];
 ?>
 <section class="motivos" aria-labelledby="motivos-titulo">
   <div class="contenedor">
-    <h2 class="motivos__titulo" id="motivos-titulo">¿Por qué elegirnos?</h2>
+    <h2 class="solo-lectores" id="motivos-titulo">¿Por qué elegirnos?</h2>
     <ul class="motivos__lista">
       <?php foreach ($motivos as $i => $motivo): ?>
         <li class="motivo">

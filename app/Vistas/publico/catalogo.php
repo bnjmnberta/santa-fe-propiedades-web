@@ -11,12 +11,7 @@ $enlacePagina = fn (int $numero): string => $accion . '?' . http_build_query($fi
 // En /propiedades la operación viaja como parámetro (viene del buscador de la portada).
 $operacionOculta = $filtros->aConsulta($seccion)['operacion'] ?? null;
 ?>
-<section class="encabezado-pagina">
-  <div class="contenedor">
-    <h1><?= e($encabezado) ?></h1>
-    <p><?= e($descripcion) ?></p>
-  </div>
-</section>
+<?= Vista::parcial('encabezado', ['titulo' => $encabezado, 'bajada' => $descripcion, 'tono' => $tono, 'migas' => [$miga]]) ?>
 
 <section class="seccion seccion--compacta">
   <div class="contenedor">
@@ -32,7 +27,7 @@ $operacionOculta = $filtros->aConsulta($seccion)['operacion'] ?? null;
       <?php endif ?>
       <div class="busqueda__barra">
         <?= icono('lupa', 'icono busqueda__lupa') ?>
-        <input class="busqueda__texto" type="search" name="q" value="<?= e($filtros->texto ?? '') ?>" placeholder="Buscá por barrio, calle o palabra clave" aria-label="Búsqueda">
+        <input class="busqueda__texto" type="search" name="q" value="<?= e($filtros->texto ?? '') ?>" placeholder="Barrio, calle o código" aria-label="Búsqueda">
         <button class="boton boton--primario boton--chico" type="submit">Buscar</button>
       </div>
       <details class="busqueda__filtros" <?= $filtros->hayFiltrosAvanzados() ? 'open' : '' ?>>

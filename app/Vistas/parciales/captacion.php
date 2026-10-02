@@ -1,6 +1,7 @@
 <?php
 /**
- * Franjas "Alquilá con nosotros" / "Vendé con nosotros", de ancho completo, como en la portada.
+ * Franjas "Alquilá con nosotros" / "Vendé con nosotros", de ancho completo. En escritorio van lado a lado
+ * (una azul y una roja, los colores de cada operación); en celular, una debajo de la otra.
  * Se usan en la portada, el catálogo, Nosotros, Contacto y las páginas de captación.
  * Van fuera de cualquier .contenedor para ocupar todo el ancho.
  *
@@ -11,11 +12,11 @@ if (!modulo('captacion')) {
 }
 $sin ??= null;
 ?>
+<div class="franjas franjas--<?= $sin === null ? 'dos' : 'una' ?>">
 <?php if ($sin !== 'alquila'): ?>
   <section class="franja franja--alquiler">
     <div class="contenedor franja__contenido">
       <div>
-        <p class="franja__antetitulo">¿Tenés una propiedad para alquilar?</p>
         <h2 class="franja__titulo">Alquilá con nosotros</h2>
         <p>La publicamos en la web y en Instagram, buscamos inquilinos y administramos el alquiler para que cobres tranquilo.</p>
       </div>
@@ -27,7 +28,6 @@ $sin ??= null;
   <section class="franja franja--venta">
     <div class="contenedor franja__contenido">
       <div>
-        <p class="franja__antetitulo">¿Querés vender?</p>
         <h2 class="franja__titulo">Vendé con nosotros</h2>
         <p>Tasación profesional, difusión y asesoramiento en cada paso de la operación.</p>
       </div>
@@ -35,3 +35,4 @@ $sin ??= null;
     </div>
   </section>
 <?php endif ?>
+</div>

@@ -1,10 +1,5 @@
 <?php use App\Core\Vista; ?>
-<section class="encabezado-pagina">
-  <div class="contenedor">
-    <h1>Preguntas frecuentes</h1>
-    <p>Si no encontrás tu respuesta, escribinos por WhatsApp.</p>
-  </div>
-</section>
+<?= Vista::parcial('encabezado', ['titulo' => 'Preguntas frecuentes', 'bajada' => 'Si no encontrás tu respuesta, escribinos por WhatsApp.', 'migas' => ['Preguntas frecuentes']]) ?>
 
 <section class="seccion">
   <div class="contenedor contenedor--angosto">

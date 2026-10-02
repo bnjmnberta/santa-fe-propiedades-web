@@ -48,15 +48,21 @@ $telefonoFijo = Cfg::get('telefono_fijo');
       <?= icono('menu') ?>
     </button>
     <a class="logo" href="/" aria-label="Santa Fe Propiedades, inicio"><?= Vista::parcial('logo') ?></a>
+    <?php
+    /* El menú marca la página actual (aria-current). Las vistas pueden fijarla con $menuActivo (por ejemplo la ficha de una propiedad). */
+    $rutaActual = (string) parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+    $menuActivo ??= ltrim($rutaActual, '/');
+    $marca = static fn (string $clave): string => $menuActivo === $clave ? ' aria-current="page"' : '';
+    ?>
     <nav class="navegacion" id="navegacion" aria-label="Principal">
-      <a href="/alquileres">Alquileres</a>
-      <a href="/ventas">Ventas</a>
-      <a href="/comerciales">Comerciales</a>
+      <a href="/alquileres"<?= $marca('alquileres') ?>>Alquileres</a>
+      <a href="/ventas"<?= $marca('ventas') ?>>Ventas</a>
+      <a href="/comerciales"<?= $marca('comerciales') ?>>Comerciales</a>
       <?php if (modulo('paginas')): ?>
-        <a href="/servicios">Servicios</a>
-        <a href="/nosotros">Nosotros</a>
+        <a href="/servicios"<?= $marca('servicios') ?>>Servicios</a>
+        <a href="/nosotros"<?= $marca('nosotros') ?>>Nosotros</a>
       <?php endif ?>
-      <a href="/contacto">Contacto</a>
+      <a href="/contacto"<?= $marca('contacto') ?>>Contacto</a>
     </nav>
     <a class="boton boton--whatsapp boton--chico cabecera__cta" href="<?= e($whatsappGeneral) ?>" target="_blank" rel="noopener"
        data-evento="consulta_whatsapp" data-origen="cabecera"><?= icono('whatsapp') ?><span>WhatsApp</span></a>

@@ -4,8 +4,7 @@ use App\Repositorios\ConfiguracionRepositorio as Cfg;
 
 /** @var list<App\Modelos\Propiedad> $alquileres */
 /** @var list<App\Modelos\Propiedad> $ventas */
-// Orden: eslogan con el buscador → destacadas → ¿Por qué elegirnos? → Alquilá / Vendé con nosotros.
-// El buscador va arriba de todo porque buscar es lo primero que viene a hacer casi cualquier visitante.
+// Orden: título con el buscador en una fila → destacadas (asoman en la primera pantalla) → ¿Por qué elegirnos? → Alquilá / Vendé con nosotros.
 $carrusel = function (array $propiedades, string $id, string $enlace, string $textoEnlace, bool $oculto): string {
     ob_start(); ?>
     <div class="carrusel" id="<?= e($id) ?>" role="tabpanel" <?= $oculto ? 'hidden' : '' ?> data-carrusel>
@@ -21,42 +20,25 @@ $carrusel = function (array $propiedades, string $id, string $enlace, string $te
     <?php return (string) ob_get_clean();
 };
 ?>
-<section class="portada"<?= $fondoPortada ? ' style="--fondo: url(\'' . e($fondoPortada) . '\')"' : '' ?>>
-  <div class="contenedor portada__contenido">
-    <p class="portada__antetitulo">Inmobiliaria en Santa Fe Capital · desde 2007</p>
+<section class="portada">
+  <div class="contenedor portada__fila">
     <h1 class="portada__titulo"><?= e(Cfg::get('eslogan', 'Tu lugar en Santa Fe')) ?></h1>
-    <p class="portada__bajada"><?= e(Cfg::get('eslogan_bajada')) ?></p>
-    <form class="buscador" action="/propiedades" method="get" role="search" aria-label="Buscar propiedades">
-      <label class="campo campo--texto">
-        <span class="campo__etiqueta">Barrio, calle o palabra clave</span>
-        <input type="search" name="q" placeholder="Ej: Candioti, Bv. Gálvez, cochera">
+    <form class="buscador" action="/propiedades" method="get" role="search">
+      <fieldset class="buscador__operacion">
+        <legend class="solo-lectores">Operación</legend>
+        <?php foreach (['' => 'Todas', 'alquiler' => 'Alquiler', 'venta' => 'Venta', 'comerciales' => 'Comerciales'] as $valor => $etiqueta): ?>
+          <label class="opcion-seg">
+            <input type="radio" name="operacion" value="<?= e($valor) ?>" <?= $valor === '' ? 'checked' : '' ?>>
+            <span><?= e($etiqueta) ?></span>
+          </label>
+        <?php endforeach ?>
+      </fieldset>
+      <label class="buscador__campo">
+        <span class="solo-lectores">Barrio, calle o código</span>
+        <?= icono('lupa') ?>
+        <input type="search" name="q" placeholder="Barrio, calle o código" autocomplete="off">
       </label>
-      <label class="campo">
-        <span class="campo__etiqueta">Operación</span>
-        <select name="operacion">
-          <option value="">Todas</option>
-          <option value="alquiler">Alquiler</option>
-          <option value="venta">Venta</option>
-          <option value="comerciales">Comerciales</option>
-        </select>
-      </label>
-      <label class="campo">
-        <span class="campo__etiqueta">Tipo</span>
-        <select name="tipo">
-          <option value="">Todos</option>
-          <?php foreach ($tipos as $tipo): ?>
-            <option value="<?= e($tipo['slug']) ?>"><?= e($tipo['nombre']) ?></option>
-          <?php endforeach ?>
-        </select>
-      </label>
-      <button class="boton boton--primario" type="submit"><?= icono('lupa') ?>Buscar</button>
-    </form>
-    <form class="buscador-codigo" action="/propiedades" method="get">
-      <label for="codigo">¿Tenés el código de una propiedad?</label>
-      <div class="buscador-codigo__fila">
-        <input id="codigo" name="codigo" type="number" inputmode="numeric" min="1" placeholder="Ej: 258">
-        <button class="boton boton--claro" type="submit">Ir</button>
-      </div>
+      <button class="boton boton--primario" type="submit">Buscar</button>
     </form>
   </div>
 </section>

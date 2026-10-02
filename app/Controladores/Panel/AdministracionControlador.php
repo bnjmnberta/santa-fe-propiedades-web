@@ -29,7 +29,6 @@ final class AdministracionControlador
         ],
         'Portada' => [
             'eslogan'          => ['Título principal', 'texto'],
-            'eslogan_bajada'   => ['Texto debajo del título', 'texto'],
         ],
         'Analítica' => [
             'ga_measurement_id' => ['ID de Google Analytics 4 (G-XXXXXXX). Vacío = sin medición', 'texto'],
