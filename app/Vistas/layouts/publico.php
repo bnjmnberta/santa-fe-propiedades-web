@@ -24,6 +24,10 @@ $telefonoFijo = Cfg::get('telefono_fijo');
   <link rel="icon" href="<?= e(asset('assets/img/favicon.svg')) ?>" type="image/svg+xml">
   <link rel="preload" href="/assets/fuentes/open-sauce-sans-400.woff" as="font" type="font/woff" crossorigin>
   <link rel="stylesheet" href="<?= e(asset('assets/css/app.css')) ?>">
+  <link rel="stylesheet" href="<?= e(asset('assets/css/cargadores.css')) ?>">
+  <?php /* Antes del primer cuadro: pantalla de carga en la primera visita de la sesión, o
+           página tapada si se llegó con la transición entre secciones (assets/js/cargadores.js). */ ?>
+  <script>(function(){try{var h=document.documentElement,s=sessionStorage;if(!s.getItem('sf-intro')){s.setItem('sf-intro','1');h.classList.add('sf-con-intro');}else if(s.getItem('sf-pt')){h.classList.add('sf-llegando');}s.removeItem('sf-pt');}catch(e){}})();</script>
   <?php if (!empty($mapa)): ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.js" defer></script>
@@ -36,6 +40,7 @@ $telefonoFijo = Cfg::get('telefono_fijo');
 </head>
 <body>
 <?= Vista::parcial('iconos') ?>
+<?= Vista::parcial('cargadores') ?>
 <a class="saltar" href="#contenido">Saltar al contenido</a>
 
 <header class="cabecera">
@@ -100,6 +105,7 @@ $telefonoFijo = Cfg::get('telefono_fijo');
      data-evento="consulta_whatsapp" data-origen="flotante"><?= icono('whatsapp') ?></a>
 <?php endif ?>
 
+<script src="<?= e(asset('assets/js/cargadores.js')) ?>" defer></script>
 <script src="<?= e(asset('assets/js/app.js')) ?>" defer></script>
 </body>
 </html>

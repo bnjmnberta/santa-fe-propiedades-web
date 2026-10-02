@@ -127,7 +127,7 @@
       elemento.addEventListener('mouseleave', esconderVista);
       elemento.addEventListener('focus', function () { mostrarVista(p, elemento); });
       elemento.addEventListener('blur', esconderVista);
-      elemento.addEventListener('click', function () { window.location.href = p.url; });
+      elemento.addEventListener('click', function () { (window.sfIrConTransicion || function (url) { window.location.href = url; })(p.url); });
       return marcador;
     }
     if (conVista) {
