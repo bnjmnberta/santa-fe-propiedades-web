@@ -26,11 +26,9 @@ $motivos = [
       <h1>Contacto</h1>
       <p>Respondemos por WhatsApp en el horario de atención. También podés llamarnos o pasar por la oficina.</p>
     </div>
-    <?php /* Los cuadros del logo, en grande: dos rojos arriba y seis azules abajo. */ ?>
-    <svg class="encabezado-contacto__cuadros" viewBox="0 0 26 26" aria-hidden="true">
-      <rect x="9" y="0" width="8" height="8" rx="1"/><rect x="18" y="0" width="8" height="8" rx="1"/>
-      <rect class="azul" x="0" y="9" width="8" height="8" rx="1"/><rect class="azul" x="9" y="9" width="8" height="8" rx="1"/><rect class="azul" x="18" y="9" width="8" height="8" rx="1"/>
-      <rect class="azul" x="0" y="18" width="8" height="8" rx="1"/><rect class="azul" x="9" y="18" width="8" height="8" rx="1"/><rect class="azul" x="18" y="18" width="8" height="8" rx="1"/>
+    <?php /* Los cuadros del logo, en grande: dos rojos arriba a la izquierda, tres celestes y tres azules. */ ?>
+    <svg class="encabezado-contacto__cuadros" viewBox="0 0 52 52" aria-hidden="true">
+      <rect class="rojo" x="0" y="0" width="15" height="15"/><rect class="rojo" x="18.5" y="0" width="15" height="15"/><rect class="celeste" x="0" y="18.5" width="15" height="15"/><rect class="celeste" x="18.5" y="18.5" width="15" height="15"/><rect class="celeste" x="37" y="18.5" width="15" height="15"/><rect class="azul" x="0" y="37" width="15" height="15"/><rect class="azul" x="18.5" y="37" width="15" height="15"/><rect class="azul" x="37" y="37" width="15" height="15"/>
     </svg>
   </div>
 </section>

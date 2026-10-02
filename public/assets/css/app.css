@@ -520,8 +520,10 @@ p { margin: 0 0 1em; }
 .encabezado-pagina--contacto { background: linear-gradient(160deg, var(--oscuro) 35%, var(--azul-oscuro)); }
 .encabezado-contacto { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 24px; }
 .encabezado-contacto__cuadros { width: 64px; height: 64px; }
-.encabezado-contacto__cuadros rect { fill: var(--rojo); }
-.encabezado-contacto__cuadros rect.azul { fill: var(--azul); }
+/* Colores del logo original, como en parciales/logo.php. */
+.encabezado-contacto__cuadros .rojo, .marcador-oficina .rojo { fill: #ed1b24; }
+.encabezado-contacto__cuadros .celeste, .marcador-oficina .celeste { fill: #0094da; }
+.encabezado-contacto__cuadros .azul, .marcador-oficina .azul { fill: #0058a8; }
 
 .contacto-pagina { display: grid; gap: 32px; align-items: start; }
 .canales { display: grid; gap: 12px; min-width: 0; }
@@ -586,8 +588,6 @@ p { margin: 0 0 1em; }
 }
 .marcador-oficina::after { content: ""; position: absolute; left: 50%; bottom: -7px; transform: translateX(-50%); border: 7px solid transparent; border-bottom: 0; border-top-color: #fff; }
 .marcador-oficina svg { width: 20px; height: 20px; }
-.marcador-oficina rect { fill: var(--rojo); }
-.marcador-oficina rect.azul { fill: var(--azul); }
 
 .captacion--contacto { margin-top: 0; }
 .captacion__tarjeta--faq { background: var(--tinta); }

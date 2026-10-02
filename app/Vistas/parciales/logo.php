@@ -1,10 +1,14 @@
-<?php // Reconstrucción provisoria del logo: reemplazar por el archivo oficial en alta calidad (pendiente 5 de ANALISIS.md). ?>
+<?php
+// Reconstrucción del logo: los cuadrados ya son como el original (images/logo.png de la web vieja:
+// dos rojos arriba a la izquierda, tres celestes y tres azules, con sus colores y proporciones).
+// El texto sigue siendo provisorio: reemplazar por el archivo oficial en alta calidad (pendiente 5 de ANALISIS.md).
+?>
 <span class="logo__marca">
   <span class="logo__nombre">SANTA FE</span>
-  <svg class="logo__cuadros" viewBox="0 0 26 26" aria-hidden="true">
-    <rect x="9" y="0" width="8" height="8" fill="#d0342c"/><rect x="18" y="0" width="8" height="8" fill="#d0342c"/>
-    <rect x="0" y="9" width="8" height="8" fill="#1d5fa8"/><rect x="9" y="9" width="8" height="8" fill="#1d5fa8"/><rect x="18" y="9" width="8" height="8" fill="#1d5fa8"/>
-    <rect x="0" y="18" width="8" height="8" fill="#1d5fa8"/><rect x="9" y="18" width="8" height="8" fill="#1d5fa8"/><rect x="18" y="18" width="8" height="8" fill="#1d5fa8"/>
+  <svg class="logo__cuadros" viewBox="0 0 52 52" aria-hidden="true">
+    <rect x="0" y="0" width="15" height="15" fill="#ed1b24"/><rect x="18.5" y="0" width="15" height="15" fill="#ed1b24"/>
+    <rect x="0" y="18.5" width="15" height="15" fill="#0094da"/><rect x="18.5" y="18.5" width="15" height="15" fill="#0094da"/><rect x="37" y="18.5" width="15" height="15" fill="#0094da"/>
+    <rect x="0" y="37" width="15" height="15" fill="#0058a8"/><rect x="18.5" y="37" width="15" height="15" fill="#0058a8"/><rect x="37" y="37" width="15" height="15" fill="#0058a8"/>
   </svg>
 </span>
 <span class="logo__sub">PROPIEDADES</span>
