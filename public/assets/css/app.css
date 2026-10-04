@@ -266,10 +266,6 @@ p { margin: 0 0 1em; }
 .historia__texto p { margin: 0; color: var(--tinta-suave); font-size: 1.05rem; }
 
 /* Contacto */
-.contacto { display: grid; gap: 24px; }
-.contacto__lista { list-style: none; padding: 0; margin: 0 0 20px; display: grid; gap: 10px; color: #d5dcea; }
-.contacto__lista li { display: flex; gap: 10px; }
-.contacto__mapa { width: 100%; min-height: 280px; border: 0; border-radius: var(--radio); background: #222a38; }
 
 /* Catálogo */
 /* Encabezado de título: banda fina con el color de la operación (azul alquiler, rojo venta, azul marino para el resto). */
@@ -422,7 +418,6 @@ p { margin: 0 0 1em; }
   .navegacion a[aria-current="page"] { box-shadow: inset 0 -3px 0 var(--azul); border-radius: 8px 8px 0 0; }
   .grilla { grid-template-columns: repeat(3, 1fr); gap: 22px; }
   .historia { grid-template-columns: 1.2fr 1fr; gap: 56px; align-items: center; }
-  .contacto { grid-template-columns: 1fr 1.3fr; align-items: start; }
   .ficha__cuerpo { grid-template-columns: minmax(0, 1fr) 340px; gap: 40px; }
   .ficha__lateral { position: relative; }
   .precio-caja { position: sticky; top: 84px; }
@@ -589,7 +584,19 @@ p { margin: 0 0 1em; }
 .ficha .mapa { margin-bottom: 12px; }
 
 /* Preguntas frecuentes */
-.faq { display: grid; gap: 10px; margin-top: 12px; }
+.faq { display: grid; gap: 32px; margin-top: 16px; }
+.faq__grupo { display: grid; gap: 12px; align-items: start; }
+.faq__titulo { display: flex; align-items: center; gap: 10px; margin: 0; font-size: 1.05rem; font-weight: 800; }
+.faq__cuadro { flex: none; width: 12px; height: 12px; }
+.faq__cuadro--rojo { background: #ed1b24; }
+.faq__cuadro--celeste { background: #0094da; }
+.faq__cuadro--azul { background: #0058a8; }
+.faq__lista { display: grid; gap: 10px; }
+@media (min-width: 900px) {
+  .faq { gap: 40px; }
+  .faq__grupo { grid-template-columns: 260px minmax(0, 1fr); gap: 40px; }
+  .faq__titulo { position: sticky; top: 88px; padding-top: 14px; }
+}
 .faq__item { border: 1px solid var(--borde); border-radius: 10px; background: #fff; }
 .faq__item summary { cursor: pointer; padding: 14px 16px; font-weight: 700; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
 .faq__item summary::-webkit-details-marker { display: none; }
@@ -598,10 +605,6 @@ p { margin: 0 0 1em; }
 .faq__item p { padding: 0 16px 14px; margin: 0; color: #353d4d; }
 
 /* Contacto con foto del local */
-.contacto__foto { border-radius: var(--radio); overflow: hidden; aspect-ratio: 4 / 3; background: var(--fondo-alterno); }
-.contacto__foto img { width: 100%; height: 100%; object-fit: cover; }
-.contacto .contacto__lista { color: var(--tinta); }
-.contacto .contacto__lista .icono { color: var(--azul); margin-top: .15em; }
 
 /* Encabezado de páginas de captación */
 
@@ -692,6 +695,20 @@ p { margin: 0 0 1em; }
 .fila-contacto__cuadro--telefono { background: #0058a8; }
 .fila-contacto__cuadro--email { background: #ed1b24; }
 .fila-contacto__cuadro--instagram { background: #0094da; }
+.fila-contacto__cuadro--direccion { background: #0094da; }
+.fila-contacto__cuadro--horario { background: #ed1b24; }
+.fila-contacto--fija:hover { background: none; padding-inline: 0; }
+
+/* Cierre de contacto de Servicios */
+.cierre-contacto { display: grid; gap: 28px; align-items: center; }
+.cierre-contacto__cabeza { display: grid; gap: 16px; justify-items: start; }
+.cierre-contacto__titulo { margin: 0; font-size: clamp(1.6rem, 4vw, 2.2rem); font-weight: 900; text-transform: uppercase; line-height: 1.1; }
+.cierre-contacto__cabeza p { margin: 0; max-width: 34em; color: var(--tinta-suave); }
+.cierre-contacto__cabeza .boton { min-height: 52px; padding-inline: 24px; }
+.cierre-contacto__filas { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--borde); }
+@media (min-width: 900px) {
+  .cierre-contacto { grid-template-columns: 1fr 1.1fr; gap: 64px; }
+}
 .fila-contacto__texto { display: grid; min-width: 0; }
 .fila-contacto__rotulo { font-size: .82rem; color: var(--tinta-suave); }
 .fila-contacto__valor { font-size: 1.05rem; font-weight: 800; overflow-wrap: anywhere; }
@@ -759,7 +776,6 @@ html:not(.js) .contacto-pagina__mapa { display: none; }
   .franja__contenido { grid-template-columns: 1fr auto; }
   .franja .boton { justify-self: start; }
   .mapa__lienzo { height: 440px; }
-  .contacto { grid-template-columns: 1fr 1fr; align-items: center; }
 }
 
 @media (min-width: 960px) {

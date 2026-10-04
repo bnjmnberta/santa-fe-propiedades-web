@@ -52,7 +52,7 @@ $total = count($servicios);
 
 <?php if ($faqs): ?>
   <section class="seccion seccion--alterna" id="faq">
-    <div class="contenedor contenedor--angosto">
+    <div class="contenedor">
       <h2 class="seccion__titulo">Preguntas frecuentes</h2>
       <?= Vista::parcial('faq', ['faqs' => $faqs]) ?>
     </div>

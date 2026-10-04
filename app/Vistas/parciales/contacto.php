@@ -2,28 +2,39 @@
 use App\Repositorios\ConfiguracionRepositorio as Cfg;
 use App\Servicios\EnlaceWhatsApp;
 
-$fotoLocal = Cfg::get('foto_local');
+/**
+ * Cierre de contacto de la página Servicios: el WhatsApp como camino principal a la izquierda y los demás
+ * datos en filas con el cuadrado de color del logo a la derecha. La página Contacto tiene la versión completa.
+ */
 $telefono = Cfg::get('telefono_fijo');
+$direccion = Cfg::get('direccion');
 ?>
-<div class="contacto" id="contacto">
-  <div class="contacto__foto">
-    <?php if ($fotoLocal !== ''): ?>
-      <img src="<?= e(asset($fotoLocal)) ?>" alt="Oficina de Santa Fe Propiedades en <?= e(Cfg::get('direccion')) ?>" loading="lazy">
-    <?php else: ?>
-      <div class="sin-foto"><?= icono('casa', 'sin-foto__icono') ?><span>Foto del local (pendiente)</span></div>
+<div class="cierre-contacto" id="contacto">
+  <div class="cierre-contacto__cabeza">
+    <h2 class="cierre-contacto__titulo">Contacto</h2>
+    <p>Escribinos por WhatsApp y te respondemos en el horario de atención, o pasá por la oficina.</p>
+    <a class="boton boton--whatsapp" href="<?= e(EnlaceWhatsApp::general(Cfg::get('whatsapp_numero'), 'Hola, les escribo desde la web de Santa Fe Propiedades.')) ?>"
+       target="_blank" rel="noopener" data-evento="consulta_whatsapp" data-origen="servicios-contacto"><?= icono('whatsapp') ?>WhatsApp · <?= e(Cfg::get('whatsapp_visible')) ?></a>
+    <a class="enlace-flecha" href="/contacto">Ver todas las formas de contacto <?= icono('flecha') ?></a>
+  </div>
+  <ul class="cierre-contacto__filas">
+    <?php if ($telefono !== ''): ?>
+      <li><a class="fila-contacto" href="tel:+54<?= e(preg_replace('/\D+/', '', ltrim($telefono, '0'))) ?>" data-evento="click_telefono" data-origen="servicios-contacto">
+        <span class="fila-contacto__cuadro fila-contacto__cuadro--telefono"><?= icono('telefono') ?></span>
+        <span class="fila-contacto__texto"><span class="fila-contacto__rotulo">Teléfono de la oficina</span><strong class="fila-contacto__valor"><?= e($telefono) ?></strong></span>
+        <?= icono('flecha') ?></a></li>
     <?php endif ?>
-  </div>
-  <div class="contacto__datos">
-    <h2 class="seccion__titulo">Contacto</h2>
-    <ul class="contacto__lista">
-      <li><?= icono('whatsapp') ?><a href="<?= e(EnlaceWhatsApp::general(Cfg::get('whatsapp_numero'), 'Hola, les escribo desde la web de Santa Fe Propiedades.')) ?>"
-             target="_blank" rel="noopener" data-evento="consulta_whatsapp" data-origen="contacto"><?= e(Cfg::get('whatsapp_visible')) ?></a></li>
-      <li><?= icono('pin') ?><a href="https://www.google.com/maps/search/?api=1&query=<?= e(rawurlencode(Cfg::get('direccion') . ', Argentina')) ?>" target="_blank" rel="noopener"><?= e(Cfg::get('direccion')) ?></a></li>
-      <?php if ($telefono !== ''): ?>
-        <li><?= icono('telefono') ?><a href="tel:+54<?= e(preg_replace('/\D+/', '', ltrim($telefono, '0'))) ?>" data-evento="click_telefono"><?= e($telefono) ?></a></li>
-      <?php endif ?>
-      <li><?= icono('mail') ?><a href="mailto:<?= e(Cfg::get('email')) ?>"><?= e(Cfg::get('email')) ?></a></li>
-      <li><?= icono('reloj') ?><?= e(Cfg::get('horario')) ?></li>
-    </ul>
-  </div>
+    <li><a class="fila-contacto" href="mailto:<?= e(Cfg::get('email')) ?>">
+      <span class="fila-contacto__cuadro fila-contacto__cuadro--email"><?= icono('mail') ?></span>
+      <span class="fila-contacto__texto"><span class="fila-contacto__rotulo">Email</span><strong class="fila-contacto__valor"><?= e(Cfg::get('email')) ?></strong></span>
+      <?= icono('flecha') ?></a></li>
+    <li><a class="fila-contacto" href="https://www.google.com/maps/search/?api=1&query=<?= e(rawurlencode($direccion . ', Argentina')) ?>" target="_blank" rel="noopener">
+      <span class="fila-contacto__cuadro fila-contacto__cuadro--direccion"><?= icono('pin') ?></span>
+      <span class="fila-contacto__texto"><span class="fila-contacto__rotulo">Oficina</span><strong class="fila-contacto__valor"><?= e($direccion) ?></strong></span>
+      <?= icono('flecha') ?></a></li>
+    <li><div class="fila-contacto fila-contacto--fija">
+      <span class="fila-contacto__cuadro fila-contacto__cuadro--horario"><?= icono('reloj') ?></span>
+      <span class="fila-contacto__texto"><span class="fila-contacto__rotulo">Horario</span><strong class="fila-contacto__valor"><?= e(Cfg::get('horario')) ?></strong></span>
+    </div></li>
+  </ul>
 </div>

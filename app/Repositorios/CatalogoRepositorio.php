@@ -50,7 +50,7 @@ final class CatalogoRepositorio
 
     public function preguntasFrecuentes(): array
     {
-        return $this->pdo->query('SELECT pregunta, respuesta FROM faq WHERE activo = 1 ORDER BY orden')->fetchAll();
+        return $this->pdo->query('SELECT pregunta, respuesta, grupo FROM faq WHERE activo = 1 ORDER BY orden')->fetchAll();
     }
 
     /** Puntos estratégicos del mapa (facultades, terminal, puerto, costanera). */
