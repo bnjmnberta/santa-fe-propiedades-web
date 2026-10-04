@@ -17,7 +17,7 @@ $operacionOculta = $filtros->aConsulta($seccion)['operacion'] ?? null;
   <div class="contenedor">
     <nav class="pestanias" aria-label="Operación">
       <?php foreach ($pestanias as $clave => $nombre): ?>
-        <a href="<?= $clave === '' ? '/propiedades' : '/' . e($clave) ?>" <?= ($seccion ?? '') === $clave ? 'aria-current="page"' : '' ?>><?= e($nombre) ?></a>
+        <a href="<?= $clave === '' ? '/propiedades' : '/' . e($clave) ?>" <?= ($seccion ?? '') === $clave ? 'aria-current="page"' : '' ?> <?= $clave === 'ventas' ? 'data-tono="venta"' : '' ?>><?= e($nombre) ?></a>
       <?php endforeach ?>
     </nav>
 

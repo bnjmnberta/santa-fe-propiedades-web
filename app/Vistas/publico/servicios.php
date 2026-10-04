@@ -44,10 +44,6 @@ $total = count($servicios);
   </div>
 </section>
 
-<?php if ($motivos): ?>
-  <?= Vista::parcial('motivos', ['motivos' => $motivos]) ?>
-<?php endif ?>
-
 <section class="seccion">
   <div class="contenedor">
     <?= Vista::parcial('contacto') ?>

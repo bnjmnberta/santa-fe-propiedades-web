@@ -19,10 +19,10 @@ foreach (range(0, max(count($alquileres), count($ventas)) - 1) as $n) {
   <div class="contenedor portada__fila">
     <h1 class="portada__titulo"><?= e(Cfg::get('eslogan', 'Tu lugar en Santa Fe')) ?></h1>
     <form class="buscador" action="/propiedades" method="get" role="search">
-      <fieldset class="buscador__operacion">
+      <fieldset class="buscador__operacion" data-segmentado>
         <legend class="solo-lectores">Operación</legend>
         <?php foreach (['' => 'Todas', 'alquiler' => 'Alquiler', 'venta' => 'Venta', 'comerciales' => 'Comerciales'] as $valor => $etiqueta): ?>
-          <label class="opcion-seg">
+          <label class="opcion-seg"<?= $valor === 'venta' ? ' data-tono="venta"' : '' ?>>
             <input type="radio" name="operacion" value="<?= e($valor) ?>" <?= $valor === '' ? 'checked' : '' ?>>
             <span><?= e($etiqueta) ?></span>
           </label>

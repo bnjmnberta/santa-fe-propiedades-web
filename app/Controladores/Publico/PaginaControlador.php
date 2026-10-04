@@ -39,7 +39,6 @@ final class PaginaControlador
             'titulo'      => 'Servicios inmobiliarios en Santa Fe | Santa Fe Propiedades',
             'descripcion' => 'Tasaciones, administración de alquileres, asesoramiento en compraventa y difusión de propiedades en Santa Fe Capital.',
             'servicios'   => $catalogo->servicios(),
-            'motivos'     => $catalogo->motivos(),
             'faqs'        => modulo('faq') ? $catalogo->preguntasFrecuentes() : [],
         ]);
     }
@@ -64,7 +63,6 @@ final class PaginaControlador
                 ? 'Publicamos, buscamos inquilinos y administramos tu propiedad en alquiler en Santa Fe.'
                 : 'Tasamos, difundimos y te asesoramos en la venta de tu propiedad en Santa Fe.',
             'esAlquiler'  => $esAlquiler,
-            'motivos'     => (new CatalogoRepositorio())->motivos(),
         ]);
     }
 

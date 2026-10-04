@@ -74,12 +74,14 @@ if ($instagram !== '') {
 
           <fieldset class="consulta__motivos">
             <legend class="campo__etiqueta">¿Qué necesitás?</legend>
-            <?php foreach ($motivos as $clave => [$etiqueta, $frase]): ?>
-              <label class="opcion-chip">
-                <input type="radio" name="motivo" value="<?= e($clave) ?>" data-frase="<?= e($frase) ?>" data-consulta="motivo">
-                <span><?= e($etiqueta) ?></span>
-              </label>
-            <?php endforeach ?>
+            <div class="consulta__opciones">
+              <?php foreach ($motivos as $clave => [$etiqueta, $frase]): ?>
+                <label class="opcion-chip">
+                  <input type="radio" name="motivo" value="<?= e($clave) ?>" data-frase="<?= e($frase) ?>" data-consulta="motivo">
+                  <span><?= e($etiqueta) ?></span>
+                </label>
+              <?php endforeach ?>
+            </div>
           </fieldset>
 
           <label class="campo" for="consulta-codigo">

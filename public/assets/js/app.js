@@ -396,6 +396,57 @@
     });
   })();
 
+  // Selectores segmentados (operación de la portada, pestañas del catálogo, motivo de la consulta):
+  // una pastilla se desliza hasta la opción elegida. La opción "Venta" (data-tono="venta") la pinta de rojo.
+  // En el catálogo las opciones son enlaces: la pastilla arranca a moverse al hacer clic, mientras entra el telón.
+  document.querySelectorAll('[data-segmentado]').forEach(function (grupo) {
+    var items = Array.prototype.slice.call(grupo.children).filter(function (el) { return el.tagName === 'A' || el.tagName === 'LABEL'; });
+    if (!items.length) { return; }
+    var pastilla = document.createElement('span');
+    pastilla.className = 'seg__pastilla';
+    pastilla.setAttribute('aria-hidden', 'true');
+    grupo.insertBefore(pastilla, grupo.firstChild);
+    grupo.classList.add('seg');
+
+    var elegido = function () {
+      return items.filter(function (el) {
+        var radio = el.querySelector('input[type="radio"]');
+        return radio ? radio.checked : el.getAttribute('aria-current') === 'page';
+      })[0] || null;
+    };
+    var ubicar = function (item) {
+      if (!item || !item.offsetWidth) { grupo.classList.add('seg--vacio'); return; }
+      grupo.classList.remove('seg--vacio');
+      grupo.style.setProperty('--seg-x', item.offsetLeft + 'px');
+      grupo.style.setProperty('--seg-y', item.offsetTop + 'px');
+      grupo.style.setProperty('--seg-ancho', item.offsetWidth + 'px');
+      grupo.style.setProperty('--seg-alto', item.offsetHeight + 'px');
+      grupo.dataset.tono = item.dataset.tono || '';
+    };
+    // Sin animación: primera ubicación, cambios de tamaño, fuente cargada, apertura del desplegable.
+    var quieto = function () {
+      grupo.classList.add('seg--quieto');
+      ubicar(elegido());
+      void pastilla.offsetWidth;
+      grupo.classList.remove('seg--quieto');
+    };
+    quieto();
+    window.requestAnimationFrame(function () { grupo.classList.add('seg--desliza'); });
+    if (document.fonts) { document.fonts.ready.then(quieto); }
+    if (window.ResizeObserver) { new ResizeObserver(quieto).observe(grupo); } else { window.addEventListener('resize', quieto); }
+
+    items.forEach(function (item) {
+      var radio = item.querySelector('input[type="radio"]');
+      if (radio) {
+        radio.addEventListener('change', function () { ubicar(item); });
+      } else {
+        item.addEventListener('click', function (evento) {
+          if (evento.button === 0 && !evento.metaKey && !evento.ctrlKey && !evento.shiftKey) { ubicar(item); }
+        });
+      }
+    });
+  });
+
   // Regla j: cada consulta por WhatsApp (y cada clic en teléfono) se registra en Analytics.
   document.addEventListener('click', function (evento) {
     var enlace = evento.target.closest('[data-evento]');

@@ -46,8 +46,4 @@ $pagina = $esAlquiler ? [
   </div>
 </section>
 
-<?php if ($motivos): ?>
-  <?= Vista::parcial('motivos', ['motivos' => $motivos]) ?>
-<?php endif ?>
-
 <?= Vista::parcial('captacion', ['sin' => $esAlquiler ? 'alquila' : 'vende']) ?>
