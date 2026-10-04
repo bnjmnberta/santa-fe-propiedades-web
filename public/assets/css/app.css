@@ -31,8 +31,10 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+/* El fondo de la página es el del pie: si el contenido es corto o se estira la pantalla, debajo del pie no se ve blanco. */
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; background: #0f141e; }
 body {
+  min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column;
   margin: 0;
   font-family: var(--fuente);
   font-size: 16px;
@@ -40,6 +42,11 @@ body {
   color: var(--tinta);
   background: var(--fondo);
 }
+/* En pantallas altas con poco contenido, el espacio que sobra se reparte arriba de las franjas azul y roja (o en la última sección,
+   si la página no las tiene): las franjas y el pie quedan siempre pegados, sin un hueco blanco en el medio. */
+main { flex: 1 0 auto; display: flex; flex-direction: column; }
+main > * { flex: none; }
+main > :has(+ .franjas), main > :last-child:not(.franjas) { flex: 1 0 auto; }
 img { max-width: 100%; display: block; }
 button, input, select, textarea { font: inherit; }
 a { color: var(--azul); }
