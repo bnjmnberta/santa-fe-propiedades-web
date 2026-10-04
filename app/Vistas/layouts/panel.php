@@ -13,7 +13,7 @@ $ruta = parse_url($_SERVER['REQUEST_URI'] ?? '/panel', PHP_URL_PATH);
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <title><?= e($titulo ?? 'Panel') ?> · Panel Santa Fe Propiedades</title>
-  <link rel="icon" href="<?= e(asset('assets/img/favicon.svg')) ?>" type="image/svg+xml">
+  <link rel="icon" href="<?= e(asset('assets/img/icono-sf.svg')) ?>" type="image/svg+xml">
   <link rel="preload" href="/assets/fuentes/open-sauce-sans-400.woff" as="font" type="font/woff" crossorigin>
   <link rel="stylesheet" href="<?= e(asset('assets/css/app.css')) ?>">
   <link rel="stylesheet" href="<?= e(asset('assets/css/panel.css')) ?>">

@@ -21,7 +21,11 @@ $telefonoFijo = Cfg::get('telefono_fijo');
   <meta property="og:description" content="<?= e($descripcion ?? '') ?>">
   <?php if (!empty($imagenOg)): ?><meta property="og:image" content="<?= e($imagenOg) ?>"><?php endif ?>
   <meta name="theme-color" content="#1c2331">
-  <link rel="icon" href="<?= e(asset('assets/img/favicon.svg')) ?>" type="image/svg+xml">
+  <link rel="icon" href="<?= e(asset('assets/img/icono-sf.svg')) ?>" type="image/svg+xml" sizes="any">
+  <link rel="icon" href="<?= e(asset('assets/img/favicon-32.png')) ?>" type="image/png" sizes="32x32">
+  <link rel="icon" href="<?= e(asset('assets/img/favicon-48.png')) ?>" type="image/png" sizes="48x48">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="<?= e(asset('assets/img/apple-touch-icon.png')) ?>">
   <link rel="preload" href="/assets/fuentes/open-sauce-sans-400.woff" as="font" type="font/woff" crossorigin>
   <link rel="stylesheet" href="<?= e(asset('assets/css/app.css')) ?>">
   <link rel="stylesheet" href="<?= e(asset('assets/css/cargadores.css')) ?>">
