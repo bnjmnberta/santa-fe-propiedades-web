@@ -71,6 +71,7 @@ $operacionOculta = $filtros->aConsulta($seccion)['operacion'] ?? null;
     <p class="resultados"><?= $total === 1 ? '1 propiedad' : e($total) . ' propiedades' ?></p>
 
     <?php if ($propiedades): ?>
+      <h2 class="solo-lectores">Propiedades encontradas</h2>
       <div class="grilla">
         <?php foreach ($propiedades as $propiedad): ?>
           <?= Vista::parcial('tarjeta', ['propiedad' => $propiedad]) ?>

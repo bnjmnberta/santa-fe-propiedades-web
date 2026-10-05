@@ -5,7 +5,9 @@
  * las que no tienen grupo van al final, en "Otras preguntas". En celular el título queda arriba de sus preguntas.
  *
  * @var list<array{pregunta: string, respuesta: string, grupo?: string}> $faqs
+ * @var ?int $nivel nivel de título de cada tema: 3 cuando la sección ya tiene su h2 (Servicios), 2 en la página propia
  */
+$nivel = (int) ($nivel ?? 3);
 $grupos = [];
 foreach ($faqs as $faq) {
     $grupos[trim($faq['grupo'] ?? '') ?: 'Otras preguntas'][] = $faq;
@@ -22,7 +24,7 @@ $sinGrupos = array_keys($grupos) === ['Otras preguntas'];
   <?php $n = 0; foreach ($grupos as $nombre => $preguntas): ?>
     <section class="faq__grupo">
       <?php if (!$sinGrupos): ?>
-        <h3 class="faq__titulo"><span class="faq__cuadro faq__cuadro--<?= $colores[$n % 3] ?>" aria-hidden="true"></span><?= e($nombre) ?></h3>
+        <h<?= $nivel ?> class="faq__titulo"><span class="faq__cuadro faq__cuadro--<?= $colores[$n % 3] ?>" aria-hidden="true"></span><?= e($nombre) ?></h<?= $nivel ?>>
       <?php endif ?>
       <div class="faq__lista">
         <?php foreach ($preguntas as $faq): ?>

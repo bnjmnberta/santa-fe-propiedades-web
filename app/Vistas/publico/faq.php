@@ -3,6 +3,6 @@
 
 <section class="seccion">
   <div class="contenedor">
-    <?= Vista::parcial('faq', ['faqs' => $faqs]) ?>
+    <?= Vista::parcial('faq', ['faqs' => $faqs, 'nivel' => 2]) ?>
   </div>
 </section>

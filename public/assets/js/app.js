@@ -93,64 +93,6 @@
     }
   });
 
-  // Interruptor Alquiler / Venta de las destacadas (patrón de pestañas: ← → Inicio Fin,
-  // y solo la pestaña activa queda en el orden del Tab). Una pastilla se desliza hasta la opción
-  // elegida cambiando de color, y las tarjetas entran desde ese lado.
-  document.querySelectorAll('[data-pestanias]').forEach(function (grupo) {
-    var botones = Array.prototype.slice.call(grupo.querySelectorAll('[role="tab"]'));
-    var pastilla = document.createElement('span');
-    pastilla.className = 'interruptor__pastilla';
-    pastilla.setAttribute('aria-hidden', 'true');
-    grupo.insertBefore(pastilla, grupo.firstChild);
-
-    var elegido = function () { return botones.filter(function (b) { return b.getAttribute('aria-selected') === 'true'; })[0] || botones[0]; };
-    var ubicarPastilla = function (boton) {
-      grupo.style.setProperty('--x-pastilla', boton.offsetLeft + 'px');
-      grupo.style.setProperty('--ancho-pastilla', boton.offsetWidth + 'px');
-      grupo.dataset.operacion = boton.classList.contains('interruptor__opcion--venta') ? 'venta' : 'alquiler';
-    };
-    // Primera ubicación y cambios de ancho (fuente cargada, rotar el celular): sin animación.
-    var reubicar = function () {
-      grupo.classList.add('interruptor--quieto');
-      ubicarPastilla(elegido());
-      void pastilla.offsetWidth;
-      grupo.classList.remove('interruptor--quieto');
-    };
-    reubicar();
-    grupo.classList.add('interruptor--deslizante');
-    if (document.fonts) { document.fonts.ready.then(reubicar); }
-    window.addEventListener('resize', reubicar);
-
-    var activar = function (boton, enfocar) {
-      var anterior = botones.indexOf(elegido());
-      var nuevo = botones.indexOf(boton);
-      botones.forEach(function (otro) {
-        var activo = otro === boton;
-        otro.setAttribute('aria-selected', activo ? 'true' : 'false');
-        otro.tabIndex = activo ? 0 : -1;
-        document.getElementById(otro.getAttribute('aria-controls')).hidden = !activo;
-      });
-      ubicarPastilla(boton);
-      if (nuevo !== anterior) {
-        var panel = document.getElementById(boton.getAttribute('aria-controls'));
-        panel.removeAttribute('data-entrada');
-        void panel.offsetWidth; // reinicia la animación si se cambia rápido de una a otra
-        panel.dataset.entrada = nuevo > anterior ? 'derecha' : 'izquierda';
-      }
-      if (enfocar) { boton.focus(); }
-    };
-    botones.forEach(function (boton, indice) {
-      boton.tabIndex = boton.getAttribute('aria-selected') === 'true' ? 0 : -1;
-      boton.addEventListener('click', function () { activar(boton, false); });
-      boton.addEventListener('keydown', function (evento) {
-        var destino = { ArrowRight: indice + 1, ArrowLeft: indice - 1, Home: 0, End: botones.length - 1 }[evento.key];
-        if (destino === undefined) { return; }
-        evento.preventDefault();
-        activar(botones[(destino + botones.length) % botones.length], true);
-      });
-    });
-  });
-
   // Formulario de Contacto: arma el mensaje con nombre, motivo, código y texto, lo muestra
   // como va a llegar y abre WhatsApp. Sin JavaScript, el formulario manda solo el texto.
   document.querySelectorAll('[data-formulario-whatsapp]').forEach(function (formulario) {
@@ -198,7 +140,13 @@
     var alto = 65;
     var posicion = 0;
     var pendiente = false;
-    seccion.classList.add('servicios-h--fijo');
+    // La escena fija necesita una pantalla de al menos 30em de alto (unos 480 px): en un celular horizontal el contenido
+    // no entra y se recortaba. Ahí los servicios quedan apilados, igual que sin JavaScript.
+    var altoSuficiente = window.matchMedia('(min-height: 30em)');
+    var aplicar = function () {
+      seccion.classList.toggle('servicios-h--fijo', altoSuficiente.matches);
+      if (altoSuficiente.matches) { medir(); programar(); }
+    };
 
     var recorrido = function () { return seccion.offsetHeight - escena.offsetHeight; };
     var medir = function () {
@@ -236,14 +184,16 @@
     pasos.forEach(function (paso, i) { paso.addEventListener('click', function () { irA(i); }); });
     // Con Tab, el foco puede llegar a un botón que está fuera de pantalla: se lleva la página hasta ese servicio.
     seccion.addEventListener('focusin', function (evento) {
+      if (!seccion.classList.contains('servicios-h--fijo')) { return; }
       var panel = evento.target.closest('[data-servicio-h]');
       var i = panel ? paneles.indexOf(panel) : -1;
       if (i >= 0 && Math.abs(i - posicion) > 0.5) { irA(i); }
     });
     window.addEventListener('scroll', programar, { passive: true });
     window.addEventListener('resize', function () { medir(); programar(); });
-    medir();
+    aplicar();
     pintar();
+    if (altoSuficiente.addEventListener) { altoSuficiente.addEventListener('change', function () { aplicar(); pintar(); }); }
     if (document.fonts) { document.fonts.ready.then(function () { medir(); pintar(); }); }
   });
 

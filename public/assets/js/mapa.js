@@ -157,7 +157,14 @@
       return marcador;
     }
     if (conVista) {
-      return marcador.setPopup(new maplibregl.Popup({ offset: DISTANCIA_VISTA, closeButton: false, maxWidth: '280px', className: 'popup-mapa popup-vista' }).setHTML(tarjetaVista(p)));
+      var globo = new maplibregl.Popup({ offset: DISTANCIA_VISTA, closeButton: false, maxWidth: '280px', className: 'popup-mapa popup-vista' }).setHTML(tarjetaVista(p));
+      // El mapa del celular es chico y la tarjeta mide unos 250 px de alto: quedaba cortada abajo. Al abrirla, la etiqueta
+      // sube hasta unos 64 px del borde de arriba y la tarjeta entra completa debajo.
+      globo.on('open', function () {
+        var alto = mapa.getContainer().clientHeight;
+        mapa.easeTo({ center: [p.lng, p.lat], offset: [0, Math.min(0, 64 - alto / 2)], duration: 350 });
+      });
+      return marcador.setPopup(globo);
     }
     return marcador.setPopup(new maplibregl.Popup({ offset: 22, closeButton: false, maxWidth: '220px', className: 'popup-mapa' }).setHTML(
       '<a class="mapa-popup" href="' + escapar(p.url) + '">' +
