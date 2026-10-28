@@ -352,6 +352,7 @@ p { margin: 0 0 1em; }
 .ficha__texto { color: #353d4d; }
 .caracteristicas { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .caracteristicas li { display: flex; gap: 8px; }
+.caracteristicas.caracteristicas--una { grid-template-columns: minmax(0, 1fr); }
 .caracteristicas .icono { color: var(--whatsapp); margin-top: .2em; }
 .datos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 0; }
 .datos div { background: var(--fondo-alterno); border-radius: 10px; padding: 10px 12px; }

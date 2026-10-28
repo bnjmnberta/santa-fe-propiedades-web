@@ -34,6 +34,10 @@ $enlaceMapa = $p->dato('latitud') && $p->dato('longitud')
 $primeraFoto = $p->fotos[0] ?? ['ancho' => 4, 'alto' => 3];
 $anchoFoto = (int) ($primeraFoto['ancho'] ?: 4);
 $altoFoto = (int) ($primeraFoto['alto'] ?: 3);
+// Condiciones del alquiler para inquilinos: se editan en Panel > Configuración (una por línea). Solo en alquileres disponibles.
+$condiciones = $p->operacion->value === 'alquiler' && $disponible
+    ? array_values(array_filter(array_map('trim', preg_split('/\R/u', Cfg::get('condiciones_alquiler')))))
+    : [];
 $whatsappSimilares = EnlaceWhatsApp::general(Cfg::get('whatsapp_numero'), sprintf('Hola, vi que la propiedad #%d ya no está disponible. ¿Tienen algo parecido?', $p->codigo));
 ?>
 <div class="contenedor ficha">
@@ -113,6 +117,13 @@ $whatsappSimilares = EnlaceWhatsApp::general(Cfg::get('whatsapp_numero'), sprint
             <div><dt><?= e($etiqueta) ?></dt><dd><?= e($valor) ?></dd></div>
           <?php endforeach ?>
         </dl>
+      <?php endif ?>
+
+      <?php if ($condiciones): ?>
+        <h2 class="ficha__subtitulo">Condiciones del alquiler</h2>
+        <ul class="caracteristicas caracteristicas--una">
+          <?php foreach ($condiciones as $condicion): ?><li><?= icono('check') ?><?= e($condicion) ?></li><?php endforeach ?>
+        </ul>
       <?php endif ?>
 
       <?php if ($p->dato('servicios')): ?>

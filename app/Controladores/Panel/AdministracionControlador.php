@@ -30,6 +30,9 @@ final class AdministracionControlador
         'Portada' => [
             'eslogan'          => ['Título principal', 'texto'],
         ],
+        'Alquileres' => [
+            'condiciones_alquiler' => ['Condiciones del alquiler para inquilinos (una por línea). Se ven en la ficha de cada propiedad en alquiler', 'area'],
+        ],
         'Analítica' => [
             'ga_measurement_id' => ['ID de Google Analytics 4 (G-XXXXXXX). Vacío = sin medición', 'texto'],
         ],
@@ -123,9 +126,12 @@ final class AdministracionControlador
         );
         foreach (self::CONFIGURACION as $campos) {
             foreach ($campos as $clave => [, $tipo]) {
-                $valor = $tipo === 'modulo'
-                    ? (isset($_POST[$clave]) ? '1' : '0')
-                    : mb_substr(trim((string) ($_POST[$clave] ?? '')), 0, 300);
+                $valor = match ($tipo) {
+                    'modulo' => isset($_POST[$clave]) ? '1' : '0',
+                    // Texto de varias líneas: una por renglón, sin renglones vacíos.
+                    'area'   => mb_substr(implode(chr(10), array_filter(array_map('trim', preg_split('/\R/u', (string) ($_POST[$clave] ?? ''))))), 0, 600),
+                    default  => mb_substr(trim((string) ($_POST[$clave] ?? '')), 0, 300),
+                };
                 if ($clave === 'whatsapp_numero') {
                     $valor = preg_replace('/\D+/', '', $valor);
                 }

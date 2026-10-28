@@ -9,6 +9,11 @@
       <?php foreach ($campos as $clave => [$etiqueta, $tipo]): ?>
         <?php if ($tipo === 'modulo'): ?>
           <label class="panel-check"><input type="checkbox" name="<?= e($clave) ?>" value="1" <?= ($valores[$clave] ?? '1') === '1' ? 'checked' : '' ?>> <?= e($etiqueta) ?></label>
+        <?php elseif ($tipo === 'area'): ?>
+          <label class="panel-campo panel-campo--completo">
+            <span><?= e($etiqueta) ?></span>
+            <textarea name="<?= e($clave) ?>" rows="5" maxlength="600"><?= e($valores[$clave] ?? '') ?></textarea>
+          </label>
         <?php else: ?>
           <label class="panel-campo panel-campo--completo">
             <span><?= e($etiqueta) ?></span>
