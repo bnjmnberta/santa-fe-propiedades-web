@@ -72,6 +72,37 @@ final class GestionPropiedadRepositorio
         return $consulta->fetch() ?: null;
     }
 
+    /** Lo mínimo de una propiedad publicada, a partir de su código (el que ve el equipo, no el id interno). */
+    public function porCodigo(int $codigo): ?array
+    {
+        $consulta = $this->pdo->prepare('SELECT id_propiedad, codigo, titulo, operacion, estado, moneda, precio
+            FROM propiedad WHERE codigo = ? AND eliminado_en IS NULL');
+        $consulta->execute([$codigo]);
+        return $consulta->fetch() ?: null;
+    }
+
+    /** Solo el precio (el resto de la ficha no se toca). Las reglas c: el precio es positivo y siempre lleva moneda. */
+    public function cambiarPrecio(int $id, float $precio, string $moneda): void
+    {
+        $this->pdo->prepare('UPDATE propiedad SET precio = ?, moneda = ? WHERE id_propiedad = ?')->execute([$precio, $moneda, $id]);
+    }
+
+    /** Datos básicos de la publicación que el asistente puede cambiar (lista cerrada: nada de armar columnas con lo que llegue). */
+    public const CAMPOS_SENCILLOS = ['expensas', 'destacada', 'descripcion'];
+
+    /** @return mixed el valor anterior */
+    public function cambiarCampo(int $id, string $campo, mixed $valor): mixed
+    {
+        if (!in_array($campo, self::CAMPOS_SENCILLOS, true)) {
+            throw new RuntimeException('Campo no permitido.');
+        }
+        $consulta = $this->pdo->prepare("SELECT $campo FROM propiedad WHERE id_propiedad = ?");
+        $consulta->execute([$id]);
+        $anterior = $consulta->fetchColumn();
+        $this->pdo->prepare("UPDATE propiedad SET $campo = ? WHERE id_propiedad = ?")->execute([$valor, $id]);
+        return $anterior === false ? null : $anterior;
+    }
+
     /** Regla h: los códigos nuevos continúan la numeración de la web vieja. */
     public function crear(array $datos, int $idUsuario): int
     {
@@ -91,7 +122,7 @@ final class GestionPropiedadRepositorio
     }
 
     /** Reglas e y f: la transición se valida antes de llamar; acá se guarda estado e historial juntos. */
-    public function cambiarEstado(int $id, EstadoPropiedad $anterior, EstadoPropiedad $nuevo, int $idUsuario, ?string $nota): void
+    public function cambiarEstado(int $id, EstadoPropiedad $anterior, EstadoPropiedad $nuevo, ?int $idUsuario, ?string $nota): void
     {
         $this->pdo->beginTransaction();
         $this->pdo->prepare('UPDATE propiedad SET estado = ?, fecha_cierre = ? WHERE id_propiedad = ?')->execute([

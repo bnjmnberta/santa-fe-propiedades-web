@@ -11,11 +11,12 @@
 <?php if (!$conectado): ?>
   <p class="panel-aviso panel-aviso--error" role="alert">El panel todavía no está conectado con el asistente. Falta cargar la dirección y la clave en la configuración del servidor.</p>
 <?php else: ?>
-<section class="wsp" data-chats data-base="/panel/chats" data-csrf="<?= e($token) ?>">
+<section class="wsp" data-chats data-base="/panel/chats" data-csrf="<?= e($token) ?>" data-push-clave="<?= e($pushClave ?? '') ?>">
   <aside class="wsp__lista" aria-label="Conversaciones">
     <div class="wsp__lista-cabecera">
       <strong>Chats</strong>
       <div class="wsp__acciones">
+        <button type="button" class="wsp__campana" data-avisos aria-pressed="false" aria-label="Activar los avisos en este dispositivo" title="Activar los avisos en este dispositivo" hidden><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 17h12l-1.6-2.4V10a4.4 4.4 0 0 0-8.8 0v4.6L6 17Zm4.5 2.2a1.6 1.6 0 0 0 3 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <div class="wsp__apariencia" role="group" aria-label="Apariencia">
           <button type="button" data-apariencia="claro" aria-pressed="false" aria-label="Modo claro" title="Modo claro"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5.3 5.3l1.7 1.7M17 17l1.7 1.7M18.7 5.3 17 7M7 17l-1.7 1.7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
           <button type="button" data-apariencia="oscuro" aria-pressed="false" aria-label="Modo oscuro" title="Modo oscuro"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></button>

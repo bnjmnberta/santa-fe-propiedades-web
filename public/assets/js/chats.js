@@ -324,7 +324,10 @@
     });
   }
 
+  var tituloBase = document.title.replace(/^\(\d+\+?\)\s*/, '');
   function actualizarCuenta(total) {
+    // Los no leídos también se ven en la pestaña ("(3) Chats"), para enterarse sin tener la pantalla de Chats a la vista.
+    document.title = (total > 0 ? '(' + (total > 99 ? '99+' : total) + ') ' : '') + tituloBase;
     if (!elCuenta) { return; }
     elCuenta.hidden = total < 1;
     elCuenta.textContent = total > 99 ? '99+' : String(total);
@@ -671,6 +674,70 @@
   }
   aplicarApariencia(aparienciaGuardada());
 
+  // Avisos al teléfono (notificaciones push): la campana activa o desactiva los avisos en este dispositivo.
+  var elAvisos = $('[data-avisos]');
+  var claveAvisos = raiz.dataset.pushClave || '';
+  var registroAvisos = null;
+  function bytesDeBase64(texto) {
+    var relleno = '='.repeat((4 - texto.length % 4) % 4);
+    var crudo = atob((texto + relleno).replace(/-/g, '+').replace(/_/g, '/'));
+    var bytes = new Uint8Array(crudo.length);
+    for (var i = 0; i < crudo.length; i++) { bytes[i] = crudo.charCodeAt(i); }
+    return bytes;
+  }
+  function pintarAvisos(activo) {
+    elAvisos.setAttribute('aria-pressed', activo ? 'true' : 'false');
+    elAvisos.classList.toggle('wsp__campana--activa', activo);
+    var texto = activo ? 'Avisos activados en este dispositivo (tocá para desactivarlos)' : 'Activar los avisos en este dispositivo';
+    elAvisos.title = texto;
+    elAvisos.setAttribute('aria-label', texto);
+  }
+  function avisoRapido(texto) {
+    elResumen.hidden = false;
+    elResumen.textContent = texto;
+    setTimeout(function () { if (!buscando()) { elResumen.hidden = true; } else { dibujarLista(); } }, 6000);
+  }
+  function pedirAvisos(ruta, cuerpo) {
+    return fetch('/panel/push/' + ruta, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF': csrf }, body: JSON.stringify(cuerpo) })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok, datos: j }; }); });
+  }
+  if (elAvisos && claveAvisos && 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window) {
+    elAvisos.hidden = false;
+    navigator.serviceWorker.register('/sw.js').then(function (registro) {
+      registroAvisos = registro;
+      return registro.pushManager.getSubscription();
+    }).then(function (suscripcion) {
+      pintarAvisos(!!suscripcion && Notification.permission === 'granted');
+    }, function () { elAvisos.hidden = true; });
+    elAvisos.addEventListener('click', function () {
+      if (!registroAvisos) { return; }
+      registroAvisos.pushManager.getSubscription().then(function (suscripcion) {
+        if (suscripcion) { // desactivar
+          var endpoint = suscripcion.endpoint;
+          return suscripcion.unsubscribe().then(function () { return pedirAvisos('baja', { endpoint: endpoint }); }).then(function () {
+            pintarAvisos(false);
+            avisoRapido('Avisos desactivados en este dispositivo.');
+          });
+        }
+        return Notification.requestPermission().then(function (permiso) {
+          if (permiso !== 'granted') {
+            avisoRapido('Los avisos están bloqueados en este navegador: habilitá las notificaciones para este sitio y probá de nuevo.');
+            return null;
+          }
+          return registroAvisos.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: bytesDeBase64(claveAvisos) }).then(function (nueva) {
+            return pedirAvisos('suscribir', { suscripcion: nueva.toJSON() }).then(function (r) {
+              if (!r.ok) { avisoRapido(r.datos.error || 'No se pudieron activar los avisos.'); return nueva.unsubscribe(); }
+              pintarAvisos(true);
+              return pedirAvisos('probar', { endpoint: nueva.endpoint }).then(function (p) {
+                avisoRapido(p.ok ? 'Avisos activados. Te mandé uno de prueba.' : (p.datos.error || 'Se activaron, pero el aviso de prueba no salió.'));
+              });
+            });
+          });
+        });
+      }).catch(function () { avisoRapido('No se pudieron activar los avisos en este navegador.'); });
+    });
+  }
+
   elForm.addEventListener('submit', enviar);
   elMic.addEventListener('click', empezarGrabacion);
   $('[data-enviar-audio]').addEventListener('click', function () { pararGrabacion(false); });
@@ -695,4 +762,15 @@
   });
   setInterval(function () { if (!document.hidden) { cargarLista(); } }, 6000);
   setInterval(function () { if (!document.hidden) { actualizarChat(); } }, 3000);
+  // En el celular el navegador congela la página al bloquear la pantalla o cambiar de aplicación: al volver, se actualiza al instante
+  // (sin esperar el siguiente ciclo y sin tener que recargar).
+  function refrescarYa() {
+    if (document.hidden) { return; }
+    cargarLista();
+    actualizarChat();
+  }
+  document.addEventListener('visibilitychange', refrescarYa);
+  window.addEventListener('focus', refrescarYa);
+  window.addEventListener('pageshow', refrescarYa);
+  window.addEventListener('online', refrescarYa);
 })();

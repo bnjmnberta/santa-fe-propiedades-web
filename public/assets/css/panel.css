@@ -312,3 +312,9 @@ html[data-tema="oscuro"] body.panel--chats .wsp__burbuja--persona .wsp__quien { 
 .wsp__apariencia button { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border: 0; border-radius: 50%; background: none; color: var(--w-suave); cursor: pointer; }
 .wsp__apariencia button:hover { color: var(--tinta); }
 .wsp__apariencia button[aria-pressed="true"] { background: var(--w-sup); color: var(--w-acento); box-shadow: 0 1px 2px var(--w-sombra); }
+
+/* Campana de avisos al teléfono (en la cabecera de la lista de chats) */
+.wsp__campana { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border: 0; border-radius: 50%; background: var(--w-chip); color: var(--w-suave); cursor: pointer; }
+.wsp__campana[hidden] { display: none; }
+.wsp__campana:hover { color: var(--tinta); }
+.wsp__campana--activa { background: var(--w-acento-bg); color: var(--w-acento); }

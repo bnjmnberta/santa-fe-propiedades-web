@@ -22,7 +22,18 @@ final class ChatsControlador
             'titulo'      => 'Chats',
             'conectado'   => AsistenteCliente::configurado(),
             'token'       => Csrf::token(),
+            'pushClave'   => AsistenteCliente::configurado() ? $this->claveDeAvisos() : '',
         ], 'layouts/panel');
+    }
+
+    /** La clave pública para los avisos al teléfono (se crea la primera vez). Vacía si no se pueden crear: el panel anda igual, sin avisos. */
+    private function claveDeAvisos(): string
+    {
+        try {
+            return (new \App\Servicios\WebPush())->claves()['publica'];
+        } catch (\Throwable) {
+            return '';
+        }
     }
 
     /** Busca dentro de lo que se dijeron en los chats (nombre y número los filtra el navegador). */

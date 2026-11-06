@@ -1,10 +1,12 @@
 <?php
 declare(strict_types=1);
 
+use App\Controladores\Api\AsistenteApiControlador;
 use App\Controladores\Panel\AccesoControlador;
 use App\Controladores\Panel\AdministracionControlador;
 use App\Controladores\Panel\ChatsControlador;
 use App\Controladores\Panel\FotosControlador;
+use App\Controladores\Panel\PushControlador;
 use App\Controladores\Panel\PropiedadesControlador;
 use App\Controladores\Publico\CatalogoControlador;
 use App\Controladores\Publico\FichaControlador;
@@ -55,6 +57,15 @@ $router->post('/panel/chats/{contacto:\d+}/enviar', [ChatsControlador::class, 'e
 $router->post('/panel/chats/{contacto:\d+}/audio', [ChatsControlador::class, 'audio']);
 $router->post('/panel/chats/{contacto:\d+}/modo',[ChatsControlador::class, 'modo']);
 $router->post('/panel/chats/{contacto:\d+}/leer', [ChatsControlador::class, 'leer']);
+// Cambios sencillos que hace el asistente de WhatsApp a pedido de un dueño (con clave; ver AsistenteApiControlador)
+$router->post('/api/asistente/estado', [AsistenteApiControlador::class, 'estado']);
+$router->post('/api/asistente/precio', [AsistenteApiControlador::class, 'precio']);
+$router->post('/api/asistente/campo', [AsistenteApiControlador::class, 'campo']);
+$router->post('/api/asistente/notificar', [AsistenteApiControlador::class, 'notificar']);
+// Avisos al teléfono (notificaciones push) de los administradores
+$router->post('/panel/push/suscribir', [PushControlador::class, 'suscribir']);
+$router->post('/panel/push/baja', [PushControlador::class, 'baja']);
+$router->post('/panel/push/probar', [PushControlador::class, 'probar']);
 $router->get('/panel/configuracion', [AdministracionControlador::class, 'configuracion']);
 $router->post('/panel/configuracion', [AdministracionControlador::class, 'guardarConfiguracion']);
 
