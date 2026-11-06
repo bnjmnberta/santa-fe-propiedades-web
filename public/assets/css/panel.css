@@ -154,29 +154,29 @@
 .panel-nav__cuenta[hidden] { display: none; }
 
 .wsp { --wsp-verde: var(--celeste); --wsp-verde-oscuro: var(--azul); --wsp-salida: #dcebf9; --wsp-fondo: #edf1f7; --wsp-tilde: var(--celeste);
-  display: grid; grid-template-columns: 1fr; height: calc(100vh - 210px); min-height: 460px; background: #fff; border: 1px solid var(--borde); border-radius: 12px; overflow: hidden; }
-.wsp__lista { display: flex; flex-direction: column; min-height: 0; border-right: 1px solid var(--borde); background: #fff; }
-.wsp__lista-cabecera { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; background: #f0f2f5; }
+  display: grid; grid-template-columns: 1fr; height: calc(100vh - 210px); min-height: 460px; background: var(--w-sup); border: 1px solid var(--borde); border-radius: 12px; overflow: hidden; }
+.wsp__lista { display: flex; flex-direction: column; min-height: 0; border-right: 1px solid var(--borde); background: var(--w-sup); }
+.wsp__lista-cabecera { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; background: var(--w-cab); }
 .wsp__conexion { color: var(--wsp-verde); font-size: .8rem; }
 .wsp__conexion--mal { color: #d0342c; }
 .wsp__buscador { position: relative; padding: 8px 12px; }
-.wsp__buscador input { width: 100%; min-height: 40px; padding: 0 38px 0 38px; border: 2px solid transparent; border-radius: 10px; background: #f0f2f5; font: inherit; font-size: 16px; /* 16px: el celular no hace zoom al enfocar */ }
-.wsp__buscador input:focus { outline: none; border-color: var(--azul); background: #fff; }
+.wsp__buscador input { width: 100%; min-height: 40px; padding: 0 38px 0 38px; border: 2px solid transparent; border-radius: 10px; background: var(--w-cab); font: inherit; font-size: 16px; /* 16px: el celular no hace zoom al enfocar */ }
+.wsp__buscador input:focus { outline: none; border-color: var(--azul); background: var(--w-sup); }
 .wsp__buscador input::-webkit-search-cancel-button { display: none; }
 .wsp__lupa { position: absolute; left: 24px; top: 50%; transform: translateY(-50%); color: var(--tinta-suave); pointer-events: none; }
-.wsp__limpiar { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); width: 28px; height: 28px; border: 0; border-radius: 50%; background: #dfe3e8; color: var(--tinta); font-size: .8rem; line-height: 1; cursor: pointer; }
-.wsp__limpiar:hover { background: #cfd5dc; }
+.wsp__limpiar { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); width: 28px; height: 28px; border: 0; border-radius: 50%; background: var(--w-limpiar); color: var(--tinta); font-size: .8rem; line-height: 1; cursor: pointer; }
+.wsp__limpiar:hover { background: var(--w-limpiar-h); }
 .wsp__limpiar[hidden] { display: none; }
 .wsp__resumen { margin: 0; padding: 0 14px 8px; font-size: .78rem; color: var(--tinta-suave); border-bottom: 1px solid var(--borde); }
 .wsp__resumen[hidden] { display: none; }
 .wsp--buscando .wsp__temas { opacity: .45; pointer-events: none; }
-.wsp mark { background: #ffe58f; color: inherit; border-radius: 3px; padding: 0 1px; }
+.wsp mark { background: var(--w-mark); color: inherit; border-radius: 3px; padding: 0 1px; }
 .wsp__chat-vista--hallazgo { color: var(--tinta); white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.3; }
 .wsp__chats { list-style: none; margin: 0; padding: 0; overflow-y: auto; flex: 1; }
 .wsp__vacio { padding: 20px 16px; color: var(--tinta-suave); }
-.wsp__chat-item { display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 14px; border: 0; border-bottom: 1px solid #f0f2f5; background: #fff; text-align: left; font: inherit; cursor: pointer; }
-.wsp__chat-item:hover { background: #f5f6f6; }
-.wsp__chat-item--activo { background: #f0f2f5; }
+.wsp__chat-item { display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 14px; border: 0; border-bottom: 1px solid var(--w-cab); background: var(--w-sup); text-align: left; font: inherit; cursor: pointer; }
+.wsp__chat-item:hover { background: var(--w-hover); }
+.wsp__chat-item--activo { background: var(--w-cab); }
 .wsp__avatar { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; background: #6b7cff; color: #fff; font-weight: 700; font-size: 1.1rem; }
 .wsp__chat-cuerpo { flex: 1; min-width: 0; display: grid; gap: 3px; }
 .wsp__chat-arriba, .wsp__chat-abajo { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-width: 0; }
@@ -184,42 +184,42 @@
 .wsp__chat-hora { flex: 0 0 auto; font-size: .75rem; color: var(--tinta-suave); }
 .wsp__chat-hora--nuevo { color: var(--wsp-verde-oscuro); font-weight: 700; }
 .wsp__chat-vista { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .88rem; color: var(--tinta-suave); }
-.wsp__etiqueta { flex: 0 0 auto; font-size: .66rem; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; padding: 2px 6px; border-radius: 6px; background: #e9edef; color: #54656f; }
-.wsp__etiqueta--venta { background: #fde7e5; color: #9c2a23; }
+.wsp__etiqueta { flex: 0 0 auto; font-size: .66rem; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; padding: 2px 6px; border-radius: 6px; background: var(--w-chip); color: var(--w-suave); }
+.wsp__etiqueta--venta { background: var(--w-venta-bg); color: var(--w-venta-fg); }
 .wsp__contador { flex: 0 0 auto; min-width: 20px; padding: 1px 6px; border-radius: 999px; background: var(--azul); color: #fff; font-size: .72rem; font-weight: 800; text-align: center; line-height: 1.5; }
-.wsp__tilde { color: #8696a0; font-size: .8rem; }
+.wsp__tilde { color: var(--w-tenue); font-size: .8rem; }
 .wsp__tilde--leido { color: var(--wsp-tilde); }
 .wsp__tilde--fallo { color: #d0342c; }
 
 .wsp__conversacion { display: none; flex-direction: column; min-height: 0; background: var(--wsp-fondo); }
 .wsp--abierto .wsp__lista { display: none; }
 .wsp--abierto .wsp__conversacion { display: flex; }
-.wsp__inicio { margin: auto; max-width: 360px; padding: 24px; text-align: center; color: #54656f; }
+.wsp__inicio { margin: auto; max-width: 360px; padding: 24px; text-align: center; color: var(--w-suave); }
 .wsp__inicio-icono { font-size: 3rem; }
 .wsp__chico { font-size: .85rem; }
 .wsp__chat { display: flex; flex-direction: column; min-height: 0; flex: 1; }
 .wsp__chat[hidden] { display: none; }
-.wsp__chat-cabecera { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: #f0f2f5; }
+.wsp__chat-cabecera { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: var(--w-cab); }
 .wsp__volver { border: 0; background: none; font-size: 1.4rem; cursor: pointer; color: var(--tinta); padding: 0 4px; }
 .wsp__chat-titulo { display: grid; min-width: 0; flex: 1; }
 .wsp__chat-titulo strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .wsp__chat-titulo span { font-size: .8rem; color: var(--tinta-suave); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .wsp__modo { flex: 0 0 auto; }
-.wsp__banner { margin: 0; padding: 9px 14px; background: #fff3c4; color: #5c4a00; font-size: .85rem; }
-.wsp__banner--suave { background: #e7f3fe; color: #1b4b72; }
-.wsp__banner--error { background: #fdecec; color: #8c1d18; }
+.wsp__banner { margin: 0; padding: 9px 14px; background: var(--w-sup)3c4; color: var(--w-banner-fg); font-size: .85rem; }
+.wsp__banner--suave { background: var(--w-banner-suave-bg); color: var(--w-banner-suave-fg); }
+.wsp__banner--error { background: var(--w-banner-err-bg); color: var(--w-banner-err-fg); }
 .wsp__mensajes { flex: 1; min-height: 0; overflow-y: auto; padding: 14px 7% 10px; display: flex; flex-direction: column; gap: 4px;
-  background-color: var(--wsp-fondo); background-image: radial-gradient(rgba(11, 20, 26, .035) 1px, transparent 1px); background-size: 18px 18px; }
+  background-color: var(--wsp-fondo); background-image: radial-gradient(var(--w-trama) 1px, transparent 1px); background-size: 18px 18px; }
 .wsp__dia { display: flex; justify-content: center; margin: 8px 0; }
-.wsp__dia span { background: #fff; color: #54656f; font-size: .75rem; padding: 4px 10px; border-radius: 8px; box-shadow: 0 1px 1px rgba(11, 20, 26, .12); }
-.wsp__burbuja { position: relative; max-width: min(78%, 560px); padding: 6px 9px 4px; border-radius: 8px; background: #fff; box-shadow: 0 1px 1px rgba(11, 20, 26, .13); word-wrap: break-word; overflow-wrap: anywhere; }
+.wsp__dia span { background: var(--w-sup); color: var(--w-suave); font-size: .75rem; padding: 4px 10px; border-radius: 8px; box-shadow: 0 1px 1px var(--w-sombra); }
+.wsp__burbuja { position: relative; max-width: min(78%, 560px); padding: 6px 9px 4px; border-radius: 8px; background: var(--w-entrada); box-shadow: 0 1px 1px var(--w-sombra); word-wrap: break-word; overflow-wrap: anywhere; }
 .wsp__burbuja--entrada { align-self: flex-start; border-top-left-radius: 0; }
 .wsp__burbuja--salida { align-self: flex-end; background: var(--wsp-salida); border-top-right-radius: 0; }
 .wsp__quien { display: block; font-size: .72rem; font-weight: 700; color: var(--wsp-verde-oscuro); margin-bottom: 1px; }
 .wsp__burbuja--persona .wsp__quien { color: var(--rojo); }
 .wsp__texto { white-space: pre-wrap; font-size: .95rem; line-height: 1.35; }
-.wsp__pie { display: block; text-align: right; font-size: .68rem; color: #667781; margin-top: 1px; user-select: none; }
-.wsp__escribir { display: flex; align-items: flex-end; gap: 8px; padding: 8px 12px; background: #f0f2f5; }
+.wsp__pie { display: block; text-align: right; font-size: .68rem; color: var(--w-suave); margin-top: 1px; user-select: none; }
+.wsp__escribir { display: flex; align-items: flex-end; gap: 8px; padding: 8px 12px; background: var(--w-cab); }
 .wsp__escribir[hidden] { display: none; }
 
 /* La pantalla de Chats ocupa todo el alto y el ancho, como WhatsApp: sin márgenes ni título; el menú de arriba queda fijo. */
@@ -235,8 +235,8 @@
   .panel--chats .panel-nav::-webkit-scrollbar { display: none; }
   .panel--chats .panel-nav a { white-space: nowrap; }
 }
-.wsp__escribir textarea { flex: 1; min-height: 42px; max-height: 140px; padding: 10px 14px; border: 0; border-radius: 22px; font: inherit; resize: none; background: #fff; line-height: 1.3; }
-.wsp__escribir textarea:disabled { background: #e9edef; }
+.wsp__escribir textarea { flex: 1; min-height: 42px; max-height: 140px; padding: 10px 14px; border: 0; border-radius: 22px; font: inherit; resize: none; background: var(--w-input); line-height: 1.3; }
+.wsp__escribir textarea:disabled { background: var(--w-chip); }
 .wsp__enviar { flex: 0 0 auto; width: 42px; height: 42px; border: 0; border-radius: 50%; background: var(--wsp-verde-oscuro); color: #fff; font-size: 1.1rem; cursor: pointer; }
 .wsp__enviar:disabled { background: #9aa6ac; cursor: not-allowed; }
 .wsp__mic { background: var(--azul-oscuro); }
@@ -244,14 +244,14 @@
 .wsp__temas { display: flex; justify-content: space-between; padding: 0 4px; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid var(--borde); }
 .wsp__temas::-webkit-scrollbar { display: none; }
 .wsp__tema { flex: 1 0 auto; justify-content: center; display: inline-flex; align-items: center; gap: 3px; padding: 10px 5px 9px; border: 0; border-bottom: 3px solid transparent; background: none; color: var(--tinta-suave); font: inherit; font-size: .76rem; font-weight: 600; white-space: nowrap; cursor: pointer; }
-.wsp__tema:hover { color: var(--azul); }
-.wsp__tema--activo { border-bottom-color: var(--azul); color: var(--azul); }
+.wsp__tema:hover { color: var(--w-acento); }
+.wsp__tema--activo { border-bottom-color: var(--w-acento); color: var(--w-acento); }
 .wsp__tema span { min-width: 17px; padding: 0 4px; border-radius: 999px; background: var(--azul); color: #fff; font-size: .66rem; font-weight: 800; line-height: 1.6; text-align: center; }
 .wsp__tema span[hidden] { display: none; }
-.wsp__etiqueta--tema { background: #e7f0fa; color: var(--azul); }
-.wsp__grabando { display: flex; align-items: center; gap: 12px; padding: 8px 12px; background: #f0f2f5; }
+.wsp__etiqueta--tema { background: var(--w-acento-bg); color: var(--w-acento); }
+.wsp__grabando { display: flex; align-items: center; gap: 12px; padding: 8px 12px; background: var(--w-cab); }
 .wsp__grabando[hidden] { display: none; }
-.wsp__grabando .wsp__chico { flex: 1; color: #54656f; }
+.wsp__grabando .wsp__chico { flex: 1; color: var(--w-suave); }
 .wsp__tiempo { font-variant-numeric: tabular-nums; font-weight: 600; min-width: 2.6em; }
 .wsp__punto { width: 12px; height: 12px; border-radius: 50%; background: #e53935; animation: wsp-latido 1s ease-in-out infinite; }
 @keyframes wsp-latido { 50% { opacity: .25; } }
@@ -263,4 +263,52 @@
   .wsp--abierto .wsp__lista { display: flex; }
   .wsp__volver { display: none; }
 }
-.wsp__chat-vista--espera { color: #b3261e; font-weight: 700; }
+.wsp__chat-vista--espera { color: var(--w-error); font-weight: 700; }
+
+
+/* ---- Apariencia de Chats: claro, oscuro o el del sistema ----
+   Claro por defecto. El oscuro se activa con html[data-tema="oscuro"] (lo decide chats.js y un script chico en el <head>). */
+.wsp {
+  --w-sup: #fff; --w-entrada: #fff; --w-input: #fff; --w-cab: #f0f2f5; --w-hover: #f5f6f6; --w-chip: #e9edef;
+  --w-suave: #54656f; --w-tenue: #8696a0; --w-limpiar: #dfe3e8; --w-limpiar-h: #cfd5dc;
+  --w-acento: var(--azul); --w-acento-bg: #e7f0fa; --w-venta-bg: #fde7e5; --w-venta-fg: #9c2a23;
+  --w-banner-bg: #fff3c4; --w-banner-fg: #5c4a00; --w-banner-suave-bg: #e7f3fe; --w-banner-suave-fg: #1b4b72;
+  --w-banner-err-bg: #fdecec; --w-banner-err-fg: #8c1d18;
+  --w-mark: #ffe58f; --w-error: #b3261e; --w-trama: rgba(11, 20, 26, .035); --w-sombra: rgba(11, 20, 26, .13);
+  color: var(--tinta);
+}
+.wsp button, .wsp input, .wsp textarea { color: inherit; }
+.wsp__chat-item { color: var(--tinta); }
+.wsp__escribir textarea::placeholder, .wsp__buscador input::placeholder { color: var(--w-suave); opacity: .85; }
+
+html[data-tema="oscuro"] body.panel--chats {
+  color-scheme: dark;
+  --tinta: #e6ebf2; --tinta-suave: #9fb0c6; --fondo: #0f141c; --fondo-alterno: #1c2533; --borde: #2a3445;
+  background: #0f141c; color: var(--tinta);
+}
+html[data-tema="oscuro"] body.panel--chats .wsp {
+  --wsp-salida: #1d3c63; --wsp-fondo: #0e141b; --wsp-tilde: #4cc3f5;
+  --w-sup: #151c27; --w-entrada: #1f2937; --w-input: #1f2937; --w-cab: #1c2533; --w-hover: #1a2230; --w-chip: #263143;
+  --w-suave: #9fb0c6; --w-tenue: #7d8ca1; --w-limpiar: #2a3546; --w-limpiar-h: #35435a;
+  --w-acento: #6db3f2; --w-acento-bg: #1e3350; --w-venta-bg: #4a1f1c; --w-venta-fg: #ffb4ae;
+  --w-banner-bg: #4a3d0f; --w-banner-fg: #ffe08a; --w-banner-suave-bg: #17324a; --w-banner-suave-fg: #a9d3f5;
+  --w-banner-err-bg: #4a1f1f; --w-banner-err-fg: #ffb4ae;
+  --w-mark: #7a5f00; --w-error: #ff8f86; --w-trama: rgba(255, 255, 255, .03); --w-sombra: rgba(0, 0, 0, .45);
+}
+html[data-tema="oscuro"] body.panel--chats .panel-cabecera { background: #151c27; }
+html[data-tema="oscuro"] body.panel--chats .panel-cabecera__marca { color: var(--tinta); }
+html[data-tema="oscuro"] body.panel--chats .panel-cabecera__etiqueta { background: #2a3445; }
+html[data-tema="oscuro"] body.panel--chats .panel-boton-suave { background: #1c2533; }
+html[data-tema="oscuro"] body.panel--chats .panel-boton-suave:hover { background: #263143; }
+html[data-tema="oscuro"] body.panel--chats .wsp__avatar { filter: brightness(.9); }
+html[data-tema="oscuro"] body.panel--chats .wsp__burbuja--entrada .wsp__quien { color: var(--w-acento); }
+html[data-tema="oscuro"] body.panel--chats .wsp__mensajes .wsp__dia span { background: #1c2533; }
+html[data-tema="oscuro"] body.panel--chats .wsp mark { color: #fff; }
+html[data-tema="oscuro"] body.panel--chats .wsp__burbuja--persona .wsp__quien { color: #ff9a92; }
+
+/* Selector de apariencia (en la cabecera de la lista de chats) */
+.wsp__acciones { display: flex; align-items: center; gap: 12px; }
+.wsp__apariencia { display: inline-flex; padding: 2px; border-radius: 999px; background: var(--w-chip); }
+.wsp__apariencia button { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border: 0; border-radius: 50%; background: none; color: var(--w-suave); cursor: pointer; }
+.wsp__apariencia button:hover { color: var(--tinta); }
+.wsp__apariencia button[aria-pressed="true"] { background: var(--w-sup); color: var(--w-acento); box-shadow: 0 1px 2px var(--w-sombra); }

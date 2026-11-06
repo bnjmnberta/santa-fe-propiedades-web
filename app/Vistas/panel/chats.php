@@ -15,7 +15,14 @@
   <aside class="wsp__lista" aria-label="Conversaciones">
     <div class="wsp__lista-cabecera">
       <strong>Chats</strong>
-      <span class="wsp__conexion" data-conexion title="Estado de la conexión con el asistente">●</span>
+      <div class="wsp__acciones">
+        <div class="wsp__apariencia" role="group" aria-label="Apariencia">
+          <button type="button" data-apariencia="claro" aria-pressed="false" aria-label="Modo claro" title="Modo claro"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5.3 5.3l1.7 1.7M17 17l1.7 1.7M18.7 5.3 17 7M7 17l-1.7 1.7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+          <button type="button" data-apariencia="oscuro" aria-pressed="false" aria-label="Modo oscuro" title="Modo oscuro"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></button>
+          <button type="button" data-apariencia="sistema" aria-pressed="true" aria-label="Igual que el sistema" title="Igual que el sistema"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><rect x="3" y="4.5" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 20.5h6M12 16.5v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+        </div>
+        <span class="wsp__conexion" data-conexion title="Estado de la conexión con el asistente">●</span>
+      </div>
     </div>
     <div class="wsp__buscador">
       <svg class="wsp__lupa" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16.5 16.5 21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>

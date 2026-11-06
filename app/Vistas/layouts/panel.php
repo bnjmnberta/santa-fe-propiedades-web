@@ -17,6 +17,16 @@ $ruta = parse_url($_SERVER['REQUEST_URI'] ?? '/panel', PHP_URL_PATH);
   <link rel="preload" href="/assets/fuentes/open-sauce-sans-400.woff" as="font" type="font/woff" crossorigin>
   <link rel="stylesheet" href="<?= e(asset('assets/css/app.css')) ?>">
   <link rel="stylesheet" href="<?= e(asset('assets/css/panel.css')) ?>">
+  <script>
+    // Apariencia de Chats (claro, oscuro o el del sistema): se decide antes de dibujar la página para que no parpadee.
+    (function () {
+      var eleccion = 'sistema';
+      try { eleccion = localStorage.getItem('sfp-chats-apariencia') || 'sistema'; } catch (e) {}
+      var oscuro = eleccion === 'oscuro' || (eleccion !== 'claro' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      document.documentElement.dataset.tema = oscuro ? 'oscuro' : 'claro';
+      document.documentElement.dataset.apariencia = eleccion;
+    })();
+  </script>
 </head>
 <body class="panel<?= str_starts_with((string) $ruta, '/panel/chats') ? ' panel--chats' : '' ?>">
 <?= Vista::parcial('iconos') ?>

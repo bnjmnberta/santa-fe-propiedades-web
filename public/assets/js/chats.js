@@ -646,6 +646,31 @@
     });
     dibujarLista();
   });
+  // Apariencia: claro, oscuro o igual que el sistema (se recuerda en este navegador; el <head> la aplica antes de dibujar).
+  var oscuroDelSistema = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  function aplicarApariencia(eleccion) {
+    var oscuro = eleccion === 'oscuro' || (eleccion === 'sistema' && oscuroDelSistema && oscuroDelSistema.matches);
+    document.documentElement.dataset.tema = oscuro ? 'oscuro' : 'claro';
+    document.documentElement.dataset.apariencia = eleccion;
+    raiz.querySelectorAll('[data-apariencia]').forEach(function (b) {
+      b.setAttribute('aria-pressed', b.dataset.apariencia === eleccion ? 'true' : 'false');
+    });
+  }
+  function aparienciaGuardada() {
+    try { return localStorage.getItem('sfp-chats-apariencia') || 'sistema'; } catch (e) { return 'sistema'; }
+  }
+  raiz.querySelectorAll('[data-apariencia]').forEach(function (boton) {
+    boton.addEventListener('click', function () {
+      try { localStorage.setItem('sfp-chats-apariencia', boton.dataset.apariencia); } catch (e) { /* sin almacenamiento: vale solo por esta visita */ }
+      aplicarApariencia(boton.dataset.apariencia);
+    });
+  });
+  // Si está en "sistema" y el sistema cambia (por ejemplo, de día a noche), la pantalla lo sigue.
+  if (oscuroDelSistema && oscuroDelSistema.addEventListener) {
+    oscuroDelSistema.addEventListener('change', function () { if (aparienciaGuardada() === 'sistema') { aplicarApariencia('sistema'); } });
+  }
+  aplicarApariencia(aparienciaGuardada());
+
   elForm.addEventListener('submit', enviar);
   elMic.addEventListener('click', empezarGrabacion);
   $('[data-enviar-audio]').addEventListener('click', function () { pararGrabacion(false); });
