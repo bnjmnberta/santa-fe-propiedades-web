@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 use App\Controladores\Panel\AccesoControlador;
 use App\Controladores\Panel\AdministracionControlador;
+use App\Controladores\Panel\ChatsControlador;
 use App\Controladores\Panel\FotosControlador;
 use App\Controladores\Panel\PropiedadesControlador;
 use App\Controladores\Publico\CatalogoControlador;
@@ -46,6 +47,14 @@ $router->get('/panel/usuarios', [AdministracionControlador::class, 'usuarios']);
 $router->post('/panel/usuarios', [AdministracionControlador::class, 'crearUsuario']);
 $router->post('/panel/usuarios/{id:\d+}/contrasena', [AdministracionControlador::class, 'contrasena']);
 $router->post('/panel/usuarios/{id:\d+}/activo', [AdministracionControlador::class, 'activo']);
+$router->get('/panel/chats', [ChatsControlador::class, 'inicio']);
+$router->get('/panel/chats/lista', [ChatsControlador::class, 'lista']);
+$router->get('/panel/chats/buscar', [ChatsControlador::class, 'buscar']);
+$router->get('/panel/chats/{contacto:\d+}/mensajes',[ChatsControlador::class, 'mensajes']);
+$router->post('/panel/chats/{contacto:\d+}/enviar', [ChatsControlador::class, 'enviar']);
+$router->post('/panel/chats/{contacto:\d+}/audio', [ChatsControlador::class, 'audio']);
+$router->post('/panel/chats/{contacto:\d+}/modo',[ChatsControlador::class, 'modo']);
+$router->post('/panel/chats/{contacto:\d+}/leer', [ChatsControlador::class, 'leer']);
 $router->get('/panel/configuracion', [AdministracionControlador::class, 'configuracion']);
 $router->post('/panel/configuracion', [AdministracionControlador::class, 'guardarConfiguracion']);
 

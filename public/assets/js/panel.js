@@ -102,4 +102,23 @@
       }
     });
   }
+
+  // Chats: el globito verde del menú con los mensajes sin leer (en la propia pantalla de Chats lo actualiza chats.js).
+  var cuenta = document.querySelector('[data-chats-cuenta]');
+  if (cuenta && !document.querySelector('[data-chats]')) {
+    var revisarChats = function () {
+      if (document.hidden) { return; }
+      fetch('/panel/chats/lista', { credentials: 'same-origin', headers: { 'Accept': 'application/json' } })
+        .then(function (respuesta) { return respuesta.ok ? respuesta.json() : null; })
+        .then(function (datos) {
+          if (!datos) { return; }
+          var total = datos.sin_leer_total || 0;
+          cuenta.hidden = total < 1;
+          cuenta.textContent = total > 99 ? '99+' : String(total);
+        })
+        .catch(function () {});
+    };
+    revisarChats();
+    setInterval(revisarChats, 30000);
+  }
 })();

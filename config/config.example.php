@@ -14,4 +14,10 @@ return [
         'url_base' => 'http://localhost:8080',
         'entorno'  => 'desarrollo', // 'produccion' en el hosting: oculta errores
     ],
+    // Panel > Chats: conexión con el asistente de WhatsApp (el bot). Sin esto, la sección Chats avisa que falta conectar.
+    // La clave es la misma que tiene el asistente (panel.clave) y solo la usa el servidor, nunca el navegador.
+    'asistente' => [
+        'url'   => 'https://DOMINIO-DEL-ASISTENTE/panel-api.php',
+        'clave' => 'CAMBIAR',
+    ],
 ];

@@ -18,7 +18,7 @@ $ruta = parse_url($_SERVER['REQUEST_URI'] ?? '/panel', PHP_URL_PATH);
   <link rel="stylesheet" href="<?= e(asset('assets/css/app.css')) ?>">
   <link rel="stylesheet" href="<?= e(asset('assets/css/panel.css')) ?>">
 </head>
-<body class="panel">
+<body class="panel<?= str_starts_with((string) $ruta, '/panel/chats') ? ' panel--chats' : '' ?>">
 <?= Vista::parcial('iconos') ?>
 
 <?php if ($usuario): ?>
@@ -28,6 +28,7 @@ $ruta = parse_url($_SERVER['REQUEST_URI'] ?? '/panel', PHP_URL_PATH);
       <nav class="panel-nav" aria-label="Panel">
         <a href="/panel" <?= $ruta === '/panel' || str_starts_with($ruta, '/panel/propiedades') ? 'aria-current="page"' : '' ?>>Propiedades</a>
         <?php if (Sesion::esAdministrador()): ?>
+          <a href="/panel/chats" <?= str_starts_with($ruta, '/panel/chats') ? 'aria-current="page"' : '' ?>>Chats <span class="panel-nav__cuenta" data-chats-cuenta hidden></span></a>
           <a href="/panel/usuarios" <?= $ruta === '/panel/usuarios' ? 'aria-current="page"' : '' ?>>Usuarios</a>
           <a href="/panel/configuracion" <?= $ruta === '/panel/configuracion' ? 'aria-current="page"' : '' ?>>Configuración</a>
         <?php endif ?>
