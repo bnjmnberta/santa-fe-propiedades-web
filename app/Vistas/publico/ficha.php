@@ -39,12 +39,23 @@ $altoFoto = (int) ($primeraFoto['alto'] ?: 3);
 $condiciones = $p->operacion->value === 'alquiler' && $disponible
     ? array_values(array_filter(array_map('trim', preg_split('/\R/u', Cfg::get('condiciones_alquiler')))))
     : [];
+// Botón de compartir: el enlace de WhatsApp sirve sin JavaScript; con JavaScript abre el menú de compartir del celular o copia el enlace.
+$urlCompartir = url($p->url());
+$textoCompartir = $p->titulo . ' | Santa Fe Propiedades';
+$enlaceCompartirWhatsApp = 'https://wa.me/?text=' . rawurlencode($textoCompartir . ' ' . $urlCompartir);
+$compartir = static fn (string $lugar): string => sprintf(
+    '<a class="compartir compartir--%s" href="%s" target="_blank" rel="noopener" data-compartir data-titulo="%s" data-url="%s" data-evento="compartir" data-origen="ficha_%s" data-codigo="%d" aria-label="Compartir esta propiedad">%s<span class="compartir__texto" aria-live="polite">Compartir</span></a>',
+    $lugar, e($enlaceCompartirWhatsApp), e($textoCompartir), e($urlCompartir), $lugar, $p->codigo, icono('compartir')
+);
 $whatsappSimilares = EnlaceWhatsApp::general(Cfg::get('whatsapp_numero'), sprintf('Hola, vi que la propiedad #%d ya no está disponible. ¿Tienen algo parecido?', $p->codigo));
 ?>
 <div class="contenedor ficha">
-  <nav class="migas" aria-label="Ubicación en el sitio">
-    <a href="/">Inicio</a><span aria-hidden="true">/</span><a href="<?= e($seccion[0]) ?>"><?= e($seccion[1]) ?></a><span aria-hidden="true">/</span><span>Código <?= e($p->codigo) ?></span>
-  </nav>
+  <div class="ficha__barra">
+    <nav class="migas" aria-label="Ubicación en el sitio">
+      <a href="/">Inicio</a><span aria-hidden="true">/</span><a href="<?= e($seccion[0]) ?>"><?= e($seccion[1]) ?></a><span aria-hidden="true">/</span><span>Código <?= e($p->codigo) ?></span>
+    </nav>
+    <?= $compartir('arriba') ?>
+  </div>
 
   <?php if (!$disponible): ?>
     <div class="aviso aviso--fuerte">
@@ -89,7 +100,10 @@ $whatsappSimilares = EnlaceWhatsApp::general(Cfg::get('whatsapp_numero'), sprint
         <?php if ($p->estado === EstadoPropiedad::Reservado): ?><span class="etiqueta etiqueta--estado">Reservado</span><?php endif ?>
         <span class="ficha__codigo">Código <?= e($p->codigo) ?></span>
       </div>
-      <h1 class="ficha__titulo"><?= e($p->titulo) ?></h1>
+      <div class="ficha__cabecera">
+        <h1 class="ficha__titulo"><?= e($p->titulo) ?></h1>
+        <?= $compartir('titulo') ?>
+      </div>
       <?php if ($p->ubicacion()): ?>
         <p class="ficha__ubicacion"><?= icono('pin') ?><?= e($p->ubicacion()) ?></p>
       <?php endif ?>

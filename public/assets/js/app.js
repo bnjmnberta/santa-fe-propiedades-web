@@ -397,6 +397,43 @@
     });
   });
 
+  // Compartir una propiedad: con el menú del celular si existe; si no, se copia el enlace y el botón avisa.
+  // Sin JavaScript queda el enlace a WhatsApp del propio botón.
+  document.querySelectorAll('[data-compartir]').forEach(function (boton) {
+    var texto = boton.querySelector('.compartir__texto');
+    var original = texto.textContent;
+    var avisar = function (mensaje) {
+      texto.textContent = mensaje;
+      clearTimeout(boton.aviso);
+      boton.aviso = setTimeout(function () { texto.textContent = original; }, 2400);
+    };
+    var copiar = function (url) {
+      var alternativa = function () {
+        var campo = document.createElement('textarea');
+        campo.value = url; campo.setAttribute('readonly', ''); campo.style.position = 'fixed'; campo.style.opacity = '0';
+        document.body.appendChild(campo); campo.select();
+        var ok = false;
+        try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+        campo.remove();
+        avisar(ok ? 'Enlace copiado' : 'No se pudo copiar');
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(function () { avisar('Enlace copiado'); }, alternativa);
+      } else { alternativa(); }
+    };
+    boton.addEventListener('click', function (evento) {
+      if (evento.button !== 0 || evento.metaKey || evento.ctrlKey || evento.shiftKey || evento.altKey) { return; }
+      evento.preventDefault();
+      var url = boton.dataset.url || window.location.href;
+      // El menú de compartir es de celulares y tablets (pantalla táctil); en PC se copia el enlace, que es lo que se espera ahí.
+      if (navigator.share && window.matchMedia('(pointer: coarse)').matches) {
+        navigator.share({ title: boton.dataset.titulo, url: url }).catch(function (error) {
+          if (error && error.name !== 'AbortError') { copiar(url); }
+        });
+      } else { copiar(url); }
+    });
+  });
+
   // Regla j: cada consulta por WhatsApp (y cada clic en teléfono) se registra en Analytics.
   document.addEventListener('click', function (evento) {
     var enlace = evento.target.closest('[data-evento]');

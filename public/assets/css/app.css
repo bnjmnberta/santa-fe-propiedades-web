@@ -330,7 +330,8 @@ p { margin: 0 0 1em; }
 
 /* Ficha */
 .ficha { padding-top: 14px; padding-bottom: 100px; }
-.migas { display: flex; gap: 8px; flex-wrap: wrap; font-size: .88rem; color: var(--tinta-suave); margin-bottom: 14px; }
+.ficha__barra { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.migas { display: flex; gap: 8px; flex-wrap: wrap; flex: 1 1 auto; min-width: 0; font-size: .88rem; color: var(--tinta-suave); }
 .migas a { display: inline-block; padding: 11px 0; margin: -7px 0; color: var(--tinta-suave); } /* 44 px para tocar, sin agrandar la fila */
 /* El marco toma la proporción de las fotos (--ancho / --alto): nunca quedan franjas. */
 .galeria { position: relative; margin: 0 -16px; }
@@ -349,6 +350,22 @@ p { margin: 0 0 1em; }
 .ficha__etiquetas { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
 .ficha__codigo { font-size: .85rem; color: var(--tinta-suave); }
 .ficha__titulo { font-size: clamp(1.6rem, 5.5vw, 2.3rem); font-weight: 800; }
+
+/* Compartir: arriba de todo en celular y tablet; en escritorio, al costado del título. */
+.compartir {
+  flex: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-width: 44px; min-height: 44px; padding: 0 14px;
+  border: 1px solid var(--borde); border-radius: 999px; background: #fff; color: var(--tinta); font-weight: 700; font-size: .92rem; text-decoration: none; cursor: pointer;
+  transition: background-color .15s, border-color .15s;
+}
+.compartir:hover { background: var(--fondo-alterno); border-color: #cfd6e0; }
+.compartir .icono { color: var(--azul); width: 20px; height: 20px; }
+.compartir__texto { white-space: nowrap; }
+.compartir--titulo { display: none; }
+/* En pantallas angostas queda solo el ícono (el nombre lo lee el lector de pantalla). */
+@media (max-width: 29.9375em) {
+  .compartir { padding: 0; }
+  .compartir__texto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+}
 .ficha__ubicacion { display: flex; gap: 6px; color: var(--tinta-suave); }
 .ficha__ubicacion .icono { color: var(--rojo); margin-top: .2em; }
 .ficha__subtitulo { font-size: 1.15rem; font-weight: 700; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--borde); }
@@ -440,6 +457,11 @@ p { margin: 0 0 1em; }
   .precio-caja { position: sticky; top: 84px; }
   .barra-movil { display: none; }
   .ficha { padding-bottom: 20px; }
+  .compartir--arriba { display: none; }
+  .ficha__cabecera { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+  .ficha__cabecera .ficha__titulo { flex: 1 1 auto; min-width: 0; }
+  .compartir--titulo { display: inline-flex; margin-top: 4px; padding: 0 16px; }
+  .compartir--titulo .compartir__texto { position: static; width: auto; height: auto; overflow: visible; clip: auto; }
 }
 
 /* ---- Boceto del 30/09: portada, catálogo con mapa, páginas institucionales ---- */
