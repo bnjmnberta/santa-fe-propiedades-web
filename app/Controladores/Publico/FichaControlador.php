@@ -20,10 +20,8 @@ final class FichaControlador
             throw new NoEncontrado('propiedad ' . $codigo);
         }
         // Una sola URL por ficha: si el slug no coincide (título editado), 301 a la canónica.
-        // Se conserva el query string (por ejemplo, las marcas utm de los QR de los carteles) para que Analytics las vea.
         if ($slug !== $propiedad->slug) {
-            $consulta = (string) ($_SERVER['QUERY_STRING'] ?? '');
-            redirigir($propiedad->url() . ($consulta !== '' ? '?' . $consulta : ''), 301);
+            redirigir($propiedad->url(), 301);
         }
 
         $urlFicha = url($propiedad->url());

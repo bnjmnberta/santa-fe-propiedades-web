@@ -38,8 +38,6 @@ $router->get('/panel/propiedades/nueva', [PropiedadesControlador::class, 'nueva'
 $router->post('/panel/propiedades', [PropiedadesControlador::class, 'crear']);
 $router->get('/panel/propiedades/{id:\d+}', [PropiedadesControlador::class, 'editar']);
 $router->post('/panel/propiedades/{id:\d+}', [PropiedadesControlador::class, 'actualizar']);
-$router->get('/panel/propiedades/{id:\d+}/qr', [PropiedadesControlador::class, 'qr']);
-$router->get('/panel/propiedades/{id:\d+}/qr\.svg', [PropiedadesControlador::class, 'qrSvg']);
 $router->get('/panel/propiedades/{id:\d+}/estado', [PropiedadesControlador::class, 'estado']);
 $router->post('/panel/propiedades/{id:\d+}/estado', [PropiedadesControlador::class, 'cambiarEstado']);
 $router->post('/panel/propiedades/{id:\d+}/destacar', [PropiedadesControlador::class, 'destacar']);

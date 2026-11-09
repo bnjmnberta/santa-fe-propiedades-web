@@ -122,10 +122,3 @@
     setInterval(revisarChats, 30000);
   }
 })();
-
-// Botón "Imprimir" de la hoja del QR para el cartel.
-(function () {
-  document.querySelectorAll('[data-imprimir]').forEach(function (boton) {
-    boton.addEventListener('click', function () { window.print(); });
-  });
-})();

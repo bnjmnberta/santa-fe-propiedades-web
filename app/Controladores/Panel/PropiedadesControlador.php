@@ -13,7 +13,6 @@ use App\Modelos\Operacion;
 use App\Modelos\Propiedad;
 use App\Repositorios\GestionPropiedadRepositorio;
 use App\Repositorios\PropiedadRepositorio;
-use App\Servicios\CodigoQr;
 use App\Servicios\TextoInstagram;
 use App\Servicios\ValidadorPropiedad;
 
@@ -80,40 +79,6 @@ final class PropiedadesControlador
         $this->repositorio->actualizar((int) $id, $datos);
         Sesion::avisar('ok', 'Cambios guardados.');
         redirigir("/panel/propiedades/$id");
-    }
-
-    /** Página imprimible con el QR del cartel: abre directo la ficha de esta propiedad. */
-    public function qr(string $id): void
-    {
-        Sesion::exigirUsuario();
-        $fila = $this->buscar((int) $id);
-        $url = $this->urlDelQr($fila);
-        $host = (string) parse_url($url, PHP_URL_HOST);
-        Vista::render('panel/qr', [
-            'titulo'  => 'QR para cartel #' . $fila['codigo'],
-            'fila'    => $fila,
-            'url'     => $url,
-            'svg'     => CodigoQr::svg($url, 'Código QR de la propiedad ' . $fila['codigo']),
-            'enLocal' => in_array($host, ['localhost', '127.0.0.1', '[::1]'], true) || str_ends_with($host, '.localhost'),
-            'publica' => EstadoPropiedad::from($fila['estado'])->esPublico(),
-        ], 'layouts/panel');
-    }
-
-    /** El mismo QR como archivo SVG (vectorial, se imprime nítido a cualquier tamaño). */
-    public function qrSvg(string $id): void
-    {
-        Sesion::exigirUsuario();
-        $fila = $this->buscar((int) $id);
-        header('Content-Type: image/svg+xml; charset=utf-8');
-        header('Content-Disposition: attachment; filename="qr-propiedad-' . (int) $fila['codigo'] . '.svg"');
-        header('X-Content-Type-Options: nosniff');
-        echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . CodigoQr::svg($this->urlDelQr($fila), 'Código QR de la propiedad ' . $fila['codigo']);
-    }
-
-    /** Ficha corta + marcas de campaña, para medir en Analytics cuánta gente entra desde los carteles. */
-    private function urlDelQr(array $fila): string
-    {
-        return url('/propiedad/' . (int) $fila['codigo']) . '?utm_source=cartel&utm_medium=qr';
     }
 
     /**
