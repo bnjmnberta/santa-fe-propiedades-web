@@ -105,6 +105,10 @@ $accion = $fila ? '/panel/propiedades/' . (int) $fila['id_propiedad'] : '/panel/
       <span>Requisitos</span>
       <input type="text" name="requisitos" value="<?= e($v('requisitos')) ?>" maxlength="150" placeholder="Ej: 5 recibos de sueldo">
     </label>
+    <div class="panel-campo panel-campo--completo">
+      <label class="panel-check"><input type="checkbox" name="apto_credito" value="1" <?= $marcado('apto_credito') ?>> Apto crédito hipotecario</label>
+      <small>Solo para ventas. Tildalo si la propiedad tiene escritura, plano de mensura y plano de arquitectura. En alquiler no se guarda.</small>
+    </div>
     <label class="panel-campo">
       <span>Disponible desde</span>
       <input type="date" name="disponible_desde" value="<?= e($v('disponible_desde')) ?>">

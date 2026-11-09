@@ -11,6 +11,9 @@ use App\Modelos\EstadoPropiedad;
         <div class="sin-foto"><?= icono('casa', 'sin-foto__icono') ?><span>Fotos próximamente</span></div>
       <?php endif ?>
       <span class="etiqueta etiqueta--<?= e($propiedad->operacion->value) ?>"><?= e($propiedad->operacion->etiqueta()) ?></span>
+      <?php if ($propiedad->operacion->value === 'venta' && (int) $propiedad->dato('apto_credito') === 1): ?>
+        <span class="etiqueta etiqueta--credito"><?= icono('check') ?>Apto crédito</span>
+      <?php endif ?>
       <?php if ($propiedad->estado === EstadoPropiedad::Reservado): ?>
         <span class="etiqueta etiqueta--estado">Reservado</span>
       <?php endif ?>

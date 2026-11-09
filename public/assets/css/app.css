@@ -171,6 +171,9 @@ p { margin: 0 0 1em; }
 .etiqueta--alquiler { background: var(--azul); }
 .etiqueta--venta { background: var(--rojo); }
 .etiqueta--estado { left: auto; right: 12px; background: var(--tinta); }
+/* Apto crédito: píldora blanca con tilde; en las tarjetas va abajo a la izquierda de la foto. */
+.etiqueta--credito { top: auto; bottom: 12px; display: inline-flex; align-items: center; gap: 5px; background: rgba(255, 255, 255, .96); color: var(--azul-oscuro); border: 1px solid rgba(21, 70, 125, .3); }
+.etiqueta--credito .icono { width: 1.1em; height: 1.1em; stroke-width: 2.4; }
 .ficha__etiquetas .etiqueta { position: static; }
 
 .rasgos { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 0; padding: 0; list-style: none; font-size: .9rem; color: var(--tinta); }

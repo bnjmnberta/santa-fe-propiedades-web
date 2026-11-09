@@ -45,6 +45,9 @@ final class TextoInstagram
         if ((int) $propiedad->dato('cocheras') > 0) {
             $items[] = '🚗 COCHERA';
         }
+        if (!$esAlquiler && (int) $propiedad->dato('apto_credito') === 1) {
+            $items[] = '🏦 APTO CRÉDITO';
+        }
         if ($items) {
             $lineas = [...$lineas, ...$items, ''];
         }

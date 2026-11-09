@@ -15,7 +15,7 @@ final class GestionPropiedadRepositorio
     public const MAXIMO_FOTOS = 30; // regla g
 
     private const COLUMNAS = ['titulo', 'operacion', 'id_tipo', 'id_zona', 'direccion', 'mostrar_direccion', 'moneda',
-        'precio', 'expensas', 'expensas_detalle', 'requisitos', 'disponible_desde', 'amoblado', 'dormitorios', 'banos',
+        'precio', 'expensas', 'expensas_detalle', 'requisitos', 'apto_credito', 'disponible_desde', 'amoblado', 'dormitorios', 'banos',
         'cocheras', 'sup_cubierta', 'sup_terreno', 'frente_m', 'fondo_m', 'regimen', 'planta', 'ubicacion_unidad',
         'caracteristicas', 'servicios', 'referencias', 'descripcion', 'instagram_url', 'latitud', 'longitud', 'destacada'];
 

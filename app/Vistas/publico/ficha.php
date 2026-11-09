@@ -7,6 +7,7 @@ use App\Servicios\EnlaceWhatsApp;
 /** @var App\Modelos\Propiedad $propiedad */
 /** @var list<App\Modelos\Propiedad> $similares */
 $p = $propiedad;
+$aptoCredito = $p->operacion->value === 'venta' && (int) $p->dato('apto_credito') === 1;
 $disponible = $p->estado->esPublico();
 $seccion = $p->esComercial ? ['/comerciales', 'Comerciales'] : ($p->operacion->value === 'venta' ? ['/ventas', 'Ventas'] : ['/alquileres', 'Alquileres']);
 
@@ -84,6 +85,7 @@ $whatsappSimilares = EnlaceWhatsApp::general(Cfg::get('whatsapp_numero'), sprint
     <div class="ficha__principal">
       <div class="ficha__etiquetas">
         <span class="etiqueta etiqueta--<?= e($p->operacion->value) ?>"><?= e($p->operacion->etiqueta()) ?></span>
+        <?php if ($aptoCredito): ?><span class="etiqueta etiqueta--credito"><?= icono('check') ?>Apto crédito</span><?php endif ?>
         <?php if ($p->estado === EstadoPropiedad::Reservado): ?><span class="etiqueta etiqueta--estado">Reservado</span><?php endif ?>
         <span class="ficha__codigo">Código <?= e($p->codigo) ?></span>
       </div>

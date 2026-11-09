@@ -51,6 +51,7 @@ final class ValidadorPropiedad
             'expensas'         => $numero('expensas', 99999999),
             'expensas_detalle' => $texto('expensas_detalle', 60),
             'requisitos'       => $texto('requisitos', 150),
+            'apto_credito'     => isset($entrada['apto_credito']) ? 1 : 0,
             'disponible_desde' => null,
             'amoblado'         => isset($entrada['amoblado']) ? 1 : 0,
             'dormitorios'      => $entero('dormitorios'),
@@ -81,6 +82,10 @@ final class ValidadorPropiedad
         }
         if ($datos['id_tipo'] === null) {
             $errores['id_tipo'] = 'Elegí el tipo de propiedad.';
+        }
+        // "Apto crédito" (escritura, plano de mensura y plano de arquitectura) solo tiene sentido en ventas.
+        if ($datos['operacion'] !== 'venta') {
+            $datos['apto_credito'] = 0;
         }
         // Regla c: precio opcional, pero con moneda; un precio en 0 cuenta como "consultar".
         if ($datos['precio'] !== null && $datos['precio'] <= 0) {
