@@ -80,7 +80,7 @@ $telefonoFijo = Cfg::get('telefono_fijo');
 <?php /* Pie compacto en tres filas: logo y enlaces, datos de contacto en una línea, y la línea legal. */ ?>
 <footer class="pie">
   <div class="contenedor pie__fila">
-    <a class="logo logo--claro" href="/" aria-label="Santa Fe Propiedades, inicio"><?= Vista::parcial('logo') ?></a>
+    <a class="logo logo--claro" href="/" aria-label="Santa Fe Propiedades, inicio"><?= Vista::parcial('logo', ['claro' => true]) ?></a>
     <nav class="pie__enlaces" aria-label="Pie de página">
       <a href="/alquileres">En alquiler</a>
       <a href="/ventas">En venta</a>

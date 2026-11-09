@@ -95,14 +95,12 @@ p { margin: 0 0 1em; }
 .navegacion a { padding: 12px 4px; color: var(--tinta); text-decoration: none; font-weight: 600; border-bottom: 1px solid var(--borde); }
 .navegacion a[aria-current="page"] { color: var(--azul); font-weight: 800; }
 
-/* Logo (provisorio) */
-.logo { display: inline-flex; flex-direction: column; text-decoration: none; color: #2b3240; line-height: 1; }
-.logo__marca { display: inline-flex; align-items: center; gap: 6px; }
-.logo__nombre { font-weight: 800; font-size: 1.55rem; letter-spacing: .01em; }
-.logo__cuadros { width: 22px; height: 22px; }
-.logo__sub { font-size: .62rem; letter-spacing: .52em; color: #6b7280; margin-top: 3px; }
-.logo--claro { color: #fff; padding: 3px 0; }
-.logo--claro .logo__sub { color: #aab3c2; }
+/* Logo: imagen recortada al contenido (406x95); el alto manda y el ancho sale solo, para que no se achique ni ensanche la barra. */
+.logo { display: inline-flex; text-decoration: none; line-height: 1; }
+.logo__img { display: block; height: 36px; width: auto; }
+.logo--claro { padding: 3px 0; }
+.logo--claro .logo__img { height: 34px; }
+@media (min-width: 60em) { .logo__img { height: 40px; } }
 
 /* Portada: el título y el buscador en una sola fila, sobre fondo claro, para que las propiedades asomen en la primera pantalla. */
 .portada { padding: 22px 0 6px; background: #fff; }
