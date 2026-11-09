@@ -25,6 +25,7 @@ $accion = $fila ? '/panel/propiedades/' . (int) $fila['id_propiedad'] : '/panel/
     <div class="panel-encabezado__acciones">
       <span class="panel-estado panel-estado--<?= e($fila['estado']) ?>"><?= e(EstadoPropiedad::from($fila['estado'])->etiqueta()) ?></span>
       <a class="boton boton--chico panel-boton-suave" href="/panel/propiedades/<?= (int) $fila['id_propiedad'] ?>/estado">Cambiar estado</a>
+      <a class="boton boton--chico panel-boton-suave" href="/panel/propiedades/<?= (int) $fila['id_propiedad'] ?>/qr">QR para cartel</a>
       <?php if ($propiedad): ?><a class="boton boton--chico panel-boton-suave" href="<?= e($propiedad->url()) ?>" target="_blank" rel="noopener">Ver en la web ↗</a><?php endif ?>
     </div>
   <?php endif ?>

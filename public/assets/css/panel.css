@@ -316,3 +316,25 @@ html[data-tema="oscuro"] body.panel--chats .wsp__burbuja--persona .wsp__quien { 
 .wsp__campana[hidden] { display: none; }
 .wsp__campana:hover { color: var(--tinta); }
 .wsp__campana--activa { background: var(--w-acento-bg); color: var(--w-acento); }
+
+/* QR para el cartel: hoja imprimible. En pantalla se ve como la hoja; al imprimir queda solo la hoja. */
+.panel-qr { display: grid; justify-items: center; gap: 6px; max-width: 640px; margin: 8px auto 20px; padding: 28px 20px; background: #fff; border: 1px solid var(--borde); border-radius: var(--radio); text-align: center; }
+.panel-qr__codigo { width: min(100%, 460px); }
+.panel-qr__codigo svg { display: block; width: 100%; height: auto; }
+.panel-qr__leyenda { margin: 6px 0 0; font-size: 1.1rem; font-weight: 700; }
+.panel-qr__numero { margin: 0; font-size: 2.4rem; font-weight: 900; line-height: 1.1; }
+.panel-qr__titulo { margin: 0; font-size: 1.15rem; max-width: 30em; }
+.panel-qr__url { margin: 8px 0 0; font-size: .85rem; color: var(--tinta-suave); overflow-wrap: anywhere; }
+.panel-qr__ayuda { max-width: 640px; margin: 0 auto; color: var(--tinta-suave); font-size: .9rem; }
+@media print {
+  .no-imprimir, .panel-cabecera { display: none !important; }
+  body.panel { background: #fff; }
+  .panel-contenido { padding: 0; }
+  .panel-qr { border: 0; max-width: none; margin: 0; padding: 0; }
+  .panel-qr__codigo { width: 16cm; }
+  .panel-qr__numero { font-size: 40pt; }
+  .panel-qr__titulo { font-size: 18pt; }
+  .panel-qr__leyenda { font-size: 16pt; }
+  .panel-qr__url { font-size: 10pt; }
+  @page { margin: 15mm; }
+}
