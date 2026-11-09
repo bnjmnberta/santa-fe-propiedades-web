@@ -1,0 +1,448 @@
+// Santa Fe Propiedades — interacciones mínimas. La web funciona sin JavaScript;
+// esto suma menú móvil, galería, filtros automáticos, botón flotante y eventos de Analytics.
+(function () {
+  'use strict';
+  document.documentElement.classList.add('js');
+
+  // Menú móvil: se cierra con Escape, tocando afuera o eligiendo un enlace.
+  var botonMenu = document.querySelector('.cabecera__menu');
+  var navegacion = document.getElementById('navegacion');
+  if (botonMenu && navegacion) {
+    var cerrarMenu = function (devolverFoco) {
+      if (!navegacion.classList.contains('abierta')) { return; }
+      navegacion.classList.remove('abierta');
+      botonMenu.setAttribute('aria-expanded', 'false');
+      if (devolverFoco) { botonMenu.focus(); }
+    };
+    botonMenu.addEventListener('click', function () {
+      var abierto = navegacion.classList.toggle('abierta');
+      botonMenu.setAttribute('aria-expanded', abierto ? 'true' : 'false');
+      if (abierto) { navegacion.querySelector('a').focus(); }
+    });
+    navegacion.addEventListener('click', function (evento) {
+      if (evento.target.tagName === 'A') { cerrarMenu(false); }
+    });
+    document.addEventListener('keydown', function (evento) {
+      if (evento.key === 'Escape') { cerrarMenu(true); }
+    });
+    document.addEventListener('click', function (evento) {
+      if (!navegacion.contains(evento.target) && !botonMenu.contains(evento.target)) { cerrarMenu(false); }
+    });
+  }
+
+  // Botón flotante de WhatsApp: se esconde mientras se ve otro botón de WhatsApp, una franja
+  // de captación o el pie, para no tapar texto que llega al borde derecho.
+  var flotante = document.querySelector('.whatsapp-flotante');
+  if (flotante && 'IntersectionObserver' in window) {
+    var aLaVista = new Set();
+    var observador = new IntersectionObserver(function (entradas) {
+      entradas.forEach(function (entrada) {
+        if (entrada.isIntersecting) { aLaVista.add(entrada.target); } else { aLaVista.delete(entrada.target); }
+      });
+      flotante.classList.toggle('whatsapp-flotante--oculto', aLaVista.size > 0);
+    });
+    document.querySelectorAll('.boton--whatsapp:not(.cabecera__cta), .contacto-pagina__wa, .franja, .pie').forEach(function (nodo) {
+      observador.observe(nodo);
+    });
+  }
+
+  // Filtros del catálogo: se aplican al cambiar la selección.
+  document.querySelectorAll('[data-envio-automatico] select').forEach(function (select) {
+    select.addEventListener('change', function () { select.form.submit(); });
+  });
+
+  // Pestañas del catálogo: en celular se deslizan; la sección actual queda a la vista.
+  // Se mide con la tipografía ya cargada, porque cambia el ancho de las pestañas.
+  var mostrarPestaniaActual = function () {
+    document.querySelectorAll('.pestanias').forEach(function (fila) {
+      var actual = fila.querySelector('[aria-current="page"]');
+      if (!actual) { return; }
+      var sobra = actual.getBoundingClientRect().right - fila.getBoundingClientRect().right;
+      if (sobra > 0) { fila.scrollLeft += sobra + 36; }
+    });
+  };
+  if (document.fonts) { document.fonts.ready.then(mostrarPestaniaActual); } else { mostrarPestaniaActual(); }
+
+  // Galería de la ficha: flechas y contador sobre un carrusel con scroll-snap.
+  document.querySelectorAll('[data-galeria]').forEach(function (galeria) {
+    var pista = galeria.querySelector('.galeria__pista');
+    var contador = galeria.querySelector('[data-galeria-contador]');
+    if (!pista) { return; }
+    var total = pista.children.length;
+    // Una foto por paso, aunque se vean dos a la vez (placas verticales en escritorio).
+    var anchoPaso = function () {
+      return pista.children[0].getBoundingClientRect().width + (parseFloat(getComputedStyle(pista).columnGap) || 0);
+    };
+    var actual = function () { return Math.round(pista.scrollLeft / anchoPaso()); };
+    var ir = function (paso) {
+      var destino = (actual() + paso + total) % total;
+      pista.scrollTo({ left: destino * anchoPaso(), behavior: 'smooth' });
+    };
+    var anterior = galeria.querySelector('[data-galeria-anterior]');
+    var siguiente = galeria.querySelector('[data-galeria-siguiente]');
+    if (anterior) { anterior.addEventListener('click', function () { ir(-1); }); }
+    if (siguiente) { siguiente.addEventListener('click', function () { ir(1); }); }
+    pista.addEventListener('keydown', function (evento) {
+      if (evento.key === 'ArrowLeft') { ir(-1); }
+      if (evento.key === 'ArrowRight') { ir(1); }
+    });
+    if (contador) {
+      pista.addEventListener('scroll', function () {
+        contador.textContent = (actual() + 1) + ' / ' + total;
+      }, { passive: true });
+    }
+  });
+
+  // Formulario de Contacto: arma el mensaje con nombre, motivo, código y texto, lo muestra
+  // como va a llegar y abre WhatsApp. Sin JavaScript, el formulario manda solo el texto.
+  document.querySelectorAll('[data-formulario-whatsapp]').forEach(function (formulario) {
+    var campo = function (nombre) { return formulario.querySelector('[data-consulta="' + nombre + '"]'); };
+    var vista = formulario.querySelector('[data-consulta-vista]');
+    var textoVista = formulario.querySelector('[data-consulta-texto]');
+    var armar = function () {
+      var nombre = campo('nombre').value.trim();
+      var motivo = formulario.querySelector('[data-consulta="motivo"]:checked');
+      var codigo = campo('codigo').value.replace(/\D+/g, '');
+      var mensaje = campo('mensaje').value.trim();
+      var partes = ['Hola' + (nombre ? ', soy ' + nombre : '') + '.'];
+      if (motivo) { partes.push('Quiero ' + motivo.dataset.frase + '.'); }
+      if (codigo) { partes.push('Me interesa la propiedad #' + codigo + '.'); }
+      var texto = partes.join(' ');
+      if (mensaje) { texto += '\n' + mensaje; }
+      return partes.length === 1 && !mensaje && !nombre ? '' : texto;
+    };
+    var actualizar = function () {
+      var texto = armar();
+      vista.hidden = texto === '';
+      textoVista.textContent = texto;
+    };
+    formulario.addEventListener('input', actualizar);
+    formulario.addEventListener('change', actualizar);
+    formulario.addEventListener('submit', function (evento) {
+      evento.preventDefault();
+      var texto = armar() || 'Hola, les escribo desde la web de Santa Fe Propiedades.';
+      window.open('https://wa.me/' + formulario.dataset.formularioWhatsapp + '?text=' + encodeURIComponent(texto), '_blank', 'noopener');
+    });
+  });
+
+  // Servicios: scroll horizontal guiado por el scroll vertical. La escena queda fija (position: sticky)
+  // y, a medida que se baja, la pista de servicios se desplaza de costado. No se intercepta la rueda:
+  // es el scroll normal de la página, así que se puede salir hacia arriba o hacia abajo en cualquier momento.
+  document.querySelectorAll('[data-servicios-h]').forEach(function (seccion) {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { return; }
+    var escena = seccion.querySelector('.servicios-h__escena');
+    var paneles = Array.prototype.slice.call(seccion.querySelectorAll('[data-servicio-h]'));
+    var pasos = Array.prototype.slice.call(seccion.querySelectorAll('[data-paso]'));
+    var contador = seccion.querySelector('[data-servicios-contador]');
+    var n = paneles.length;
+    if (n < 2) { return; }
+    var cabecera = document.querySelector('.cabecera');
+    var alto = 65;
+    var posicion = 0;
+    var pendiente = false;
+    // La escena fija necesita una pantalla de al menos 30em de alto (unos 480 px): en un celular horizontal el contenido
+    // no entra y se recortaba. Ahí los servicios quedan apilados, igual que sin JavaScript.
+    var altoSuficiente = window.matchMedia('(min-height: 30em)');
+    var aplicar = function () {
+      seccion.classList.toggle('servicios-h--fijo', altoSuficiente.matches);
+      if (altoSuficiente.matches) { medir(); programar(); }
+    };
+
+    var recorrido = function () { return seccion.offsetHeight - escena.offsetHeight; };
+    var medir = function () {
+      alto = cabecera ? cabecera.offsetHeight : 65;
+      seccion.style.setProperty('--alto-cab', alto + 'px');
+    };
+    var pintar = function () {
+      pendiente = false;
+      var largo = recorrido();
+      var avance = largo > 0 ? Math.min(1, Math.max(0, (alto - seccion.getBoundingClientRect().top) / largo)) : 0;
+      posicion = avance * (n - 1);
+      seccion.style.setProperty('--pos', posicion.toFixed(4));
+      paneles.forEach(function (panel, i) {
+        var d = i - posicion;
+        panel.style.setProperty('--d', d.toFixed(3));
+        panel.style.setProperty('--ad', Math.min(1, Math.abs(d)).toFixed(3));
+      });
+      var activo = Math.round(posicion);
+      pasos.forEach(function (paso, i) {
+        paso.style.setProperty('--f', Math.min(1, Math.max(0, posicion - i + 1)).toFixed(3));
+        if (i === activo) { paso.setAttribute('aria-current', 'step'); } else { paso.removeAttribute('aria-current'); }
+      });
+      if (contador) {
+        contador.textContent = (activo + 1) + ' de ' + n + ' · ' + paneles[activo].querySelector('.servicio-h__titulo').textContent;
+      }
+    };
+    var programar = function () {
+      if (!pendiente) { pendiente = true; window.requestAnimationFrame(pintar); }
+    };
+    var irA = function (i) {
+      var destino = window.pageYOffset + seccion.getBoundingClientRect().top - alto + (i / (n - 1)) * recorrido();
+      window.scrollTo({ top: destino, behavior: 'smooth' });
+    };
+
+    pasos.forEach(function (paso, i) { paso.addEventListener('click', function () { irA(i); }); });
+    // Con Tab, el foco puede llegar a un botón que está fuera de pantalla: se lleva la página hasta ese servicio.
+    seccion.addEventListener('focusin', function (evento) {
+      if (!seccion.classList.contains('servicios-h--fijo')) { return; }
+      var panel = evento.target.closest('[data-servicio-h]');
+      var i = panel ? paneles.indexOf(panel) : -1;
+      if (i >= 0 && Math.abs(i - posicion) > 0.5) { irA(i); }
+    });
+    window.addEventListener('scroll', programar, { passive: true });
+    window.addEventListener('resize', function () { medir(); programar(); });
+    aplicar();
+    pintar();
+    if (altoSuficiente.addEventListener) { altoSuficiente.addEventListener('change', function () { aplicar(); pintar(); }); }
+    if (document.fonts) { document.fonts.ready.then(function () { medir(); pintar(); }); }
+  });
+
+  // Contacto: indicador "Abierto ahora / Cerrado" con la hora de Santa Fe. El servidor lo escribe ya calculado
+  // (HorarioAtencion.php); acá se repite el cálculo cada minuto para que no quede viejo en una pestaña abierta.
+  document.querySelectorAll('[data-horario]').forEach(function (indicador) {
+    var datos;
+    try { datos = JSON.parse(indicador.getAttribute('data-horario')); } catch (e) { return; }
+    var texto = indicador.querySelector('[data-estado-texto]');
+    var bajada = document.querySelector('[data-bajada-oficina]');
+    var formato = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Argentina/Buenos_Aires', weekday: 'short', hour: 'numeric', minute: 'numeric', hourCycle: 'h23' });
+    var hora = function (minutos) {
+      var h = Math.floor(minutos / 60);
+      var m = minutos % 60;
+      return m === 0 ? String(h) : h + ':' + (m < 10 ? '0' : '') + m;
+    };
+    var calcular = function () {
+      var partes = formato.formatToParts(new Date());
+      var valor = function (tipo) { return partes.filter(function (p) { return p.type === tipo; })[0].value; };
+      var dia = { Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6, Sun: 7 }[valor('weekday')];
+      var minuto = parseInt(valor('hour'), 10) * 60 + parseInt(valor('minute'), 10);
+      var turnos = datos.turnos;
+      if (datos.dias.indexOf(dia) >= 0) {
+        for (var i = 0; i < turnos.length; i++) {
+          if (minuto >= turnos[i][0] && minuto < turnos[i][1]) { return { abierto: true, texto: 'Abierto ahora · hasta las ' + hora(turnos[i][1]) + ' hs' }; }
+        }
+        for (var j = 0; j < turnos.length; j++) {
+          if (minuto < turnos[j][0]) { return { abierto: false, texto: 'Cerrado ahora · abrimos hoy a las ' + hora(turnos[j][0]) + ' hs' }; }
+        }
+      }
+      for (var salto = 1; salto <= 7; salto++) {
+        var candidato = (dia - 1 + salto) % 7 + 1;
+        if (datos.dias.indexOf(candidato) >= 0) {
+          return { abierto: false, texto: 'Cerrado ahora · abrimos ' + (salto === 1 ? 'mañana' : 'el ' + datos.nombres[candidato - 1]) + ' a las ' + hora(turnos[0][0]) + ' hs' };
+        }
+      }
+      return { abierto: false, texto: 'Cerrado ahora' };
+    };
+    var pintar = function () {
+      var estado = calcular();
+      indicador.classList.toggle('estado-oficina--abierto', estado.abierto);
+      indicador.classList.toggle('estado-oficina--cerrado', !estado.abierto);
+      texto.textContent = estado.texto;
+      if (bajada) { bajada.textContent = estado.abierto ? bajada.dataset.abierto : bajada.dataset.cerrado; }
+    };
+    pintar();
+    window.setInterval(pintar, 60000);
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) { pintar(); } });
+  });
+
+  // Contacto: en celular el mapa queda detrás de un botón (en escritorio se ve siempre).
+  document.querySelectorAll('[data-mapa-contacto]').forEach(function (contenedor) {
+    var boton = contenedor.querySelector('[data-mapa-boton]');
+    if (!boton) { return; }
+    var etiqueta = boton.querySelector('span');
+    contenedor.classList.add('contacto-pagina__mapa--cerrado');
+    boton.addEventListener('click', function () {
+      var cerrado = contenedor.classList.toggle('contacto-pagina__mapa--cerrado');
+      boton.setAttribute('aria-expanded', cerrado ? 'false' : 'true');
+      etiqueta.textContent = cerrado ? 'Ver mapa' : 'Ocultar mapa';
+    });
+  });
+
+  // Carrusel de destacadas: las flechas avanzan una tarjeta.
+  document.querySelectorAll('[data-carrusel]').forEach(function (carrusel) {
+    var pista = carrusel.querySelector('.carrusel__pista');
+    var mover = function (sentido) {
+      var tarjeta = pista.querySelector('.tarjeta');
+      if (tarjeta) { pista.scrollBy({ left: sentido * (tarjeta.getBoundingClientRect().width + 16), behavior: 'smooth' }); }
+    };
+    carrusel.querySelector('[data-carrusel-anterior]').addEventListener('click', function () { mover(-1); });
+    carrusel.querySelector('[data-carrusel-siguiente]').addEventListener('click', function () { mover(1); });
+  });
+
+  // Buscador de la portada: filtra las propiedades de abajo en la misma página, sin recargar.
+  // Pide /propiedades con los mismos filtros, toma las tarjetas del resultado y las pone en el carrusel.
+  // Elegir una operación con el mouse o el dedo filtra al instante; con el teclado (flechas) solo cambia la
+  // selección y se envía con Enter o con Buscar. Sin JavaScript, el formulario manda a /propiedades.
+  (function () {
+    var formulario = document.querySelector('.buscador');
+    var seccion = document.getElementById('resultados');
+    if (!formulario || !seccion || !window.fetch || !window.DOMParser) { return; }
+    var pista = seccion.querySelector('[data-resultados-pista]');
+    var titulo = seccion.querySelector('[data-resultados-titulo]');
+    var estado = seccion.querySelector('[data-resultados-estado]');
+    var enlace = seccion.querySelector('[data-resultados-enlace]');
+    var inicial = pista.innerHTML;
+    var NOMBRES = { '': '', alquiler: ' en alquiler', venta: ' en venta', comerciales: ' comerciales' };
+    var pedido = 0;
+
+    formulario.querySelectorAll('.buscador__operacion input').forEach(function (opcion) {
+      opcion.addEventListener('click', function (evento) {
+        if (evento.detail > 0) { formulario.requestSubmit(); }
+      });
+    });
+
+    var mostrar = function (operacion, texto, tarjetas, total, destino) {
+      pista.innerHTML = '';
+      tarjetas.forEach(function (tarjeta) { pista.appendChild(document.importNode(tarjeta, true)); });
+      pista.scrollTo({ left: 0 });
+      titulo.textContent = 'Propiedades' + NOMBRES[operacion];
+      estado.textContent = total === 0
+        ? 'No encontramos propiedades' + (texto ? ' para “' + texto + '”' : '') + '.'
+        : (total === 1 ? '1 propiedad' : total + ' propiedades') + (texto ? ' para “' + texto + '”' : '');
+      enlace.href = destino;
+      enlace.textContent = total > tarjetas.length ? 'Ver las ' + total + ' propiedades' : 'Ver en el catálogo';
+      enlace.parentNode.hidden = total === 0;
+    };
+
+    var restaurar = function () {
+      pista.innerHTML = inicial;
+      titulo.textContent = titulo.dataset.inicial;
+      estado.textContent = '';
+      enlace.href = '/propiedades';
+      enlace.textContent = enlace.dataset.inicial;
+      enlace.parentNode.hidden = false;
+    };
+
+    formulario.addEventListener('submit', function (evento) {
+      evento.preventDefault();
+      var datos = new FormData(formulario);
+      var operacion = String(datos.get('operacion') || '');
+      var texto = String(datos.get('q') || '').trim();
+      var consulta = new URLSearchParams();
+      if (operacion) { consulta.set('operacion', operacion); }
+      if (texto) { consulta.set('q', texto); }
+      var destino = '/propiedades' + (consulta.toString() ? '?' + consulta.toString() : '');
+      if (!operacion && !texto) { pedido++; restaurar(); return; }
+
+      var mio = ++pedido;
+      seccion.setAttribute('aria-busy', 'true');
+      fetch(destino, { headers: { Accept: 'text/html' } }).then(function (respuesta) {
+        if (!respuesta.ok) { throw new Error('http ' + respuesta.status); }
+        // Un número que coincide con un código redirige a la ficha de esa propiedad: se va directo.
+        if (new URL(respuesta.url).pathname.indexOf('/propiedad/') === 0) { window.location.href = respuesta.url; return null; }
+        return respuesta.text();
+      }).then(function (html) {
+        if (html === null || mio !== pedido) { return; }
+        var doc = new DOMParser().parseFromString(html, 'text/html');
+        var tarjetas = Array.prototype.slice.call(doc.querySelectorAll('.grilla > .tarjeta'));
+        var total = parseInt((doc.querySelector('.resultados') || {}).textContent, 10) || tarjetas.length;
+        mostrar(operacion, texto, tarjetas, total, destino);
+        var arriba = seccion.getBoundingClientRect().top;
+        if (arriba > window.innerHeight * 0.7) { seccion.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      }).catch(function () {
+        window.location.href = destino;   // si algo falla, la búsqueda de siempre
+      }).then(function () {
+        seccion.removeAttribute('aria-busy');
+      });
+    });
+  })();
+
+  // Selectores segmentados (operación de la portada, pestañas del catálogo, motivo de la consulta):
+  // una pastilla se desliza hasta la opción elegida. La opción "Venta" (data-tono="venta") la pinta de rojo.
+  // En el catálogo las opciones son enlaces: la pastilla arranca a moverse al hacer clic, mientras entra el telón.
+  document.querySelectorAll('[data-segmentado]').forEach(function (grupo) {
+    var items = Array.prototype.slice.call(grupo.children).filter(function (el) { return el.tagName === 'A' || el.tagName === 'LABEL'; });
+    if (!items.length) { return; }
+    var pastilla = document.createElement('span');
+    pastilla.className = 'seg__pastilla';
+    pastilla.setAttribute('aria-hidden', 'true');
+    grupo.insertBefore(pastilla, grupo.firstChild);
+    grupo.classList.add('seg');
+
+    var elegido = function () {
+      return items.filter(function (el) {
+        var radio = el.querySelector('input[type="radio"]');
+        return radio ? radio.checked : el.getAttribute('aria-current') === 'page';
+      })[0] || null;
+    };
+    var ubicar = function (item) {
+      if (!item || !item.offsetWidth) { grupo.classList.add('seg--vacio'); return; }
+      grupo.classList.remove('seg--vacio');
+      grupo.style.setProperty('--seg-x', item.offsetLeft + 'px');
+      grupo.style.setProperty('--seg-y', item.offsetTop + 'px');
+      grupo.style.setProperty('--seg-ancho', item.offsetWidth + 'px');
+      grupo.style.setProperty('--seg-alto', item.offsetHeight + 'px');
+      grupo.dataset.tono = item.dataset.tono || '';
+    };
+    // Sin animación: primera ubicación, cambios de tamaño, fuente cargada, apertura del desplegable.
+    var quieto = function () {
+      grupo.classList.add('seg--quieto');
+      ubicar(elegido());
+      void pastilla.offsetWidth;
+      grupo.classList.remove('seg--quieto');
+    };
+    quieto();
+    window.requestAnimationFrame(function () { grupo.classList.add('seg--desliza'); });
+    if (document.fonts) { document.fonts.ready.then(quieto); }
+    if (window.ResizeObserver) { new ResizeObserver(quieto).observe(grupo); } else { window.addEventListener('resize', quieto); }
+
+    items.forEach(function (item) {
+      var radio = item.querySelector('input[type="radio"]');
+      if (radio) {
+        radio.addEventListener('change', function () { ubicar(item); });
+      } else {
+        item.addEventListener('click', function (evento) {
+          if (evento.button === 0 && !evento.metaKey && !evento.ctrlKey && !evento.shiftKey) { ubicar(item); }
+        });
+      }
+    });
+  });
+
+  // Compartir una propiedad: con el menú del celular si existe; si no, se copia el enlace y el botón avisa.
+  // Sin JavaScript queda el enlace a WhatsApp del propio botón.
+  document.querySelectorAll('[data-compartir]').forEach(function (boton) {
+    var texto = boton.querySelector('.compartir__texto');
+    var original = texto.textContent;
+    var avisar = function (mensaje) {
+      texto.textContent = mensaje;
+      clearTimeout(boton.aviso);
+      boton.aviso = setTimeout(function () { texto.textContent = original; }, 2400);
+    };
+    var copiar = function (url) {
+      var alternativa = function () {
+        var campo = document.createElement('textarea');
+        campo.value = url; campo.setAttribute('readonly', ''); campo.style.position = 'fixed'; campo.style.opacity = '0';
+        document.body.appendChild(campo); campo.select();
+        var ok = false;
+        try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+        campo.remove();
+        avisar(ok ? 'Enlace copiado' : 'No se pudo copiar');
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(function () { avisar('Enlace copiado'); }, alternativa);
+      } else { alternativa(); }
+    };
+    boton.addEventListener('click', function (evento) {
+      if (evento.button !== 0 || evento.metaKey || evento.ctrlKey || evento.shiftKey || evento.altKey) { return; }
+      evento.preventDefault();
+      var url = boton.dataset.url || window.location.href;
+      // El menú de compartir es de celulares y tablets (pantalla táctil); en PC se copia el enlace, que es lo que se espera ahí.
+      if (navigator.share && window.matchMedia('(pointer: coarse)').matches) {
+        navigator.share({ title: boton.dataset.titulo, url: url }).catch(function (error) {
+          if (error && error.name !== 'AbortError') { copiar(url); }
+        });
+      } else { copiar(url); }
+    });
+  });
+
+  // Regla j: cada consulta por WhatsApp (y cada clic en teléfono) se registra en Analytics.
+  document.addEventListener('click', function (evento) {
+    var enlace = evento.target.closest('[data-evento]');
+    if (!enlace || typeof window.gtag !== 'function') { return; }
+    window.gtag('event', enlace.dataset.evento, {
+      origen: enlace.dataset.origen || '',
+      codigo_propiedad: enlace.dataset.codigo || '',
+      operacion: enlace.dataset.operacion || '',
+      tipo_propiedad: enlace.dataset.tipo || ''
+    });
+  });
+})();

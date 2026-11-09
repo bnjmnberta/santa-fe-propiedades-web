@@ -1,0 +1,142 @@
+/* Animaciones de carga de "Santa Fe Loader" (loader.css). Solo cambian los colores, que ahora son
+   los del logo original; las reglas son las mismas.
+   Al final van los agregados para esta web en PHP, donde cada sección es una página nueva. */
+/* ===== Santa Fe Propiedades — loaders ===== */
+:root {
+  --sf-red: #ed1b24;  /* colores del logo original (images/logo.png de la web vieja) */
+  --sf-cyan: #0094da;
+  --sf-blue: #0058a8;
+  --sf-ink: #242420;
+  --sf-bg: #ffffff;
+  --sf-ease: cubic-bezier(0.76, 0, 0.24, 1);
+  --sf-pt-in: 650ms;
+  --sf-pt-out: 700ms;
+}
+
+/* ---------- Logo de 8 cuadrados ---------- */
+.sf-mark {
+  display: grid;
+  width: max-content;
+  grid-template-columns: repeat(3, var(--sq-w));
+  grid-template-rows: repeat(3, var(--sq-h));
+  gap: var(--gap);
+}
+.sf-sq { display: block; will-change: transform, opacity; }
+.sf-sq--red  { background: var(--sf-red); }
+.sf-sq--cyan { background: var(--sf-cyan); }
+.sf-sq--blue { background: var(--sf-blue); }
+
+@keyframes sf-drop {
+  0%   { opacity: 0; transform: translateY(-140%) scale(0.7); }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes sf-wave {
+  0%, 60%, 100% { transform: none; filter: none; }
+  30%           { transform: translateY(-22%); filter: brightness(1.12); }
+}
+@keyframes sf-pop-out {
+  0%   { opacity: 1; transform: none; }
+  100% { opacity: 0; transform: translateY(-60%) scale(0.4); }
+}
+
+/* ---------- Pantalla de carga inicial: solo el logo, centrado ---------- */
+.sf-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  background: var(--sf-bg);
+}
+
+/* build: caen y arman el logo de abajo hacia arriba */
+.sf-intro.is-build .sf-sq {
+  opacity: 0;
+  animation: sf-drop 550ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation-delay: calc(var(--i) * 90ms);
+}
+
+/* loop: ola mientras termina de cargar */
+.sf-intro.is-loop .sf-sq {
+  animation: sf-wave 1.3s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 70ms);
+}
+/* leave: se desarman (de arriba hacia abajo) y sube el telón */
+.sf-intro.is-leave .sf-sq {
+  animation: sf-pop-out 320ms ease-in forwards;
+  animation-delay: calc((7 - var(--i)) * 35ms);
+}
+.sf-intro.is-leave {
+  transform: translateY(-100%);
+  transition: transform 550ms var(--sf-ease) 400ms;
+}
+
+/* ---------- Transición entre páginas ---------- */
+.sf-pt {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  overflow: hidden;
+}
+.sf-pt:not(.is-idle) { pointer-events: all; }
+
+.sf-pt__panel {
+  position: absolute;
+  inset: 0;
+  transform: translateY(100%);
+}
+.sf-pt__panel--blue  { background: var(--sf-blue); }
+.sf-pt__panel--cyan  { background: var(--sf-cyan); }
+.sf-pt__panel--white { background: var(--sf-bg); display: grid; place-items: center; }
+
+/* in / hold: los paneles suben y tapan (azul → celeste → blanco) */
+.sf-pt.is-in .sf-pt__panel,
+.sf-pt.is-hold .sf-pt__panel {
+  transform: translateY(0);
+  transition: transform var(--sf-pt-in) var(--sf-ease);
+  transition-delay: calc(var(--d) * 90ms);
+}
+/* out: se van hacia arriba (blanco → celeste → azul) y aparece la nueva página */
+.sf-pt.is-out .sf-pt__panel {
+  transform: translateY(-100%);
+  transition: transform var(--sf-pt-out) var(--sf-ease);
+  transition-delay: calc((2 - var(--d)) * 90ms);
+}
+
+.sf-pt .sf-sq { opacity: 0; }
+.sf-pt.is-in .sf-sq {
+  animation: sf-drop 450ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation-delay: calc(420ms + var(--i) * 45ms);
+}
+.sf-pt.is-hold .sf-sq {
+  opacity: 1;
+  animation: sf-wave 1s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 60ms);
+}
+.sf-pt.is-out .sf-sq { opacity: 1; }
+
+/* ---------- Accesibilidad ---------- */
+.sf-visually-hidden {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sf-intro *, .sf-pt * { animation: none !important; opacity: 1 !important; }
+  .sf-intro.is-leave { transition: opacity 200ms; transform: none; opacity: 0; }
+}
+
+/* ---------- Agregados para la web en PHP ---------- */
+.sf-intro__inner { display: grid; place-items: center; }
+/* La pantalla de carga está en el HTML de todas las páginas, pero solo se muestra en la primera
+   visita de la sesión: el script del <head> pone .sf-con-intro en <html>. */
+.sf-intro { display: none; }
+.sf-con-intro .sf-intro { display: grid; }
+.sf-intro[hidden] { display: none !important; }
+
+/* Llegada después de una transición: la página nueva se pinta ya tapada por los paneles
+   (el script del <head> pone .sf-llegando) y cargadores.js los saca hacia arriba. */
+.sf-llegando .sf-pt { pointer-events: all; }
+.sf-llegando .sf-pt__panel { transform: translateY(0); transition: none; }
+.sf-llegando .sf-pt .sf-sq { opacity: 1; }
