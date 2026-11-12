@@ -140,9 +140,11 @@
     var alto = 65;
     var posicion = 0;
     var pendiente = false;
-    // La escena fija necesita una pantalla de al menos 30em de alto (unos 480 px): en un celular horizontal el contenido
-    // no entra y se recortaba. Ahí los servicios quedan apilados, igual que sin JavaScript.
-    var altoSuficiente = window.matchMedia('(min-height: 30em)');
+    // El desplazamiento horizontal es solo para computadora: pantalla de 60em o más de ancho (unos 960 px, donde el menú
+    // pasa de hamburguesa a barra) y con mouse. En celular y tablet, en vertical o en horizontal, los servicios quedan
+    // apilados y se recorren con el scroll vertical de siempre, igual que sin JavaScript. También hace falta una pantalla
+    // de al menos 30em de alto (unos 480 px): si el contenido no entra se recortaba; ahí también quedan apilados.
+    var altoSuficiente = window.matchMedia('(min-width: 60em) and (min-height: 30em) and (hover: hover) and (pointer: fine)');
     var aplicar = function () {
       seccion.classList.toggle('servicios-h--fijo', altoSuficiente.matches);
       if (altoSuficiente.matches) { medir(); programar(); }
