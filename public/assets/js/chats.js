@@ -271,7 +271,7 @@
         // Un cliente que escribió y todavía no tiene respuesta de una persona: se destaca en rojo.
         vista.className += ' wsp__chat-vista--espera';
         vista.textContent = '';
-        vista.appendChild(document.createTextNode('⏳ Espera respuesta hace ' + duracion(chat.espera_minutos)));
+        vista.appendChild(document.createTextNode('⏳ Espera hace ' + duracion(chat.espera_minutos)));
       }
       var hallazgo = buscando() ? coincidencias[chat.contacto] : null;
       if (hallazgo) {
@@ -378,7 +378,7 @@
     elModo.textContent = modo === 'persona' ? 'Devolver al bot' : 'Tomar el chat';
     elModo.className = 'boton boton--chico wsp__modo ' + (modo === 'persona' ? 'panel-boton-suave' : 'boton--primario');
     if (!ventanaAbierta) {
-      mostrarBanner('Pasaron más de 24 horas desde el último mensaje del cliente. WhatsApp solo deja escribirle de nuevo cuando él escribe.', false);
+      mostrarBanner('El cliente no escribe hace más de un día. WhatsApp solo deja contestarle cuando él vuelve a escribir.', false);
     } else if (modo === 'persona' && esperaMinutos !== null) {
       mostrarBanner('El cliente espera tu respuesta hace ' + duracion(esperaMinutos) + '. Contestale desde acá; el asistente no le escribe en este chat.', true);
     } else if (modo === 'persona') {
@@ -389,7 +389,7 @@
     elTexto.disabled = !ventanaAbierta;
     elEnviar.disabled = !ventanaAbierta;
     elMic.disabled = !ventanaAbierta;
-    elTexto.placeholder = ventanaAbierta ? 'Escribí un mensaje' : 'No se puede escribir: pasaron más de 24 h';
+    elTexto.placeholder = ventanaAbierta ? 'Escribí un mensaje' : 'Podrás contestar cuando el cliente escriba';
   }
 
   function mostrarBanner(texto, error, suave) {
