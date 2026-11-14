@@ -189,6 +189,9 @@ html[data-tema="oscuro"] body.panel--chats .logo-tema--oscuro { display: inline-
 .wsp__chat-vista { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .88rem; color: var(--tinta-suave); }
 .wsp__etiqueta { flex: 0 0 auto; font-size: .66rem; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; padding: 2px 6px; border-radius: 6px; background: var(--w-chip); color: var(--w-suave); }
 .wsp__etiqueta--venta { background: var(--w-venta-bg); color: var(--w-venta-fg); }
+/* Conversación finalizada: gris y un poco más apagada, para que no compita con las que esperan algo. */
+.wsp__etiqueta--cerrada { background: var(--w-chip); color: var(--w-suave); }
+.wsp__chat--cerrada .wsp__chat-nombre, .wsp__chat--cerrada .wsp__chat-vista { opacity: .65; }
 .wsp__contador { flex: 0 0 auto; min-width: 20px; padding: 1px 6px; border-radius: 999px; background: var(--azul); color: #fff; font-size: .72rem; font-weight: 800; text-align: center; line-height: 1.5; }
 .wsp__tilde { color: var(--w-tenue); font-size: .8rem; }
 .wsp__tilde--leido { color: var(--wsp-tilde); }

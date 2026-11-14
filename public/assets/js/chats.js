@@ -37,6 +37,7 @@
   var modo = 'bot';
   var ventanaAbierta = true;
   var esperaMinutos = null; // hace cuánto espera el cliente una respuesta de una persona
+  var cerrada = null; // motivo si la conversación está finalizada: agresivo | despedida | sin_respuesta
   var ultimoDia = '';
   var enviando = false;
   var temaActivo = 'todos'; // solapa elegida: todos, venta, alquiler, locales u otros
@@ -293,7 +294,13 @@
         tema.textContent = { venta: 'Venta', alquiler: 'Alquiler', locales: 'Locales' }[chat.tema] || '';
         abajo.appendChild(tema);
       }
-      if (chat.modo === 'persona') {
+      if (chat.cerrada) {
+        var fin = document.createElement('span');
+        fin.className = 'wsp__etiqueta wsp__etiqueta--cerrada';
+        fin.textContent = 'Finalizada';
+        abajo.appendChild(fin);
+        boton.className += ' wsp__chat--cerrada';
+      } else if (chat.modo === 'persona') {
         var etiqueta = document.createElement('span');
         etiqueta.className = 'wsp__etiqueta' + (chat.motivo === 'venta' ? ' wsp__etiqueta--venta' : '');
         etiqueta.textContent = chat.motivo === 'venta' ? 'Compra' : 'Vos';
@@ -356,6 +363,7 @@
       modo = r.datos.modo;
       ventanaAbierta = r.datos.ventana_abierta;
       esperaMinutos = r.datos.espera_minutos === undefined ? null : r.datos.espera_minutos;
+      cerrada = r.datos.cerrada || null;
       if (r.datos.nombre) { chat.nombre = r.datos.nombre; pintarCabecera(chat); }
       dibujarMensajes(r.datos.mensajes, true);
       actualizarEstadoDelChat();
@@ -377,7 +385,13 @@
   function actualizarEstadoDelChat() {
     elModo.textContent = modo === 'persona' ? 'Devolver al bot' : 'Tomar el chat';
     elModo.className = 'boton boton--chico wsp__modo ' + (modo === 'persona' ? 'panel-boton-suave' : 'boton--primario');
-    if (!ventanaAbierta) {
+    if (cerrada) {
+      mostrarBanner({
+        agresivo: 'Conversación finalizada: el cliente fue agresivo o quiso romper el asistente, y no se le contestó. Si escribe una consulta nueva, el asistente le responde.',
+        despedida: 'Conversación finalizada: el cliente se despidió y el asistente no le contestó. Si escribe una consulta nueva, el asistente le responde.',
+        sin_respuesta: 'Conversación finalizada: el cliente dejó de contestar. Si escribe una consulta nueva, se reabre sola.'
+      }[cerrada] || 'Conversación finalizada.', false, true);
+    } else if (!ventanaAbierta) {
       mostrarBanner('El cliente no escribe hace más de un día. WhatsApp solo deja contestarle cuando él vuelve a escribir.', false);
     } else if (modo === 'persona' && esperaMinutos !== null) {
       mostrarBanner('El cliente espera tu respuesta hace ' + duracion(esperaMinutos) + '. Contestale desde acá; el asistente no le escribe en este chat.', true);
@@ -468,6 +482,7 @@
       modo = r.datos.modo;
       ventanaAbierta = r.datos.ventana_abierta;
       esperaMinutos = r.datos.espera_minutos === undefined ? null : r.datos.espera_minutos;
+      cerrada = r.datos.cerrada || null;
       dibujarMensajes(r.datos.mensajes, false);
       actualizarEstadoDelChat();
       if (habiaNuevos && entro && !document.hidden) { leer(); }
