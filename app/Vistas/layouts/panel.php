@@ -34,7 +34,7 @@ $ruta = parse_url($_SERVER['REQUEST_URI'] ?? '/panel', PHP_URL_PATH);
 <?php if ($usuario): ?>
   <header class="panel-cabecera">
     <div class="panel-cabecera__fila">
-      <a class="panel-cabecera__marca" href="/panel"><?= Vista::parcial('logo') ?><span class="panel-cabecera__etiqueta">Panel</span></a>
+      <a class="panel-cabecera__marca" href="/panel"><span class="logo-tema logo-tema--claro"><?= Vista::parcial('logo') ?></span><span class="logo-tema logo-tema--oscuro"><?= Vista::parcial('logo', ['claro' => true]) ?></span><span class="panel-cabecera__etiqueta">Panel</span></a>
       <nav class="panel-nav" aria-label="Panel">
         <a href="/panel" <?= $ruta === '/panel' || str_starts_with($ruta, '/panel/propiedades') ? 'aria-current="page"' : '' ?>>Propiedades</a>
         <?php if (Sesion::esAdministrador()): ?>

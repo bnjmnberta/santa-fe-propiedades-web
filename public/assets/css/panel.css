@@ -5,6 +5,11 @@
 .panel-cabecera__fila { max-width: 1100px; margin: 0 auto; padding: 10px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px; }
 .panel-cabecera__marca { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: #2b3240; }
 .panel-cabecera__marca .logo__img { height: 28px; width: auto; }
+/* Dos logos: el de letras oscuras para el fondo claro y el blanco para el modo oscuro de Chats. */
+.logo-tema { display: inline-flex; }
+.logo-tema--oscuro { display: none; }
+html[data-tema="oscuro"] body.panel--chats .logo-tema--claro { display: none; }
+html[data-tema="oscuro"] body.panel--chats .logo-tema--oscuro { display: inline-flex; }
 .panel-cabecera__etiqueta { background: var(--tinta); color: #fff; font-size: .7rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; }
 .panel-nav { display: flex; gap: 4px; flex-wrap: wrap; order: 3; width: 100%; }
 .panel-nav a { padding: 8px 12px; border-radius: 8px; text-decoration: none; color: var(--tinta); font-weight: 600; }
